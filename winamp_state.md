@@ -21,15 +21,15 @@ This file tracks the development progress, sprint status, and overall project st
 - [x] Create audio session interruption handling (calls, notifications)
 - [x] Implement background audio playback capability
 
-#### Story 1.2: File Format Support 🔄
-- [ ] Implement MP3 decoder with ID3v1/v2 tag support
-- [ ] Add AAC/M4A support with iTunes metadata
-- [ ] Add FLAC support with Vorbis comment parsing
-- [ ] Add OGG Vorbis support
-- [ ] Implement WAV/AIFF support for uncompressed audio
-- [ ] Create unified metadata extraction interface
+#### Story 1.2: File Format Support ✅
+- [x] Implement MP3 decoder with ID3v1/v2 tag support
+- [x] Add AAC/M4A support with iTunes metadata
+- [x] Add FLAC support with Vorbis comment parsing
+- [x] Add OGG Vorbis support
+- [x] Implement WAV/AIFF support for uncompressed audio
+- [x] Create unified metadata extraction interface
 - [ ] Add format conversion capabilities
-- [ ] Implement audio format detection system
+- [x] Implement audio format detection system
 
 #### Story 1.3: Playlist Management 📋
 - [ ] Design playlist data model with CoreData
@@ -69,6 +69,19 @@ This file tracks the development progress, sprint status, and overall project st
 - [2025-01-28] Created modular architecture with clear separation of concerns
 - [2025-01-28] Merged PR #2 into main branch
 
+### Story 1.2: File Format Support (Completed)
+- [2025-01-28] Created comprehensive metadata extraction system with unified MetadataExtractor protocol
+- [2025-01-28] Implemented format detection system using magic bytes and file extensions
+- [2025-01-28] Added MP3Decoder with full ID3v1/v2 tag parsing support
+- [2025-01-28] Added AACDecoder with iTunes metadata extraction (MP4 atoms)
+- [2025-01-28] Added FLACDecoder with Vorbis comment metadata parsing
+- [2025-01-28] Added OGGDecoder with Vorbis comment support
+- [2025-01-28] Added WAVDecoder and AIFFDecoder for uncompressed audio formats
+- [2025-01-28] Created unified FileLoader system integrating all decoders
+- [2025-01-28] Integrated decoders with AudioEngine for seamless format support
+- [2025-01-28] Added comprehensive error handling for unsupported formats
+- [2025-01-28] Created AudioFormatDetector for automatic format identification
+
 ---
 
 ## 🔀 Active Pull Requests
@@ -95,6 +108,17 @@ None currently active.
 │       │   │   ├── AudioSessionManager.swift # Audio session and interruption handling
 │       │   │   ├── AudioQueueManager.swift   # Gapless playback queue management
 │       │   │   └── VolumeBalanceController.swift # Volume/balance with logarithmic scaling
+│       │   ├── Decoders/  # Audio format decoders
+│       │   │   ├── AudioFormatDetector.swift # Format detection using magic bytes
+│       │   │   ├── MetadataExtractor.swift   # Unified metadata extraction protocol
+│       │   │   ├── MP3Decoder.swift          # MP3 with ID3v1/v2 support
+│       │   │   ├── AACDecoder.swift          # AAC/M4A with iTunes metadata
+│       │   │   ├── FLACDecoder.swift         # FLAC with Vorbis comments
+│       │   │   ├── OGGDecoder.swift          # OGG Vorbis support
+│       │   │   ├── WAVDecoder.swift          # WAV file support
+│       │   │   └── AIFFDecoder.swift         # AIFF file support
+│       │   ├── FileLoader/
+│       │   │   └── FileLoader.swift          # Unified file loading system
 │       │   └── Models/
 │       │       ├── Track.swift          # Track data model
 │       │       └── Playlist.swift       # Playlist data model
@@ -171,17 +195,17 @@ None at this time.
 ### Sprint Burndown
 ```
 Total Story Points: 24 (3 stories × 8 points each)
-Completed: 8 (Story 1.1)
-Remaining: 16
-Progress: 33.3%
+Completed: 16 (Story 1.1 + Story 1.2)
+Remaining: 8
+Progress: 66.7%
 ```
 
 ### Task Progress
 ```
 Story 1.1 (Audio Playback Core): 6/7 tasks ✅ (Audio routing pending)
-Story 1.2 (File Format Support): 0/8 tasks  
+Story 1.2 (File Format Support): 7/8 tasks ✅ (Format conversion pending)
 Story 1.3 (Playlist Management): 0/8 tasks
-Total Tasks: 6/23 completed (26%)
+Total Tasks: 13/23 completed (56.5%)
 ```
 
 ### Velocity Tracking
@@ -207,10 +231,15 @@ Total Tasks: 6/23 completed (26%)
 - Audio session properly configured for background playback and interruption handling
 - Gapless playback infrastructure ready for playlist implementation
 - Only remaining task in Story 1.1 is audio routing support for multiple output devices
-- Ready to proceed with Story 1.2 (File Format Support) while finishing audio routing
+- Story 1.2 (File Format Support) is now complete except for format conversion capabilities
+- Comprehensive metadata extraction system supports ID3v1/v2, iTunes MP4, and Vorbis comments
+- Format detection uses both magic bytes and file extensions for reliability
+- All major audio formats (MP3, AAC, FLAC, OGG, WAV, AIFF) are now supported
+- Unified FileLoader provides seamless integration with AudioEngine
+- Ready to proceed with Story 1.3 (Playlist Management) as the final sprint story
 
 ---
 
 ## 🔄 Last Updated
 
-2025-01-28 - PR #2 merged. Story 1.1 (86% complete) in main. Starting Story 1.2 (File Format Support).
+2025-01-28 - Story 1.2 (File Format Support) completed (87.5%). Comprehensive audio format support with metadata extraction implemented.
