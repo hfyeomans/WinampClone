@@ -72,7 +72,10 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🔀 Active Pull Requests
 
-None currently active.
+- **PR #2**: [Sprint 1: Story 1.1 - Complete Audio Playback Core](https://github.com/hfyeomans/WinampClone/pull/2)
+  - Status: Open
+  - Branch: `sprint-1-audio-implementation`
+  - Description: Implements professional-grade audio playback with AudioEngine, session management, volume control, and gapless queue
 
 ---
 
@@ -212,4 +215,4 @@ Total Tasks: 6/23 completed (26%)
 
 ## 🔄 Last Updated
 
-2025-01-28 - Story 1.1 (Audio Playback Core) completed except for audio routing. Enhanced AudioEngine with full playback controls, audio session management, volume/balance controller, queue management, and comprehensive test suite.
+2025-01-28 - Story 1.1 (Audio Playback Core) 86% complete. Created PR #2 with AudioEngine, session management, volume control, gapless queue, and comprehensive tests. Only audio routing remains.
