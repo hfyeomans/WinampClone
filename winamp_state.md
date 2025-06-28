@@ -86,7 +86,10 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🔀 Active Pull Requests
 
-None currently active.
+- **PR #3**: [Sprint 1: Story 1.2 - Complete File Format Support](https://github.com/hfyeomans/WinampClone/pull/3)
+  - Status: Open
+  - Branch: `sprint-1-file-format-support`
+  - Description: Comprehensive file format support with metadata extraction for all major audio formats
 
 ---
 
