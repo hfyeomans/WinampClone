@@ -55,15 +55,13 @@ This file tracks the development progress, sprint status, and overall project st
 - [2025-01-28] Created SwiftUI ContentView and App entry point
 - [2025-01-28] Pushed sprint-1-audio-foundation branch to remote repository
 - [2025-01-28] Created Pull Request #1 for Sprint 1 Audio Foundation
+- [2025-01-28] Merged PR #1 into main branch
 
 ---
 
 ## 🔀 Active Pull Requests
 
-- **PR #1**: [Sprint 1: Audio Foundation - Initial Project Setup](https://github.com/hfyeomans/WinampClone/pull/1)
-  - Status: Open
-  - Branch: `sprint-1-audio-foundation`
-  - Description: Establishes project foundation and begins audio engine implementation
+None currently active.
 
 ---
 
@@ -179,4 +177,4 @@ Total Tasks: 0/23 completed
 
 ## 🔄 Last Updated
 
-2025-01-28 - Updated with Sprint 1 details, completed project initialization tasks, and created PR #1
+2025-01-28 - PR #1 merged to main, continuing Sprint 1 development
