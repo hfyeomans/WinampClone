@@ -24,6 +24,27 @@ struct Track: Identifiable, Equatable, Codable {
     let trackNumber: Int?
     let albumArtwork: Data?
     
+    // Audio format information
+    let audioFormat: AudioFormat?
+    let audioProperties: AudioProperties?
+    
+    // Extended metadata
+    let albumArtist: String?
+    let composer: String?
+    let comment: String?
+    let lyrics: String?
+    let bpm: Int?
+    let discNumber: Int?
+    let totalDiscs: Int?
+    let totalTracks: Int?
+    let encoder: String?
+    
+    // File information
+    let fileSize: Int64?
+    let dateAdded: Date?
+    let lastPlayed: Date?
+    let playCount: Int?
+    
     // MARK: - Computed Properties
     
     /// Display title (falls back to filename if title is empty)
@@ -61,7 +82,22 @@ struct Track: Identifiable, Equatable, Codable {
         duration: TimeInterval,
         fileURL: URL? = nil,
         trackNumber: Int? = nil,
-        albumArtwork: Data? = nil
+        albumArtwork: Data? = nil,
+        audioFormat: AudioFormat? = nil,
+        audioProperties: AudioProperties? = nil,
+        albumArtist: String? = nil,
+        composer: String? = nil,
+        comment: String? = nil,
+        lyrics: String? = nil,
+        bpm: Int? = nil,
+        discNumber: Int? = nil,
+        totalDiscs: Int? = nil,
+        totalTracks: Int? = nil,
+        encoder: String? = nil,
+        fileSize: Int64? = nil,
+        dateAdded: Date? = nil,
+        lastPlayed: Date? = nil,
+        playCount: Int? = nil
     ) {
         self.id = id
         self.title = title
@@ -73,6 +109,21 @@ struct Track: Identifiable, Equatable, Codable {
         self.fileURL = fileURL
         self.trackNumber = trackNumber
         self.albumArtwork = albumArtwork
+        self.audioFormat = audioFormat
+        self.audioProperties = audioProperties
+        self.albumArtist = albumArtist
+        self.composer = composer
+        self.comment = comment
+        self.lyrics = lyrics
+        self.bpm = bpm
+        self.discNumber = discNumber
+        self.totalDiscs = totalDiscs
+        self.totalTracks = totalTracks
+        self.encoder = encoder
+        self.fileSize = fileSize
+        self.dateAdded = dateAdded
+        self.lastPlayed = lastPlayed
+        self.playCount = playCount
     }
     
     /// Initialize from a file URL by reading metadata
@@ -83,6 +134,23 @@ struct Track: Identifiable, Equatable, Codable {
         
         self.id = UUID()
         self.fileURL = url
+        
+        // Initialize extended metadata to nil
+        self.audioFormat = nil
+        self.audioProperties = nil
+        self.albumArtist = nil
+        self.composer = nil
+        self.comment = nil
+        self.lyrics = nil
+        self.bpm = nil
+        self.discNumber = nil
+        self.totalDiscs = nil
+        self.totalTracks = nil
+        self.encoder = nil
+        self.fileSize = try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64
+        self.dateAdded = Date()
+        self.lastPlayed = nil
+        self.playCount = nil
         
         // Read metadata from file
         let asset = AVAsset(url: url)
