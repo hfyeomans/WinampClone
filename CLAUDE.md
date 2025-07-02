@@ -61,3 +61,7 @@ The infinite command implements sophisticated parallel agent coordination:
 - Parallel execution managed through Task tool with batch sizes optimized by count
 - Progressive sophistication strategy for infinite mode waves
 - Each iteration must be genuinely unique while maintaining spec compliance
+
+## Important Workflow Practices
+- We can't continue with the project until we've made sure that any outstanding pull requests have been merged.
+- Always wait for PR merge confirmation before starting new work.

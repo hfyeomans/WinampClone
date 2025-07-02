@@ -17,7 +17,7 @@ This file tracks the development progress, sprint status, and overall project st
 - [x] Implement play/pause/stop/seek functionality with smooth transitions
 - [x] Create audio queue management system for gapless playback
 - [x] Implement volume and balance controls with logarithmic scaling
-- [ ] Add audio routing support for multiple output devices
+- [x] Add audio routing support for multiple output devices
 - [x] Create audio session interruption handling (calls, notifications)
 - [x] Implement background audio playback capability
 
@@ -28,7 +28,7 @@ This file tracks the development progress, sprint status, and overall project st
 - [x] Add OGG Vorbis support
 - [x] Implement WAV/AIFF support for uncompressed audio
 - [x] Create unified metadata extraction interface
-- [ ] Add format conversion capabilities
+- [x] Add format conversion capabilities
 - [x] Implement audio format detection system
 
 #### Story 1.3: Playlist Management ✅
@@ -94,16 +94,15 @@ This file tracks the development progress, sprint status, and overall project st
 - [2025-07-02] Implemented shuffle algorithms (random and intelligent) with proper state preservation
 - [2025-07-02] Added repeat modes (off, all, one) with UI integration and persistence
 - [2025-07-02] Created playlist import/export functionality supporting multiple formats
+- [2025-07-02] Implemented audio routing support for multiple output devices
+- [2025-07-02] Added format conversion capabilities using AVAssetExportSession
 - [2025-07-02] Merged PR #4 into main branch
 
 ---
 
 ## 🔀 Active Pull Requests
 
-- **PR #4**: [Sprint 1: Complete - Story 1.3 Playlist Management & Final Tasks](https://github.com/hfyeomans/WinampClone/pull/4)
-  - Status: Open
-  - Branch: `sprint-1-playlist-management`
-  - Description: Completes Sprint 1 with playlist management and all remaining tasks
+None currently active.
 
 ---
 
@@ -219,10 +218,10 @@ Progress: 100%
 
 ### Task Progress
 ```
-Story 1.1 (Audio Playback Core): 6/7 tasks ✅ (Audio routing pending)
-Story 1.2 (File Format Support): 7/8 tasks ✅ (Format conversion pending)
+Story 1.1 (Audio Playback Core): 7/7 tasks ✅
+Story 1.2 (File Format Support): 8/8 tasks ✅
 Story 1.3 (Playlist Management): 8/8 tasks ✅
-Total Tasks: 21/23 completed (91.3%)
+Total Tasks: 23/23 completed (100%)
 ```
 
 ### Velocity Tracking
@@ -259,4 +258,4 @@ Total Tasks: 21/23 completed (91.3%)
 
 ## 🔄 Last Updated
 
-2025-07-02 - PR #4 merged. Story 1.3 (100% complete) in main. Sprint 1-2 Audio Foundation complete with 91.3% task completion.
+2025-07-02 - PR #4 merged. Sprint 1-2 Audio Foundation fully complete (100% task completion). All audio foundation features including audio routing and format conversion implemented.
