@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 class MetadataExample {
     
@@ -114,8 +118,15 @@ extension Track {
     }
     
     /// Get artwork for this track
+    #if canImport(UIKit)
     func getArtwork() async throws -> UIImage? {
         let artworks = try await MetadataExtractor.shared.extractArtwork(from: url)
         return artworks.first?.image
     }
+    #elseif canImport(AppKit)
+    func getArtwork() async throws -> NSImage? {
+        let artworks = try await MetadataExtractor.shared.extractArtwork(from: url)
+        return artworks.first?.image
+    }
+    #endif
 }

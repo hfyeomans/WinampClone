@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 import AVFoundation
 
 /// Main class responsible for extracting metadata from audio files
