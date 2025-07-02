@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Represents metadata extracted from an audio file
 public struct AudioMetadata: Equatable, Codable {
@@ -87,10 +91,16 @@ public struct AudioArtwork: Equatable {
         case other = "Other"
     }
     
-    /// Converts the artwork data to a UIImage
+    /// Converts the artwork data to a platform image
+    #if canImport(UIKit)
     public var image: UIImage? {
         UIImage(data: data)
     }
+    #elseif canImport(AppKit)
+    public var image: NSImage? {
+        NSImage(data: data)
+    }
+    #endif
     
     public init(data: Data, mimeType: String? = nil, type: ArtworkType = .frontCover) {
         self.data = data

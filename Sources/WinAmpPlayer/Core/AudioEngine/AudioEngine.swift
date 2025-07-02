@@ -9,11 +9,40 @@
 import AVFoundation
 import Combine
 import os.log
+import Accelerate
 
 // MARK: - Notification Names
 
 extension Notification.Name {
     static let audioPlaybackCompleted = Notification.Name("audioPlaybackCompleted")
+}
+
+// MARK: - Audio Visualization Data
+
+/// Data structure containing real-time audio information for visualization
+public struct AudioVisualizationData {
+    /// Time-domain samples for the left channel
+    public let leftChannel: [Float]
+    
+    /// Time-domain samples for the right channel
+    public let rightChannel: [Float]
+    
+    /// Peak level for the left channel (0.0 to 1.0)
+    public let leftPeak: Float
+    
+    /// Peak level for the right channel (0.0 to 1.0)
+    public let rightPeak: Float
+    
+    /// Sample rate of the audio data
+    public let sampleRate: Double
+    
+    /// Timestamp when this data was captured
+    public let timestamp: TimeInterval
+    
+    /// Number of samples per channel
+    public var sampleCount: Int {
+        return leftChannel.count
+    }
 }
 
 /// Errors that can occur during audio playback
@@ -83,6 +112,25 @@ class AudioEngine: ObservableObject {
     @Published var currentTrack: Track?
     @Published var isLoading: Bool = false
     
+    // MARK: - Audio Visualization
+    
+    /// Publisher for real-time audio visualization data
+    public let audioVisualizationDataPublisher = PassthroughSubject<AudioVisualizationData, Never>()
+    
+    /// Last captured visualization data
+    private var lastVisualizationData: AudioVisualizationData?
+    
+    /// Whether audio visualization is enabled
+    @Published var isVisualizationEnabled: Bool = false {
+        didSet {
+            if isVisualizationEnabled {
+                installAudioTap()
+            } else {
+                removeAudioTap()
+            }
+        }
+    }
+    
     // MARK: - Computed Properties
     
     var isPlaying: Bool {
@@ -115,6 +163,13 @@ class AudioEngine: ObservableObject {
     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
     
+    // Audio tap properties
+    private var audioTapInstalled = false
+    private let visualizationQueue = DispatchQueue(label: "com.winamp.visualization", qos: .userInitiated)
+    private let targetVisualizationSamples = 512 // Number of samples for visualization
+    private var lastVisualizationTime: TimeInterval = 0
+    private let visualizationUpdateInterval: TimeInterval = 1.0 / 60.0 // 60 FPS
+    
     // MARK: - Initialization
     
     init() {
@@ -126,6 +181,7 @@ class AudioEngine: ObservableObject {
     }
     
     deinit {
+        removeAudioTap()
         cleanup()
         NotificationCenter.default.removeObserver(self)
     }
@@ -483,6 +539,11 @@ class AudioEngine: ObservableObject {
     }
     
     private func cleanup() {
+        // Remove audio tap if installed
+        if audioTapInstalled {
+            removeAudioTap()
+        }
+        
         // Stop playback
         if audioEngine.isRunning {
             playerNode.stop()
@@ -504,12 +565,218 @@ class AudioEngine: ObservableObject {
         
         logger.info("Audio engine cleaned up")
     }
+    
+    // MARK: - Audio Visualization Methods
+    
+    /// Install an audio tap on the main mixer node to capture real-time audio data
+    private func installAudioTap() {
+        guard !audioTapInstalled else { return }
+        
+        let mainMixer = audioEngine.mainMixerNode
+        let format = mainMixer.outputFormat(forBus: 0)
+        
+        // Ensure we have a valid format
+        guard format.sampleRate > 0 && format.channelCount > 0 else {
+            logger.warning("Invalid audio format for visualization tap")
+            return
+        }
+        
+        // Calculate buffer size for ~60 FPS updates
+        let sampleRate = format.sampleRate
+        let updateInterval = visualizationUpdateInterval
+        let bufferSize = AVAudioFrameCount(sampleRate * updateInterval)
+        
+        mainMixer.installTap(onBus: 0, bufferSize: bufferSize, format: format) { [weak self] buffer, time in
+            self?.processAudioBuffer(buffer, format: format, time: time)
+        }
+        
+        audioTapInstalled = true
+        logger.info("Audio visualization tap installed")
+    }
+    
+    /// Remove the audio tap from the main mixer node
+    private func removeAudioTap() {
+        guard audioTapInstalled else { return }
+        
+        audioEngine.mainMixerNode.removeTap(onBus: 0)
+        audioTapInstalled = false
+        logger.info("Audio visualization tap removed")
+    }
+    
+    /// Process captured audio buffer for visualization
+    private func processAudioBuffer(_ buffer: AVAudioPCMBuffer, format: AVAudioFormat, time: AVAudioTime) {
+        // Rate limit visualization updates
+        let currentTime = CACurrentMediaTime()
+        guard currentTime - lastVisualizationTime >= visualizationUpdateInterval else { return }
+        lastVisualizationTime = currentTime
+        
+        visualizationQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            let frameLength = Int(buffer.frameLength)
+            guard frameLength > 0,
+                  let channelData = buffer.floatChannelData else { return }
+            
+            let channelCount = Int(format.channelCount)
+            let isInterleaved = format.isInterleaved
+            
+            // Extract channel data
+            var leftSamples: [Float] = []
+            var rightSamples: [Float] = []
+            
+            if channelCount == 1 {
+                // Mono: duplicate to both channels
+                let monoData = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
+                leftSamples = self.downsampleIfNeeded(monoData)
+                rightSamples = leftSamples
+            } else if channelCount >= 2 {
+                // Stereo or multi-channel
+                if isInterleaved {
+                    // Deinterleave the data
+                    var left: [Float] = []
+                    var right: [Float] = []
+                    let interleavedData = channelData[0]
+                    
+                    for i in 0..<frameLength {
+                        left.append(interleavedData[i * 2])
+                        right.append(interleavedData[i * 2 + 1])
+                    }
+                    
+                    leftSamples = self.downsampleIfNeeded(left)
+                    rightSamples = self.downsampleIfNeeded(right)
+                } else {
+                    // Non-interleaved
+                    let leftData = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
+                    let rightData = Array(UnsafeBufferPointer(start: channelData[1], count: frameLength))
+                    
+                    leftSamples = self.downsampleIfNeeded(leftData)
+                    rightSamples = self.downsampleIfNeeded(rightData)
+                }
+            }
+            
+            // Apply window function for better FFT results later
+            let windowedLeft = self.applyHammingWindow(to: leftSamples)
+            let windowedRight = self.applyHammingWindow(to: rightSamples)
+            
+            // Calculate peak levels
+            let leftPeak = self.calculatePeakLevel(windowedLeft)
+            let rightPeak = self.calculatePeakLevel(windowedRight)
+            
+            // Create visualization data
+            let visualizationData = AudioVisualizationData(
+                leftChannel: windowedLeft,
+                rightChannel: windowedRight,
+                leftPeak: leftPeak,
+                rightPeak: rightPeak,
+                sampleRate: format.sampleRate,
+                timestamp: currentTime
+            )
+            
+            // Store and publish on main thread
+            DispatchQueue.main.async {
+                self.lastVisualizationData = visualizationData
+                self.audioVisualizationDataPublisher.send(visualizationData)
+            }
+        }
+    }
+    
+    /// Downsample audio data if needed to reduce data volume
+    private func downsampleIfNeeded(_ samples: [Float]) -> [Float] {
+        guard samples.count > targetVisualizationSamples else {
+            return samples
+        }
+        
+        // Simple downsampling by averaging
+        let downsampleFactor = samples.count / targetVisualizationSamples
+        var downsampled: [Float] = []
+        downsampled.reserveCapacity(targetVisualizationSamples)
+        
+        for i in 0..<targetVisualizationSamples {
+            let startIdx = i * downsampleFactor
+            let endIdx = min((i + 1) * downsampleFactor, samples.count)
+            
+            if startIdx < endIdx {
+                let sum = samples[startIdx..<endIdx].reduce(0, +)
+                let average = sum / Float(endIdx - startIdx)
+                downsampled.append(average)
+            }
+        }
+        
+        return downsampled
+    }
+    
+    /// Apply Hamming window to samples for better FFT results
+    private func applyHammingWindow(to samples: [Float]) -> [Float] {
+        let count = samples.count
+        guard count > 0 else { return samples }
+        
+        var windowed = samples
+        let factor = 2.0 * Float.pi / Float(count - 1)
+        
+        for i in 0..<count {
+            let window = 0.54 - 0.46 * cos(Float(i) * factor)
+            windowed[i] *= window
+        }
+        
+        return windowed
+    }
+    
+    /// Calculate peak level from samples (RMS with decay)
+    private func calculatePeakLevel(_ samples: [Float]) -> Float {
+        guard !samples.isEmpty else { return 0 }
+        
+        // Calculate RMS (Root Mean Square)
+        var sum: Float = 0
+        vDSP_measqv(samples, 1, &sum, vDSP_Length(samples.count))
+        let rms = sqrt(sum / Float(samples.count))
+        
+        // Normalize to 0-1 range (assuming -1 to 1 input range)
+        // RMS of a full-scale sine wave is 1/sqrt(2) ≈ 0.707
+        let normalizedRMS = min(rms * 1.414, 1.0)
+        
+        return normalizedRMS
+    }
+    
+    /// Enable audio visualization
+    public func enableVisualization() {
+        isVisualizationEnabled = true
+    }
+    
+    /// Disable audio visualization
+    public func disableVisualization() {
+        isVisualizationEnabled = false
+    }
+    
+    /// Get frequency data for spectrum analyzer
+    /// - Returns: Array of frequency magnitudes (0.0 to 1.0)
+    public func getFrequencyData() -> [Float] {
+        guard isVisualizationEnabled,
+              let lastVisualizationData = lastVisualizationData else {
+            return []
+        }
+        
+        // For now, return a simple frequency representation
+        // In a full implementation, this would use FFT
+        let frequencies = lastVisualizationData.leftChannel.map { abs($0) }
+        return frequencies
+    }
+    
+    /// Get waveform data for oscilloscope
+    /// - Returns: Array of waveform samples (-1.0 to 1.0)
+    public func getWaveformData() -> [Float] {
+        guard isVisualizationEnabled,
+              let lastVisualizationData = lastVisualizationData else {
+            return []
+        }
+        
+        // Return the left channel waveform data
+        return lastVisualizationData.leftChannel
+    }
 }
 
-// MARK: - Notifications
+// MARK: - Additional Notifications
 
 extension Notification.Name {
-    static let audioPlaybackCompleted = Notification.Name("audioPlaybackCompleted")
     static let audioPlaybackStateChanged = Notification.Name("audioPlaybackStateChanged")
     static let audioPlaybackError = Notification.Name("audioPlaybackError")
 }

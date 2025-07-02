@@ -353,12 +353,16 @@ public struct MainPlayerView: View {
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
     @StateObject private var windowCommunicator = WindowCommunicator.shared
+    @StateObject private var fftProcessor = FFTProcessor()
     
     // UI State
     @State private var isTimerMode = false
     @State private var seekProgress: Double = 0
     @State private var volume: Float = 0.7
     @State private var balance: Float = 0.0
+    @State private var visualizationMode: VisualizationMode = .spectrum
+    @State private var isVisualizationVisible = true
+    @State private var visualizationData: AudioVisualizationData?
     
     // Track info
     @State private var currentTrack: Track?
@@ -385,9 +389,47 @@ public struct MainPlayerView: View {
                 maxSize: CGSize(width: 275, height: 116)
             )
         ) {
-            VStack(spacing: 4) {
-                // Top section with LCD display and clutterbar
-                HStack(spacing: 4) {
+            VStack(spacing: 0) {
+                // Visualization area (classic WinAmp position)
+                if isVisualizationVisible {
+                    HStack(spacing: 4) {
+                        // Visualization display
+                        SimpleVisualizationView(
+                            mode: $visualizationMode,
+                            audioEngine: audioEngine
+                        )
+                        .frame(height: 16)
+                        .background(Color.black)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 1)
+                                .stroke(WinAmpColors.border, lineWidth: 1)
+                        )
+                        
+                        // Mode toggle button
+                        Button(action: {
+                            visualizationMode = visualizationMode == .spectrum ? .oscilloscope : .spectrum
+                        }) {
+                            Image(systemName: visualizationMode == .spectrum ? "waveform.path.ecg" : "waveform")
+                                .font(.system(size: 8))
+                                .foregroundColor(WinAmpColors.text)
+                                .frame(width: 20, height: 16)
+                                .background(WinAmpColors.backgroundLight)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .stroke(WinAmpColors.border, lineWidth: 1)
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.top, 4)
+                    .padding(.bottom, 2)
+                }
+                
+                // Main content area
+                VStack(spacing: 4) {
+                    // Top section with LCD display and clutterbar
+                    HStack(spacing: 4) {
                     // LCD Display
                     LCDDisplay(
                         currentTime: formatTime(audioEngine.currentTime),
@@ -409,7 +451,7 @@ public struct MainPlayerView: View {
                             // File menu
                         }
                         ClutterbarButton(icon: "waveform") {
-                            // Visualization
+                            isVisualizationVisible.toggle()
                         }
                     }
                     .padding(.trailing, 4)
@@ -513,6 +555,7 @@ public struct MainPlayerView: View {
                 }
                 .padding(.horizontal, 8)
                 .padding(.bottom, 4)
+                }
             }
             .frame(width: 275, height: 116)
             .background(WinAmpColors.background)
@@ -536,6 +579,9 @@ public struct MainPlayerView: View {
     private func setupAudioEngine() {
         audioEngine.setVolumeController(volumeController)
         audioEngine.volume = volume
+        
+        // Enable visualization
+        audioEngine.enableVisualization()
         
         // Register window
         WindowCommunicator.shared.registerWindow("main")
@@ -675,6 +721,123 @@ public struct MainPlayerView: View {
             balance: balance,
             from: "main"
         )
+    }
+}
+
+// MARK: - Simple Visualization View
+
+struct SimpleVisualizationView: View {
+    @Binding var mode: VisualizationMode
+    @ObservedObject var audioEngine: AudioEngine
+    @State private var barHeights: [CGFloat] = Array(repeating: 0, count: 16)
+    @State private var waveformPoints: [CGFloat] = Array(repeating: 0.5, count: 32)
+    
+    let timer = Timer.publish(every: 0.05, on: .main, in: .common).autoconnect()
+    
+    var body: some View {
+        GeometryReader { geometry in
+            if mode == .spectrum {
+                // Spectrum analyzer bars
+                HStack(spacing: 1) {
+                    ForEach(0..<barHeights.count, id: \.self) { index in
+                        VStack(spacing: 0) {
+                            Spacer()
+                            Rectangle()
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            WinAmpColors.accent,
+                                            WinAmpColors.text
+                                        ]),
+                                        startPoint: .bottom,
+                                        endPoint: .top
+                                    )
+                                )
+                                .frame(height: barHeights[index] * geometry.size.height)
+                        }
+                    }
+                }
+            } else {
+                // Oscilloscope waveform
+                Path { path in
+                    let width = geometry.size.width
+                    let height = geometry.size.height
+                    let stepX = width / CGFloat(waveformPoints.count - 1)
+                    
+                    path.move(to: CGPoint(x: 0, y: waveformPoints[0] * height))
+                    
+                    for i in 1..<waveformPoints.count {
+                        path.addLine(to: CGPoint(x: CGFloat(i) * stepX, y: waveformPoints[i] * height))
+                    }
+                }
+                .stroke(WinAmpColors.text, lineWidth: 1)
+            }
+        }
+        .onReceive(timer) { _ in
+            updateVisualization()
+        }
+        .onReceive(audioEngine.audioVisualizationDataPublisher) { data in
+            updateVisualizationWithData(data)
+        }
+    }
+    
+    private func updateVisualization() {
+        if audioEngine.isPlaying {
+            if mode == .spectrum {
+                // Simulate spectrum data with random variations
+                for i in 0..<barHeights.count {
+                    let targetHeight = CGFloat.random(in: 0.1...0.8) * 
+                                      (1.0 - CGFloat(i) / CGFloat(barHeights.count))
+                    barHeights[i] = barHeights[i] * 0.7 + targetHeight * 0.3
+                }
+            } else {
+                // Simulate waveform with sine wave variations
+                let phase = Date().timeIntervalSince1970 * 2
+                for i in 0..<waveformPoints.count {
+                    let x = Double(i) / Double(waveformPoints.count - 1)
+                    let wave = sin(x * .pi * 4 + phase) * 0.3 + 0.5
+                    waveformPoints[i] = CGFloat(wave)
+                }
+            }
+        } else {
+            // Decay to zero when not playing
+            if mode == .spectrum {
+                for i in 0..<barHeights.count {
+                    barHeights[i] *= 0.9
+                }
+            } else {
+                for i in 0..<waveformPoints.count {
+                    waveformPoints[i] = waveformPoints[i] * 0.9 + 0.5 * 0.1
+                }
+            }
+        }
+    }
+    
+    private func updateVisualizationWithData(_ data: AudioVisualizationData) {
+        // If we have real audio data, use it
+        if mode == .spectrum && !data.leftChannel.isEmpty {
+            // Convert time-domain to frequency-domain using simple averaging
+            let samplesPerBar = data.leftChannel.count / barHeights.count
+            for i in 0..<barHeights.count {
+                var sum: Float = 0
+                let start = i * samplesPerBar
+                let end = min((i + 1) * samplesPerBar, data.leftChannel.count)
+                
+                for j in start..<end {
+                    sum += abs(data.leftChannel[j])
+                }
+                
+                let average = sum / Float(samplesPerBar)
+                barHeights[i] = CGFloat(average)
+            }
+        } else if mode == .oscilloscope && !data.leftChannel.isEmpty {
+            // Use waveform data directly
+            let step = data.leftChannel.count / waveformPoints.count
+            for i in 0..<waveformPoints.count {
+                let index = min(i * step, data.leftChannel.count - 1)
+                waveformPoints[i] = CGFloat(data.leftChannel[index]) * 0.5 + 0.5
+            }
+        }
     }
 }
 

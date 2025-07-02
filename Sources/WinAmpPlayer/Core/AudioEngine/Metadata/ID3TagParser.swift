@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Parser for ID3v1 and ID3v2 tags
 public class ID3TagParser: MetadataExtractorProtocol {
