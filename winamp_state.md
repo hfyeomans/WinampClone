@@ -162,6 +162,22 @@ This file tracks the development progress, sprint status, and overall project st
 
 None currently active.
 
+## 🎉 Completed Sprints
+
+### Sprint 1-2: Audio Foundation (Weeks 1-4)
+- **Completed**: 2025-07-02
+- **Stories**: Audio Playback Core, File Format Support, Playlist Management
+- **Tasks**: 23/23 completed (100%)
+- **Velocity**: 24 story points
+- **PR**: #4 (merged)
+
+### Sprint 3-4: Classic UI Implementation (Weeks 5-8)
+- **Completed**: 2025-07-02
+- **Stories**: Window Management System, Main Player Window, Visualization System
+- **Tasks**: 24/24 completed (100%)
+- **Velocity**: 24 story points
+- **PR**: #5 (merged)
+
 ---
 
 ## 📁 Current Project Structure
@@ -317,4 +333,4 @@ Total Tasks: 24/24 completed (100%)
 
 ## 🔄 Last Updated
 
-2025-07-02 - Completed Sprint 2 (Classic UI Implementation) with 100% task completion. Story 2.3 (Visualization System) fully implemented with FFT processing, Metal rendering, and plugin API. All 24 tasks completed successfully.
+2025-07-02 - PR #5 merged. Sprint 3-4 (Classic UI Implementation) complete. Ready to start Sprint 5 (Secondary Windows).
