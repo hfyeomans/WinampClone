@@ -1,6 +1,7 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
+import Combine
 
 /// Manages AVAudioSession configuration and handles audio-related system events
 public final class AudioSessionManager {
@@ -16,6 +17,12 @@ public final class AudioSessionManager {
     private var routeChangeObserver: NSObjectProtocol?
     private var mediaServicesResetObserver: NSObjectProtocol?
     private var mediaServicesLostObserver: NSObjectProtocol?
+    
+    /// Audio output manager instance
+    private let outputManager = AudioOutputManager.shared
+    
+    /// Cancellables for Combine subscriptions
+    private var cancellables = Set<AnyCancellable>()
     
     /// Current audio session category
     public private(set) var currentCategory: AVAudioSession.Category = .playback
@@ -48,10 +55,12 @@ public final class AudioSessionManager {
     private init() {
         setupObservers()
         setupRemoteTransportControls()
+        setupOutputManagerIntegration()
     }
     
     deinit {
         removeObservers()
+        cancellables.removeAll()
     }
     
     // MARK: - Public Methods
@@ -59,7 +68,7 @@ public final class AudioSessionManager {
     /// Configure audio session for music playback
     @discardableResult
     public func configureForMusicPlayback() -> Bool {
-        return configureSession(category: .playback, mode: .default, options: [.allowBluetooth, .allowBluetoothA2DP])
+        return configureSession(category: .playback, mode: .default, options: [.allowBluetooth, .allowBluetoothA2DP, .allowAirPlay])
     }
     
     /// Configure audio session with custom settings
@@ -127,6 +136,33 @@ public final class AudioSessionManager {
     /// Get current audio route
     public var currentRoute: AVAudioSessionRouteDescription {
         return audioSession.currentRoute
+    }
+    
+    /// Get available output devices
+    public var availableOutputDevices: [AudioOutputManager.AudioOutputDevice] {
+        return outputManager.availableOutputDevices
+    }
+    
+    /// Get current output device
+    public var currentOutputDevice: AudioOutputManager.AudioOutputDevice? {
+        return outputManager.currentOutputDevice
+    }
+    
+    /// Switch to a specific output device
+    @discardableResult
+    public func switchToOutputDevice(_ device: AudioOutputManager.AudioOutputDevice) -> Bool {
+        return outputManager.switchToDevice(device)
+    }
+    
+    /// Enable multi-output for simultaneous playback
+    @discardableResult
+    public func enableMultiOutput(devices: [AudioOutputManager.AudioOutputDevice], mirroring: Bool = true) -> Bool {
+        return outputManager.enableMultiOutput(devices: devices, mirroring: mirroring)
+    }
+    
+    /// Disable multi-output
+    public func disableMultiOutput() {
+        outputManager.disableMultiOutput()
     }
     
     /// Update Now Playing info
@@ -355,6 +391,10 @@ public final class AudioSessionManager {
             
         case .newDeviceAvailable:
             // New device available (e.g., headphones plugged in)
+            // Optionally switch to the new device automatically
+            if let preferredDevice = outputManager.preferredOutputDevice {
+                outputManager.switchToDevice(preferredDevice)
+            }
             break
             
         case .override:
@@ -380,6 +420,31 @@ public final class AudioSessionManager {
         onMediaServicesLost?()
         isSessionActive = false
     }
+    
+    private func setupOutputManagerIntegration() {
+        // Subscribe to output manager events
+        outputManager.deviceConnectionPublisher
+            .sink { [weak self] deviceEvent in
+                print("Device \(deviceEvent.device.name) \(deviceEvent.connected ? "connected" : "disconnected")")
+                
+                // Handle device connections
+                if deviceEvent.connected {
+                    // Optionally auto-switch to newly connected device based on preferences
+                    if deviceEvent.device.portType == .headphones ||
+                       deviceEvent.device.portType == .bluetoothA2DP {
+                        self?.outputManager.switchToDevice(deviceEvent.device)
+                    }
+                }
+            }
+            .store(in: &cancellables)
+        
+        outputManager.routeChangePublisher
+            .sink { [weak self] reason in
+                // Additional handling for route changes if needed
+                print("Route changed: \(reason)")
+            }
+            .store(in: &cancellables)
+    }
 }
 
 // MARK: - AudioEngine Integration Extension
@@ -390,6 +455,23 @@ extension AudioSessionManager {
     public func prepareForAudioEngine() -> Bool {
         guard configureForMusicPlayback() else { return false }
         return activateSession()
+    }
+    
+    /// Check if any wireless audio device is connected
+    public var isWirelessAudioConnected: Bool {
+        return outputManager.isBluetoothConnected || outputManager.isAirPlayAvailable
+    }
+    
+    /// Get all wireless audio devices
+    public var wirelessAudioDevices: [AudioOutputManager.AudioOutputDevice] {
+        return outputManager.bluetoothDevices + outputManager.airPlayDevices
+    }
+    
+    /// Handle AirPlay selection
+    public func showAirPlayPicker() {
+        // This would typically show the system AirPlay picker
+        // Implementation depends on UI framework (UIKit/SwiftUI)
+        print("AirPlay picker requested - implement UI integration")
     }
     
     /// Handle AudioEngine state changes

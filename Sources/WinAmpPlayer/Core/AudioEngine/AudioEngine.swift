@@ -10,6 +10,12 @@ import AVFoundation
 import Combine
 import os.log
 
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let audioPlaybackCompleted = Notification.Name("audioPlaybackCompleted")
+}
+
 /// Errors that can occur during audio playback
 enum AudioEngineError: LocalizedError {
     case fileNotFound
