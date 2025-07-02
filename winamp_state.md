@@ -81,15 +81,13 @@ This file tracks the development progress, sprint status, and overall project st
 - [2025-01-28] Integrated decoders with AudioEngine for seamless format support
 - [2025-01-28] Added comprehensive error handling for unsupported formats
 - [2025-01-28] Created AudioFormatDetector for automatic format identification
+- [2025-01-28] Merged PR #3 into main branch
 
 ---
 
 ## 🔀 Active Pull Requests
 
-- **PR #3**: [Sprint 1: Story 1.2 - Complete File Format Support](https://github.com/hfyeomans/WinampClone/pull/3)
-  - Status: Open
-  - Branch: `sprint-1-file-format-support`
-  - Description: Comprehensive file format support with metadata extraction for all major audio formats
+None currently active.
 
 ---
 
@@ -245,4 +243,4 @@ Total Tasks: 13/23 completed (56.5%)
 
 ## 🔄 Last Updated
 
-2025-01-28 - Story 1.2 (File Format Support) completed (87.5%). Comprehensive audio format support with metadata extraction implemented.
+2025-01-28 - PR #3 merged. Story 1.2 (87.5% complete) in main. Starting Story 1.3 (Playlist Management).
