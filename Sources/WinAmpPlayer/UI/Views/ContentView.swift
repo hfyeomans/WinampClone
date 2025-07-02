@@ -27,12 +27,14 @@ struct ContentView: View {
     ]
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
+    @StateObject private var playlist = Playlist(name: "Main Playlist")
     
     @State private var isDraggingSeekBar = false
     @State private var seekPosition: Double = 0
     @State private var showOpenPanel = false
     @State private var errorMessage: String?
     @State private var showError = false
+    @State private var showPlaylist = false
     
     init() {
         let engine = AudioEngine()
@@ -95,10 +97,16 @@ struct ContentView: View {
             )
             
             // Equalizer and Playlist toggles
-            ToggleButtonsView()
+            ToggleButtonsView(
+                showEqualizer: .constant(false),
+                showPlaylist: $showPlaylist
+            )
         }
         .background(Color.black)
         .frame(width: 275, height: 116)
+        .sheet(isPresented: $showPlaylist) {
+            PlaylistWindowView(playlist: playlist)
+        }
         .alert("Error", isPresented: $showError) {
             Button("OK") { showError = false }
         } message: {
@@ -163,15 +171,21 @@ struct ContentView: View {
     }
     
     private func previousTrack() {
-        // Skip backward 10 seconds for now
-        // In a full implementation, this would go to the previous track in a playlist
-        audioEngine.skipBackward()
+        if let track = playlist.selectPreviousTrack() {
+            loadTrack(track)
+        } else {
+            // If no previous track, skip backward in current track
+            audioEngine.skipBackward()
+        }
     }
     
     private func nextTrack() {
-        // Skip forward 10 seconds for now
-        // In a full implementation, this would go to the next track in a playlist
-        audioEngine.skipForward()
+        if let track = playlist.selectNextTrack() {
+            loadTrack(track)
+        } else {
+            // If no next track, skip forward in current track
+            audioEngine.skipForward()
+        }
     }
     
     private func stopPlayback() {
@@ -189,6 +203,11 @@ struct ContentView: View {
             Task {
                 do {
                     try await audioEngine.loadURL(url)
+                    // Add to playlist if successfully loaded
+                    if let track = Track(from: url) {
+                        playlist.addTrack(track)
+                        playlist.currentTrackIndex = playlist.tracks.count - 1
+                    }
                 } catch {
                     await MainActor.run {
                         errorMessage = error.localizedDescription
@@ -214,6 +233,11 @@ struct ContentView: View {
             Task {
                 do {
                     try await audioEngine.loadURL(url)
+                    // Add to playlist if successfully loaded
+                    if let track = Track(from: url) {
+                        playlist.addTrack(track)
+                        playlist.currentTrackIndex = playlist.tracks.count - 1
+                    }
                 } catch {
                     await MainActor.run {
                         errorMessage = error.localizedDescription
@@ -403,8 +427,8 @@ struct VolumeBalanceView: View {
 }
 
 struct ToggleButtonsView: View {
-    @State private var showEqualizer = false
-    @State private var showPlaylist = false
+    @Binding var showEqualizer: Bool
+    @Binding var showPlaylist: Bool
     
     var body: some View {
         HStack {
@@ -476,6 +500,39 @@ struct SeekBar: View {
         guard duration > 0 else { return 0 }
         let progress = isDragging ? seekPosition / duration : currentTime / duration
         return CGFloat(progress) * totalWidth
+    }
+}
+
+    private func loadTrack(_ track: Track) {
+        guard let url = track.fileURL else { return }
+        Task {
+            do {
+                try await audioEngine.loadURL(url)
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Playlist Window
+
+struct PlaylistWindowView: View {
+    @ObservedObject var playlist: Playlist
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            PlaylistControlsView(playlist: playlist)
+                .frame(height: 26)
+            
+            PlaylistView(playlist: playlist)
+                .frame(minWidth: 550, minHeight: 300)
+        }
+        .background(Color(red: 0.11, green: 0.11, blue: 0.11))
+        .preferredColorScheme(.dark)
     }
 }
 

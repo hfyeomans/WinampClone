@@ -3,6 +3,7 @@ import AVFoundation
 import Combine
 
 /// Manages audio queue with seamless transitions, crossfading, and prebuffering
+/// Works in conjunction with Playlist model for advanced queue management
 final class AudioQueueManager: ObservableObject {
     
     // MARK: - Properties
@@ -13,6 +14,10 @@ final class AudioQueueManager: ObservableObject {
     @Published private(set) var queueHistory: [Track] = []
     @Published private(set) var isShuffleEnabled: Bool = false
     @Published private(set) var crossfadeDuration: TimeInterval = 3.0
+    
+    // Playlist integration
+    private weak var currentPlaylist: Playlist?
+    private var playlistCancellables = Set<AnyCancellable>()
     
     private let audioEngine: AudioEngine
     private var currentPlayer: AVAudioPlayerNode?
@@ -125,6 +130,23 @@ final class AudioQueueManager: ObservableObject {
     
     // MARK: - Playback Control
     
+    /// Set the current playlist for queue management
+    func setPlaylist(_ playlist: Playlist?) {
+        currentPlaylist = playlist
+        
+        // Clear previous subscriptions
+        playlistCancellables.removeAll()
+        
+        // Subscribe to playlist changes if available
+        if let playlist = playlist {
+            playlist.$shuffleMode
+                .sink { [weak self] mode in
+                    self?.isShuffleEnabled = mode != .off
+                }
+                .store(in: &playlistCancellables)
+        }
+    }
+    
     /// Play a specific track and set up the queue
     func play(track: Track, in tracks: [Track]) {
         clearQueue()
@@ -151,6 +173,15 @@ final class AudioQueueManager: ObservableObject {
     func skipToNext() {
         addToHistory(currentTrack)
         
+        // If we have a playlist, use its navigation
+        if let playlist = currentPlaylist {
+            if let next = playlist.selectNextTrack() {
+                transitionToTrack(next)
+                return
+            }
+        }
+        
+        // Otherwise use internal queue logic
         if let next = getNextTrack() {
             transitionToTrack(next)
         }
@@ -158,6 +189,15 @@ final class AudioQueueManager: ObservableObject {
     
     /// Skip to the previous track
     func skipToPrevious() {
+        // If we have a playlist, use its navigation
+        if let playlist = currentPlaylist {
+            if let previous = playlist.selectPreviousTrack() {
+                transitionToTrack(previous)
+                return
+            }
+        }
+        
+        // Otherwise use history
         if let previous = queueHistory.popLast() {
             if let current = currentTrack {
                 queue.insert(current, at: 0)
@@ -212,10 +252,11 @@ final class AudioQueueManager: ObservableObject {
         
         do {
             // Use prebuffered file if available
-            if let bufferedFile = prebufferedFiles[track.url] {
+            guard let url = track.fileURL else { return }
+            if let bufferedFile = prebufferedFiles[url] {
                 currentFile = bufferedFile
             } else {
-                currentFile = try AVAudioFile(forReading: track.url)
+                currentFile = try AVAudioFile(forReading: url)
             }
             
             guard let file = currentFile else { return }
@@ -250,11 +291,12 @@ final class AudioQueueManager: ObservableObject {
             
             do {
                 // Use prebuffered file if available
-                if let bufferedFile = prebufferedFiles[next.url] {
+                guard let url = next.fileURL else { return }
+                if let bufferedFile = prebufferedFiles[url] {
                     nextFile = bufferedFile
                 } else {
-                    nextFile = try AVAudioFile(forReading: next.url)
-                    prebufferedFiles[next.url] = nextFile
+                    nextFile = try AVAudioFile(forReading: url)
+                    prebufferedFiles[url] = nextFile
                 }
                 
                 guard let file = nextFile else { return }
@@ -401,11 +443,12 @@ final class AudioQueueManager: ObservableObject {
                 let track = queue[i]
                 
                 // Skip if already buffered
-                if prebufferedFiles[track.url] != nil { continue }
+                guard let url = track.fileURL else { continue }
+                if prebufferedFiles[url] != nil { continue }
                 
                 do {
-                    let file = try AVAudioFile(forReading: track.url)
-                    prebufferedFiles[track.url] = file
+                    let file = try AVAudioFile(forReading: url)
+                    prebufferedFiles[url] = file
                 } catch {
                     print("Error prebuffering track: \(error)")
                 }
@@ -419,7 +462,7 @@ final class AudioQueueManager: ObservableObject {
     private func cleanupPrebufferedFiles() {
         let currentAndUpcoming = Set(
             queue[queueState.currentIndex..<min(queueState.currentIndex + prebufferSize + 1, queue.count)]
-                .map { $0.url }
+                .compactMap { $0.fileURL }
         )
         
         prebufferedFiles = prebufferedFiles.filter { currentAndUpcoming.contains($0.key) }
@@ -467,13 +510,13 @@ private final class QueuePersistence {
     
     struct PersistedState: Codable {
         let queue: [Track]
-        let currentTrackId: String?
+        let currentTrackId: UUID?
         let history: [Track]
         let isShuffleEnabled: Bool
         let crossfadeDuration: TimeInterval
     }
     
-    func save(queue: [Track], currentTrackId: String?, history: [Track], isShuffleEnabled: Bool, crossfadeDuration: TimeInterval) {
+    func save(queue: [Track], currentTrackId: UUID?, history: [Track], isShuffleEnabled: Bool, crossfadeDuration: TimeInterval) {
         let state = PersistedState(
             queue: queue,
             currentTrackId: currentTrackId,
