@@ -100,7 +100,10 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🔀 Active Pull Requests
 
-None currently active.
+- **PR #4**: [Sprint 1: Complete - Story 1.3 Playlist Management & Final Tasks](https://github.com/hfyeomans/WinampClone/pull/4)
+  - Status: Open
+  - Branch: `sprint-1-playlist-management`
+  - Description: Completes Sprint 1 with playlist management and all remaining tasks
 
 ---
 
