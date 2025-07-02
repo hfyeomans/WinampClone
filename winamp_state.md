@@ -6,11 +6,43 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🎯 Current Sprint
 
-**Sprint**: Sprint 1-2 - Audio Foundation  
-**Duration**: Weeks 1-4 (Started 2025-01-28)  
-**Sprint Goal**: Build a robust audio playback engine supporting multiple formats with professional-grade features  
+**Sprint**: Sprint 3-4 - Classic UI Implementation  
+**Duration**: Weeks 5-8 (Started 2025-07-02)  
+**Sprint Goal**: Recreate the iconic WinAmp interface with authentic look and feel  
 
 ### Active Stories
+
+#### Story 2.1: Window Management System ⏳
+- [x] Create modular window framework with SwiftUI
+- [x] Implement window snapping/docking with magnetic edges
+- [x] Add window state persistence across launches
+- [x] Create inter-window communication system
+- [x] Implement window shade mode
+- [x] Add always-on-top functionality
+- [x] Create window transparency controls
+- [x] Implement multi-monitor support
+
+#### Story 2.2: Main Player Window ⏳
+- [ ] Design main window layout matching classic dimensions
+- [ ] Implement transport controls with state management
+- [ ] Create time display with custom bitmap font rendering
+- [ ] Add seek bar with real-time position tracking
+- [ ] Implement volume slider with 0-100 range
+- [ ] Add balance slider with center detent
+- [ ] Create mono/stereo indicator
+- [ ] Implement kbps/khz display
+- [ ] Add clutterbar functionality
+
+#### Story 2.3: Visualization System ⏳
+- [ ] Implement FFT-based spectrum analyzer
+- [ ] Create oscilloscope view
+- [ ] Add visualization switching system
+- [ ] Implement visualization plugins API
+- [ ] Optimize rendering with Metal
+- [ ] Add FPS limiter for efficiency
+- [ ] Create visualization recorder
+
+### Previously Completed Stories
 
 #### Story 1.1: Audio Playback Core ✅
 - [x] Set up AVFoundation audio player with proper session management
@@ -44,6 +76,17 @@ This file tracks the development progress, sprint status, and overall project st
 ---
 
 ## ✅ Completed Tasks
+
+### Sprint 2: Classic UI Implementation
+- [2025-07-02] Created WindowManager for modular window management
+- [2025-07-02] Implemented window snapping/docking with 20px magnetic edges
+- [2025-07-02] Added window state persistence using UserDefaults
+- [2025-07-02] Created WindowCommunicator for inter-window messaging
+- [2025-07-02] Implemented WinAmpWindow base view with classic styling
+- [2025-07-02] Added shade mode animation support
+- [2025-07-02] Implemented always-on-top and transparency controls
+- [2025-07-02] Added multi-monitor support with screen tracking
+- [2025-07-02] Created comprehensive test suite for window management
 
 ### Project Initialization
 - [2025-01-28] Created project state tracking file (`winamp_state.md`)
@@ -211,22 +254,23 @@ None at this time.
 ### Sprint Burndown
 ```
 Total Story Points: 24 (3 stories × 8 points each)
-Completed: 24 (Story 1.1 + Story 1.2 + Story 1.3)
-Remaining: 0
-Progress: 100%
+Completed: 8 (Story 2.1)
+Remaining: 16
+Progress: 33.3%
 ```
 
 ### Task Progress
 ```
-Story 1.1 (Audio Playback Core): 7/7 tasks ✅
-Story 1.2 (File Format Support): 8/8 tasks ✅
-Story 1.3 (Playlist Management): 8/8 tasks ✅
-Total Tasks: 23/23 completed (100%)
+Story 2.1 (Window Management System): 8/8 tasks ✅
+Story 2.2 (Main Player Window): 0/9 tasks
+Story 2.3 (Visualization System): 0/7 tasks
+Total Tasks: 8/24 completed (33.3%)
 ```
 
 ### Velocity Tracking
-- Sprint 1-2: In Progress
-- Average Velocity: N/A
+- Sprint 1-2: 24 points completed
+- Sprint 3-4: In Progress
+- Average Velocity: 24 points/sprint
 
 ---
 
@@ -258,4 +302,4 @@ Total Tasks: 23/23 completed (100%)
 
 ## 🔄 Last Updated
 
-2025-07-02 - PR #4 merged. Sprint 1-2 Audio Foundation fully complete (100% task completion). All audio foundation features including audio routing and format conversion implemented.
+2025-07-02 - Completed Story 2.1 (Window Management System) with all 8 tasks. Created WindowManager, WindowCommunicator, and WinAmpWindow components with full test coverage.
