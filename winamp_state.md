@@ -68,14 +68,57 @@ The macOS refactoring has made significant progress:
 - ✅ Major UI component conflicts resolved
 - ✅ Protocol conformance issues fixed
 
-**Remaining Issues:**
-- ComparisonOperator ambiguity between modules (partially fixed)
-- Some method visibility issues need adjustment
-- Minor API usage updates needed
+**Remaining Minor Issues to Address Incrementally:**
+
+1. **Type Ambiguity Issues** (~50% of remaining errors)
+   - `ComparisonOperator` exists in both Playlist.swift and SmartPlaylistRule.swift
+   - *Incremental Fix*: Consider creating a shared Types module or using typealiases
+   - *Affected Files*: SmartPlaylistRule.swift, Playlist.swift, SmartPlaylistEngine.swift
+
+2. **Method Visibility Issues** (~20% of remaining errors)
+   - Several internal properties accessed from public methods
+   - `playerNode` in AudioEngine needs to be internal/public for plugins
+   - *Incremental Fix*: Review access levels file by file
+   - *Affected Files*: AudioEngine.swift, MetadataExtractor.swift
+
+3. **Missing Method Arguments** (~15% of remaining errors)
+   - Some calls missing 'from' parameter in audio decoder methods
+   - *Incremental Fix*: Update call sites to match method signatures
+   - *Affected Files*: Various decoder files
+
+4. **Deprecated API Usage** (~10% of remaining errors)
+   - AVAsset metadata APIs need async versions
+   - Some AppKit APIs need updating for macOS 14+
+   - *Incremental Fix*: Update one API at a time with proper testing
+   - *Affected Files*: Track.swift, AIFFDecoder.swift, MetadataExtractor.swift
+
+5. **Plugin System Type Issues** (~5% of remaining errors)
+   - VisualizationPlugin protocol has nested type issues
+   - CoreGraphics context needs proper typing
+   - *Incremental Fix*: Refactor plugin protocols separately
+   - *Affected Files*: VisualizationPlugin.swift, CoreGraphicsRenderContext.swift
+
+**Recommended Incremental Approach:**
+1. Start with type ambiguity - has biggest impact
+2. Fix method visibility - improves API design
+3. Update method calls - quick wins
+4. Modernize deprecated APIs - ensures future compatibility
+5. Refactor plugin system - can be done independently
 
 The codebase is now substantially closer to full macOS compatibility, with the core audio system completely refactored.
 
-### Critical Issues Remaining 🚨
+### Next Steps for Completion 📋
+
+**Create GitHub Issues for Each Category:**
+1. Issue: "Fix Type Ambiguity - ComparisonOperator" (Priority: High)
+2. Issue: "Review and Fix Method Visibility" (Priority: Medium)
+3. Issue: "Update Method Call Sites" (Priority: Low)
+4. Issue: "Modernize Deprecated APIs" (Priority: Medium)
+5. Issue: "Refactor Plugin System Types" (Priority: Low)
+
+Each issue should reference the specific files and error patterns documented above.
+
+### Critical Issues Resolved ✅
 
 #### iOS APIs in macOS Application
 The project uses iOS-specific `AVAudioSession` APIs that don't exist on macOS:
@@ -83,14 +126,16 @@ The project uses iOS-specific `AVAudioSession` APIs that don't exist on macOS:
 - ~~**AudioOutputManager.swift** - iOS-specific output routing~~ ✅ Removed - Replaced with macOSAudioDeviceManager
 - ~~**AudioSessionManager.swift** - iOS session handling~~ ✅ Removed - Replaced with macOSAudioSystemManager
 
-#### Additional Compilation Errors
-1. **AudioDecoderFactory.swift:160** - Method signature mismatch
-2. **MainPlayerView.swift:355-356** - Missing ObservableObject conformance
-3. **AIFFDecoder.swift** - Deprecated API usage
-4. **ID3v1Parser.swift** - Duplicate declarations
-5. **MP4MetadataParser.swift** - Non-unique enum raw values
-6. **NSCache** - Type mismatch (requires classes, not structs)
-7. Multiple files missing `import Combine`
+#### Additional Compilation Errors (Mostly Resolved)
+1. ~~**AudioDecoderFactory.swift:160** - Method signature mismatch~~ ✅ Fixed
+2. ~~**MainPlayerView.swift:355-356** - Missing ObservableObject conformance~~ ✅ Fixed
+3. **AIFFDecoder.swift** - Deprecated API usage ⚠️ Documented for incremental fix
+4. ~~**ID3v1Parser.swift** - Duplicate declarations~~ ✅ Fixed
+5. ~~**MP4MetadataParser.swift** - Non-unique enum raw values~~ ✅ Fixed
+6. ~~**NSCache** - Type mismatch (requires classes, not structs)~~ ✅ Fixed with wrapper
+7. ~~Multiple files missing `import Combine`~~ ✅ Fixed
+
+See "Remaining Minor Issues" section above for the current state of compilation errors.
 
 ### Comprehensive Test Suite Instructions 📋
 
