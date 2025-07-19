@@ -112,7 +112,7 @@ public extension NSView {
 }
 
 /// Visualization view that hosts plugins
-public class VisualizationView: NSView {
+public class PluginVisualizationView: NSView {
     private var displayLink: CVDisplayLink?
     private var audioDataBuffer: VisualizationAudioData?
     private let dataQueue = DispatchQueue(label: "com.winamp.visualization.data", qos: .userInteractive)
@@ -141,7 +141,7 @@ public class VisualizationView: NSView {
         
         // Set callback
         CVDisplayLinkSetOutputCallback(displayLink, { (displayLink, inNow, inOutputTime, flagsIn, flagsOut, context) -> CVReturn in
-            let view = Unmanaged<VisualizationView>.fromOpaque(context!).takeUnretainedValue()
+            let view = Unmanaged<PluginVisualizationView>.fromOpaque(context!).takeUnretainedValue()
             
             DispatchQueue.main.async {
                 view.setNeedsDisplay(view.bounds)
