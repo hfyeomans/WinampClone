@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import Combine
+import AppKit
 
 /// Manages audio system state on macOS (replaces iOS AVAudioSession)
 final class macOSAudioSystemManager: ObservableObject {

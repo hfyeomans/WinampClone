@@ -11,10 +11,7 @@ import AVFoundation
 import UniformTypeIdentifiers
 import AppKit
 
-// Define supported audio content types
-extension UTType {
-    static let mp3 = UTType(filenameExtension: "mp3")!
-}
+// Note: mp3 UTType is already defined in the system
 
 struct ContentView: View {
     // Supported audio file types
@@ -61,7 +58,7 @@ struct ContentView: View {
                 
                 // Seek bar
                 if audioEngine.currentTrack != nil {
-                    SeekBar(
+                    ContentSeekBar(
                         currentTime: $audioEngine.currentTime,
                         duration: audioEngine.duration,
                         isDragging: $isDraggingSeekBar,
@@ -459,7 +456,7 @@ struct ToggleButtonsView: View {
 
 // MARK: - Seek Bar
 
-struct SeekBar: View {
+struct ContentSeekBar: View {
     @Binding var currentTime: TimeInterval
     let duration: TimeInterval
     @Binding var isDragging: Bool

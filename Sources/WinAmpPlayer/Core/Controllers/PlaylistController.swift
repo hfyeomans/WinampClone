@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import AVFoundation
+import AppKit
 
 /// Central controller for playlist management and playback coordination
 @MainActor
@@ -66,7 +67,11 @@ class PlaylistController: ObservableObject {
     
     private func setupBindings() {
         // Sync with audio engine state
-        audioEngine.$isPlaying
+        audioEngine.$playbackState
+            .map { state in
+                if case .playing = state { return true }
+                return false
+            }
             .receive(on: DispatchQueue.main)
             .assign(to: &$isPlaying)
         
