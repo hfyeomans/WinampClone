@@ -15,7 +15,7 @@ public class VisualizationIntegrationExample {
     private var beatDetector: SimpleBeatDetector?
     
     // Visualization view
-    public let visualizationView = VisualizationView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+    public let visualizationView = PluginVisualizationView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
     
     // MARK: - Setup
     

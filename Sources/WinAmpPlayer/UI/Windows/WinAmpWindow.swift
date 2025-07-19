@@ -110,20 +110,16 @@ struct WinAmpTitleBar: View {
         HStack(spacing: 4) {
             // Window controls
             HStack(spacing: 2) {
-                WindowControlButton(icon: "xmark") {
-                    onClose()
-                }
+                WindowControlButton(type: .close, action: onClose)
                 
-                WindowControlButton(icon: "minus") {
-                    onMinimize()
-                }
+                WindowControlButton(type: .minimize, action: onMinimize)
                 
-                WindowControlButton(icon: "arrow.up.arrow.down") {
+                WindowControlButton(type: .shade, action: {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                         isShaded.toggle()
                         WindowManager.shared.setShadeMode(isShaded, for: windowType)
                     }
-                }
+                })
             }
             .padding(.leading, 6)
             

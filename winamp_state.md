@@ -27,11 +27,18 @@ This file tracks the development progress, sprint status, and overall project st
 - Fixed protocol conformance issues
 - Documented remaining minor issues for incremental fixes
 
-### PR #13 Merged ✅ (2025-07-19)
-- **Issue #8 Resolved**: Fixed type ambiguity errors
+### PR #8 Merged ✅ (2025-07-19)
+- **Issue #13 Resolved**: Fixed type ambiguity errors
 - Updated SmartPlaylistRule to use SmartPlaylistComparisonOperator consistently
 - Resolved VisualizationView naming conflict (renamed to PluginVisualizationView)
 - Reduced compilation errors from 841 to 767
+
+### PR #9 Merged ✅ (2025-07-19)
+- **Issue #14 Resolved**: Fixed method visibility errors
+- Made AudioEngine playerNode and audioFile internal for extension access
+- Made WindowManager checkForSnapping internal for delegate access
+- Restructured MetadataCache Statistics for public API access
+- Reduced compilation errors from 767 to 673
 - **Major Achievement**: Removed all iOS-specific audio APIs
 - Created `macOSAudioDeviceManager.swift` with CoreAudio integration
 - Created `macOSAudioSystemManager.swift` replacing AVAudioSession
