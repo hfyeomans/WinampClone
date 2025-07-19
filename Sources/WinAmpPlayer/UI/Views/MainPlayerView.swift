@@ -318,9 +318,9 @@ struct WinAmpSlider: View {
     }
 }
 
-// MARK: - Clutterbar Button
+// MARK: - Window Control Button
 
-struct ClutterbarButton: View {
+struct WindowControlButton: View {
     let icon: String
     let action: () -> Void
     @State private var isHovered = false

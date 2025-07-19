@@ -39,8 +39,8 @@ final class FFTProcessor: ObservableObject {
     
     // Smoothing
     private var previousBands: [Float] = []
-    private let smoothingFactor: Float = 0.8
-    private let decayFactor: Float = 0.95
+    private var smoothingFactor: Float = 0.8
+    private var decayFactor: Float = 0.95
     
     // Thread safety
     private let processQueue = DispatchQueue(label: "com.winamp.fftprocessor", attributes: .concurrent)
