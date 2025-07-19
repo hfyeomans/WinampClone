@@ -350,7 +350,7 @@ public struct FilePropertyRule: SmartPlaylistRuleProtocol {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         field = try container.decode(Field.self, forKey: .field)
-        `operator` = try container.decode(ComparisonOperator.self, forKey: .operator)
+        `operator` = try container.decode(SmartPlaylistComparisonOperator.self, forKey: .operator)
         unit = try container.decodeIfPresent(DateUnit.self, forKey: .unit)
         
         if let stringValue = try? container.decode(String.self, forKey: .stringValue) {
@@ -490,7 +490,7 @@ public struct PlayStatisticsRule: SmartPlaylistRuleProtocol {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         field = try container.decode(Field.self, forKey: .field)
-        `operator` = try container.decode(ComparisonOperator.self, forKey: .operator)
+        `operator` = try container.decode(SmartPlaylistComparisonOperator.self, forKey: .operator)
         unit = try container.decodeIfPresent(DateUnit.self, forKey: .unit)
         
         if let intValue = try? container.decode(Int.self, forKey: .intValue) {

@@ -1162,8 +1162,6 @@ extension SmartPlaylistRuleType: Codable {
     }
 }
 
-extension ComparisonOperator: Codable {}
-
 // MARK: - Smart Playlist Support
 
 extension Playlist {
