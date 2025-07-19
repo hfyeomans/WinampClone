@@ -110,15 +110,15 @@ struct WinAmpTitleBar: View {
         HStack(spacing: 4) {
             // Window controls
             HStack(spacing: 2) {
-                WindowControlButton(type: .close) {
+                WindowControlButton(icon: "xmark") {
                     onClose()
                 }
                 
-                WindowControlButton(type: .minimize) {
+                WindowControlButton(icon: "minus") {
                     onMinimize()
                 }
                 
-                WindowControlButton(type: .shade) {
+                WindowControlButton(icon: "arrow.up.arrow.down") {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                         isShaded.toggle()
                         WindowManager.shared.setShadeMode(isShaded, for: windowType)
@@ -283,7 +283,7 @@ public struct WinAmpWindow<Content: View, MenuContent: View>: View {
             self.window = newWindow
             configureWindow(newWindow)
         })
-        .onChange(of: scenePhase) { _ in
+        .onChange(of: scenePhase) { _, _ in
             if let window = window {
                 WindowManager.shared.registerWindow(window, type: configuration.windowType)
             }
