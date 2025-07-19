@@ -143,7 +143,7 @@ public class MetadataExtractor {
     }
     
     /// Get cache statistics
-    public func cacheStatistics() async -> MetadataCache.Statistics {
+    public func cacheStatistics() async -> MetadataCacheStatistics {
         await cache.statistics()
     }
     
@@ -265,18 +265,19 @@ public class MetadataExtractor {
 
 // MARK: - Metadata Cache
 
+/// Statistics for metadata cache
+public struct MetadataCacheStatistics {
+    public let metadataCount: Int
+    public let artworkCount: Int
+    public let totalSize: Int
+}
+
 /// Cache for storing extracted metadata and artwork
 private actor MetadataCache {
     private var metadataCache: [MetadataCacheKey: AudioMetadata] = [:]
     private var artworkCache: [MetadataCacheKey: [AudioArtwork]] = [:]
     private let maxCacheSize = 1000
     private let cacheQueue = DispatchQueue(label: "com.winampplayer.metadata.cache")
-    
-    struct Statistics {
-        let metadataCount: Int
-        let artworkCount: Int
-        let totalSize: Int
-    }
     
     func metadata(for url: URL) async throws -> AudioMetadata? {
         guard let modDate = modificationDate(for: url) else { return nil }
@@ -323,9 +324,9 @@ private actor MetadataCache {
         artworkCache.removeAll()
     }
     
-    func statistics() async -> Statistics {
+    func statistics() async -> MetadataCacheStatistics {
         let artworkSize = artworkCache.values.flatMap { $0 }.reduce(0) { $0 + $1.data.count }
-        return Statistics(
+        return MetadataCacheStatistics(
             metadataCount: metadataCache.count,
             artworkCount: artworkCache.count,
             totalSize: artworkSize

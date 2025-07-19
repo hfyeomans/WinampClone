@@ -150,10 +150,10 @@ class AudioEngine: ObservableObject {
     // MARK: - Private Properties
     
     internal let audioEngine: AVAudioEngine
-    private let playerNode: AVAudioPlayerNode
+    internal let playerNode: AVAudioPlayerNode
     private let audioSystemManager = macOSAudioSystemManager.shared
     private let deviceManager = macOSAudioDeviceManager.shared
-    private var audioFile: AVAudioFile?
+    internal var audioFile: AVAudioFile?
     private var audioFormat: AVAudioFormat?
     private var framePosition: AVAudioFramePosition = 0
     private var frameLength: AVAudioFramePosition = 0
