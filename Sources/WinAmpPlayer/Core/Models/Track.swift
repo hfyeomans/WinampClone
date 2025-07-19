@@ -152,80 +152,104 @@ struct Track: Identifiable, Equatable, Codable {
         self.lastPlayed = nil
         self.playCount = nil
         
-        // Read metadata from file
+        // Set default values - metadata will be loaded asynchronously
+        self.title = url.deletingPathExtension().lastPathComponent
+        self.artist = nil
+        self.album = nil
+        self.genre = nil
+        self.year = nil
+        self.trackNumber = nil
+        self.albumArtwork = nil
+        self.duration = 0
+        
+        // Load metadata asynchronously
+        Task {
+            await loadMetadata()
+        }
+    }
+    
+    /// Load metadata asynchronously
+    private func loadMetadata() async {
+        guard let url = fileURL else { return }
         let asset = AVAsset(url: url)
-        let metadata = asset.commonMetadata
         
-        // Extract title
-        if let titleItem = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .commonIdentifierTitle
-        ).first,
-           let title = titleItem.stringValue {
-            self.title = title
-        } else {
-            self.title = url.deletingPathExtension().lastPathComponent
-        }
-        
-        // Extract artist
-        self.artist = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .commonIdentifierArtist
-        ).first?.stringValue
-        
-        // Extract album
-        self.album = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .commonIdentifierAlbumName
-        ).first?.stringValue
-        
-        // Extract genre
-        self.genre = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .iTunesMetadataKeyUserGenre
-        ).first?.stringValue
-        
-        // Extract year
-        if let yearItem = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .iTunesMetadataKeyReleaseDate
-        ).first {
-            if let dateValue = yearItem.dateValue {
-                let calendar = Calendar.current
-                self.year = calendar.component(.year, from: dateValue)
-            } else if let numberValue = yearItem.numberValue {
-                self.year = numberValue.intValue
-            } else {
-                self.year = nil
+        do {
+            // Load common metadata
+            let metadata = try await asset.load(.commonMetadata)
+            
+            // Extract title
+            if let titleItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .commonIdentifierTitle
+            ).first,
+               let title = try? await titleItem.load(.stringValue) {
+                self.title = title
             }
-        } else {
-            self.year = nil
+            
+            // Extract artist
+            if let artistItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .commonIdentifierArtist
+            ).first,
+               let artist = try? await artistItem.load(.stringValue) {
+                self.artist = artist
+            }
+            
+            // Extract album
+            if let albumItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .commonIdentifierAlbumName
+            ).first,
+               let album = try? await albumItem.load(.stringValue) {
+                self.album = album
+            }
+            
+            // Extract genre
+            if let genreItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .iTunesMetadataKeyUserGenre
+            ).first,
+               let genre = try? await genreItem.load(.stringValue) {
+                self.genre = genre
+            }
+            
+            // Extract year
+            if let yearItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .iTunesMetadataKeyReleaseDate
+            ).first {
+                if let dateValue = try? await yearItem.load(.dateValue) {
+                    let calendar = Calendar.current
+                    self.year = calendar.component(.year, from: dateValue)
+                } else if let numberValue = try? await yearItem.load(.numberValue) {
+                    self.year = numberValue.intValue
+                }
+            }
+            
+            // Extract track number
+            if let trackItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .iTunesMetadataKeyTrackNumber
+            ).first,
+               let trackNumber = try? await trackItem.load(.numberValue) {
+                self.trackNumber = trackNumber.intValue
+            }
+            
+            // Extract artwork
+            if let artworkItem = AVMetadataItem.metadataItems(
+                from: metadata,
+                filteredByIdentifier: .commonIdentifierArtwork
+            ).first,
+               let data = try? await artworkItem.load(.dataValue) {
+                self.albumArtwork = data
+            }
+            
+            // Load duration
+            let duration = try await asset.load(.duration)
+            self.duration = duration.seconds
+        } catch {
+            // If loading fails, keep default values
         }
-        
-        // Extract track number
-        if let trackItem = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .iTunesMetadataKeyTrackNumber
-        ).first,
-           let trackNumber = trackItem.numberValue {
-            self.trackNumber = trackNumber.intValue
-        } else {
-            self.trackNumber = nil
-        }
-        
-        // Extract artwork
-        if let artworkItem = AVMetadataItem.metadataItems(
-            from: metadata,
-            filteredByIdentifier: .commonIdentifierArtwork
-        ).first,
-           let data = artworkItem.dataValue {
-            self.albumArtwork = data
-        } else {
-            self.albumArtwork = nil
-        }
-        
-        // Calculate duration
-        self.duration = asset.duration.seconds
     }
 }
 

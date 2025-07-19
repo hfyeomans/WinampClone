@@ -39,6 +39,14 @@ This file tracks the development progress, sprint status, and overall project st
 - Made WindowManager checkForSnapping internal for delegate access
 - Restructured MetadataCache Statistics for public API access
 - Reduced compilation errors from 767 to 673
+
+### PR #10 Merged ✅ (2025-07-19)
+- **Issue #10 Resolved**: Fixed method call site errors
+- Fixed ContentView PlaylistView call to include required controller parameter
+- Fixed PluginIntegrationExample to use PluginVisualizationView
+- Fixed WinAmpWindow WindowControlButton calls to use correct parameters
+- Renamed MainPlayerView's WindowControlButton to ClutterbarButton
+- Reduced compilation errors from 673 to 525
 - **Major Achievement**: Removed all iOS-specific audio APIs
 - Created `macOSAudioDeviceManager.swift` with CoreAudio integration
 - Created `macOSAudioSystemManager.swift` replacing AVAudioSession
