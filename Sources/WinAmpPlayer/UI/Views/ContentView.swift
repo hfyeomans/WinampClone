@@ -24,6 +24,7 @@ struct ContentView: View {
     ]
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
+    @StateObject private var playlistController: PlaylistController
     @StateObject private var playlist = Playlist(name: "Main Playlist")
     
     @State private var isDraggingSeekBar = false
@@ -35,10 +36,12 @@ struct ContentView: View {
     
     init() {
         let engine = AudioEngine()
-        let controller = VolumeBalanceController(audioEngine: engine.audioEngine)
-        engine.setVolumeController(controller)
+        let volumeCtrl = VolumeBalanceController(audioEngine: engine.audioEngine)
+        let playlistCtrl = PlaylistController(audioEngine: engine, volumeController: volumeCtrl)
+        engine.setVolumeController(volumeCtrl)
         _audioEngine = StateObject(wrappedValue: engine)
-        _volumeController = StateObject(wrappedValue: controller)
+        _volumeController = StateObject(wrappedValue: volumeCtrl)
+        _playlistController = StateObject(wrappedValue: playlistCtrl)
     }
     
     var body: some View {
@@ -524,7 +527,7 @@ struct PlaylistWindowView: View {
             PlaylistControlsView(playlist: playlist)
                 .frame(height: 26)
             
-            PlaylistView(playlist: playlist)
+            PlaylistView(controller: playlistController, playlist: playlist)
                 .frame(minWidth: 550, minHeight: 300)
         }
         .background(Color(red: 0.11, green: 0.11, blue: 0.11))
