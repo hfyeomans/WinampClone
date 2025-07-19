@@ -19,7 +19,7 @@ enum ShuffleMode {
 }
 
 /// Repeat modes for playlist playback
-enum RepeatMode: Equatable, Codable {
+enum RepeatMode: Equatable {
     case off
     case all
     case one
@@ -40,7 +40,9 @@ enum SmartPlaylistRuleType {
     case bpm(Int, ComparisonOperator)
 }
 
-enum ComparisonOperator {
+// Note: There's also a more complete ComparisonOperator in SmartPlaylistRule.swift
+// This simplified version is kept here to avoid circular dependencies
+enum ComparisonOperator: String, Codable {
     case equals
     case notEquals
     case greaterThan

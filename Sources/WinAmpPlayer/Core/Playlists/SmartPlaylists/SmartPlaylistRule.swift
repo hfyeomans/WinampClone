@@ -66,7 +66,7 @@ public enum DateUnit: String, Codable, CaseIterable {
 // MARK: - Metadata Rules
 
 /// Rule for string metadata fields
-public struct StringMetadataRule: SmartPlaylistRuleProtocol {
+public struct StringMetadataRule: SmartPlaylistRuleProtocol, Codable {
     public enum Field: String, Codable, CaseIterable {
         case title, artist, album, genre, albumArtist, composer, comment, encoder
         
@@ -151,7 +151,7 @@ public struct StringMetadataRule: SmartPlaylistRuleProtocol {
 }
 
 /// Rule for numeric metadata fields
-public struct NumericMetadataRule: SmartPlaylistRuleProtocol {
+public struct NumericMetadataRule: SmartPlaylistRuleProtocol, Codable {
     public enum Field: String, Codable, CaseIterable {
         case year, trackNumber, discNumber, bpm, duration
         
