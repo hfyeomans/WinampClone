@@ -157,7 +157,7 @@ public class AudioDecoderFactory {
     /// - Throws: AudioDecoderError if format detection or decoder creation fails
     public static func createDecoder(for url: URL) throws -> AudioDecoder {
         let detector = FormatDetector()
-        let formatInfo = try detector.detectFormat(at: url)
+        let formatInfo = try detector.detectFormat(from: url)
         
         guard formatInfo.format != .unknown else {
             throw AudioDecoderError.unknownFormat

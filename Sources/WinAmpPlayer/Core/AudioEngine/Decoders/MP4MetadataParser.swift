@@ -54,7 +54,7 @@ public class MP4MetadataParser {
         case jpeg = 13
         case png = 14
         case signed32BitInteger = 21
-        case signed16BitInteger = 21
+        case signed16BitInteger = 65
         case unsigned32BitInteger = 22
         case unsigned16BitInteger = 23
         case unsigned8BitInteger = 24

@@ -1,8 +1,9 @@
 import Foundation
 import Accelerate
+import Combine
 
 /// FFT processor for spectrum analysis using Accelerate framework
-final class FFTProcessor {
+final class FFTProcessor: ObservableObject {
     
     // MARK: - Types
     

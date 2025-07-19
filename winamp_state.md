@@ -6,25 +6,32 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🎯 Current Sprint
 
-**Status**: Compilation Error Resolution Required  
-**Current Activity**: Fixing compilation errors before Sprint 5  
+**Status**: iOS/macOS Compatibility Resolution Required  
+**Current Activity**: Planning fixes for iOS-specific API usage in macOS app  
 **Last Sprint Completed**: Sprint 3-4 - Classic UI Implementation (100% complete)  
-**Testing Phase**: Attempted 2025-07-19 (Blocked by compilation errors)
+**Testing Phase**: Partially completed 2025-07-19
 
-### Compilation Errors Discovered (With Full Xcode) 🔧
+### PR #6 Merged ✅
+- Fixed initial compilation errors (syntax, type ambiguities, conformances)
+- Discovered deeper architectural issues with iOS APIs in macOS app
+- Additional compilation errors documented in `additional_compilation_errors.md`
 
-#### Error Summary
-- [x] Xcode 16.4 installed and verified ✅
-- [ ] 5 compilation errors blocking test execution
-- [ ] 2 resource warnings to resolve
-- [x] Comprehensive fix plan created: `winamp_compilation_errors.md`
+### Critical Issues Remaining 🚨
 
-#### Specific Errors Found
-1. **ContentView.swift:519** - Extraneous '}' syntax error
-2. **Playlist.swift:98** - 'SmartPlaylistRule' type ambiguity
-3. **Track.swift:13** - Missing Decodable conformance
-4. **PlaylistView.swift:135** - RepeatMode comparison type mismatch
-5. **Package.swift** - Missing Resources directory, unhandled Metal files
+#### iOS APIs in macOS Application
+The project uses iOS-specific `AVAudioSession` APIs that don't exist on macOS:
+- **AudioEngine.swift** - Uses AVAudioSession for audio management
+- **AudioOutputManager.swift** - iOS-specific output routing
+- **AudioSessionManager.swift** - iOS session handling
+
+#### Additional Compilation Errors
+1. **AudioDecoderFactory.swift:160** - Method signature mismatch
+2. **MainPlayerView.swift:355-356** - Missing ObservableObject conformance
+3. **AIFFDecoder.swift** - Deprecated API usage
+4. **ID3v1Parser.swift** - Duplicate declarations
+5. **MP4MetadataParser.swift** - Non-unique enum raw values
+6. **NSCache** - Type mismatch (requires classes, not structs)
+7. Multiple files missing `import Combine`
 
 ### Comprehensive Test Suite Instructions 📋
 
@@ -98,13 +105,25 @@ This file tracks the development progress, sprint status, and overall project st
 - New features: >80% required
 
 ### Fix Implementation Status
-- [ ] Fix syntax errors (ContentView.swift)
-- [ ] Resolve type ambiguities (SmartPlaylistRule)
-- [ ] Add Codable conformance (AudioFormat, AudioProperties)
-- [ ] Fix enum comparisons (RepeatMode)
-- [ ] Update Package.swift resources
+- [x] Fix syntax errors (ContentView.swift) ✅
+- [x] Resolve type ambiguities (SmartPlaylistRule) ✅
+- [x] Add Codable conformance (AudioFormat, AudioProperties) ✅
+- [x] Fix enum comparisons (RepeatMode) ✅
+- [x] Update Package.swift resources ✅
+- [ ] Replace iOS APIs with macOS equivalents ⏳
+- [ ] Fix remaining compilation errors
 - [ ] Run full test suite
 - [ ] Update test reports with actual results
+
+### Stashed Changes from Test Agents
+During testing, the following files were modified by test agents and stashed:
+- **Deleted**: AudioOutputManager.swift, AudioSessionManager.swift (iOS-specific)
+- **Modified**: AudioEngineExample.swift, FFTProcessor.swift, FileLoader.swift
+- **Modified**: AudioFormat.swift, PlaylistController.swift, Track.swift
+- **Modified**: SmartPlaylistEngine.swift, SmartPlaylistRule.swift
+- **Modified**: WindowCommunicator.swift, MainPlayerView.swift
+
+These changes are stored in git stash and may contain partial fixes attempted by the test agents.
 
 ### Next Sprint Preview (Sprint 5: Secondary Windows)
 
@@ -442,4 +461,4 @@ Total Tasks: 24/24 completed (100%)
 
 ## 🔄 Last Updated
 
-2025-07-19 - Full Xcode 16.4 installed. Attempted automated testing but discovered 5 compilation errors and 2 resource warnings blocking test execution. Created comprehensive fix plan in winamp_compilation_errors.md. Updated state with detailed test suite instructions. Awaiting error resolution before proceeding to Sprint 5.
+2025-07-19 - PR #6 merged successfully, fixing initial compilation errors. However, testing revealed critical iOS/macOS compatibility issues - the project uses iOS-specific AVAudioSession APIs that don't exist on macOS. Additional compilation errors documented. Test agent changes stashed. Project blocked from Sprint 5 until iOS APIs are replaced with macOS equivalents.

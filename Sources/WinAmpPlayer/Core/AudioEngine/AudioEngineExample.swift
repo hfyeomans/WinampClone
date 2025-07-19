@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 /// Example view demonstrating AudioEngine usage
 struct AudioPlayerView: View {
