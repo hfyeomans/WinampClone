@@ -313,12 +313,14 @@ public class AudioConverter {
         // Create asset from source file
         let asset = AVURLAsset(url: sourceURL)
         
-        // Check if asset is readable
+        // Check if asset is readable - using synchronous API for now
+        // TODO: Refactor to async when converting this method to async
         guard asset.isReadable else {
             throw AudioConversionError.conversionFailed("Cannot read source file")
         }
         
-        // Get audio track
+        // Get audio track - using synchronous API for now
+        // TODO: Refactor to async when converting this method to async  
         guard let audioTrack = asset.tracks(withMediaType: .audio).first else {
             throw AudioConversionError.conversionFailed("No audio track found in source file")
         }

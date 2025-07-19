@@ -97,30 +97,36 @@ public class MP3Decoder {
     }
     
     private func parseAVAssetMetadata(from asset: AVAsset) {
-        let metadataItems = asset.commonMetadata
-        
-        for item in metadataItems {
-            guard let key = item.commonKey else { continue }
-            
-            switch key {
-            case .commonKeyTitle:
-                if metadata.title == nil {
-                    metadata.title = item.stringValue
+        Task {
+            do {
+                let metadataItems = try await asset.load(.commonMetadata)
+                
+                for item in metadataItems {
+                    guard let key = item.commonKey else { continue }
+                    
+                    switch key {
+                    case .commonKeyTitle:
+                        if metadata.title == nil, let value = try? await item.load(.stringValue) {
+                            metadata.title = value
+                        }
+                    case .commonKeyArtist:
+                        if metadata.artist == nil, let value = try? await item.load(.stringValue) {
+                            metadata.artist = value
+                        }
+                    case .commonKeyAlbumName:
+                        if metadata.album == nil, let value = try? await item.load(.stringValue) {
+                            metadata.album = value
+                        }
+                    case .commonKeyArtwork:
+                        if metadata.albumArt == nil, let data = try? await item.load(.dataValue) {
+                            metadata.albumArt = data
+                        }
+                    default:
+                        break
+                    }
                 }
-            case .commonKeyArtist:
-                if metadata.artist == nil {
-                    metadata.artist = item.stringValue
-                }
-            case .commonKeyAlbumName:
-                if metadata.album == nil {
-                    metadata.album = item.stringValue
-                }
-            case .commonKeyArtwork:
-                if metadata.albumArt == nil, let data = item.dataValue {
-                    metadata.albumArt = data
-                }
-            default:
-                break
+            } catch {
+                // Handle error if needed
             }
         }
     }

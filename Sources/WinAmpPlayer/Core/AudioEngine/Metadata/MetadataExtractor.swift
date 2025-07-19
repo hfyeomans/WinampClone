@@ -151,115 +151,101 @@ public class MetadataExtractor {
     
     /// Fallback metadata extraction using AVFoundation
     private func extractUsingAVFoundation(from url: URL) async throws -> AudioMetadata {
-        return try await withCheckedThrowingContinuation { continuation in
-            queue.async {
-                do {
-                    let asset = AVAsset(url: url)
-                    var metadata = AudioMetadata()
-                    
-                    // Extract basic metadata
-                    let commonMetadata = asset.commonMetadata
-                    
-                    for item in commonMetadata {
-                        guard let key = item.commonKey else { continue }
-                        
-                        switch key {
-                        case .commonKeyTitle:
-                            metadata.title = item.stringValue
-                        case .commonKeyArtist:
-                            metadata.artist = item.stringValue
-                        case .commonKeyAlbumName:
-                            metadata.album = item.stringValue
-                        case .commonKeyCreator:
-                            metadata.composer = item.stringValue
-                        case .commonKeyType:
-                            metadata.genre = item.stringValue
-                        case .commonKeyCreationDate:
-                            if let dateString = item.stringValue,
-                               let year = Int(dateString.prefix(4)) {
-                                metadata.year = year
-                            }
-                        default:
-                            break
-                        }
-                    }
-                    
-                    // Extract duration
-                    let duration = asset.duration
-                    if duration.isValid && !duration.isIndefinite {
-                        metadata.duration = CMTimeGetSeconds(duration)
-                    }
-                    
-                    // Extract technical information
-                    if let track = asset.tracks(withMediaType: .audio).first {
-                        let desc = track.formatDescriptions.first
-                        if let desc = desc {
-                            let audioDesc = CMAudioFormatDescriptionGetStreamBasicDescription(desc as! CMAudioFormatDescription)
-                            if let audioDesc = audioDesc?.pointee {
-                                metadata.sampleRate = Int(audioDesc.mSampleRate)
-                                metadata.channels = Int(audioDesc.mChannelsPerFrame)
-                            }
-                        }
-                        
-                        // Estimate bitrate
-                        if let duration = metadata.duration,
-                           duration > 0,
-                           let fileSize = try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64 {
-                            let bitrate = Int((Double(fileSize) * 8.0) / duration / 1000.0)
-                            metadata.bitrate = bitrate
-                        }
-                    }
-                    
-                    metadata.fileFormat = url.pathExtension.uppercased()
-                    
-                    // Check for artwork
-                    metadata.hasArtwork = !asset.metadata(forFormat: .iTunesMetadata).filter {
-                        $0.commonKey == .commonKeyArtwork
-                    }.isEmpty
-                    
-                    continuation.resume(returning: metadata)
-                } catch {
-                    continuation.resume(throwing: MetadataError.extractionFailed(error.localizedDescription))
+        let asset = AVAsset(url: url)
+        var metadata = AudioMetadata()
+        
+        // Extract basic metadata
+        let commonMetadata = try await asset.load(.commonMetadata)
+        
+        for item in commonMetadata {
+            guard let key = item.commonKey else { continue }
+            
+            switch key {
+            case .commonKeyTitle:
+                metadata.title = try? await item.load(.stringValue)
+            case .commonKeyArtist:
+                metadata.artist = try? await item.load(.stringValue)
+            case .commonKeyAlbumName:
+                metadata.album = try? await item.load(.stringValue)
+            case .commonKeyCreator:
+                metadata.composer = try? await item.load(.stringValue)
+            case .commonKeyType:
+                metadata.genre = try? await item.load(.stringValue)
+            case .commonKeyCreationDate:
+                if let dateString = try? await item.load(.stringValue),
+                   let year = Int(dateString.prefix(4)) {
+                    metadata.year = year
                 }
+            default:
+                break
             }
         }
+        
+        // Extract duration
+        let duration = try await asset.load(.duration)
+        if duration.isValid && !duration.isIndefinite {
+            metadata.duration = CMTimeGetSeconds(duration)
+        }
+        
+        // Extract technical information
+        let tracks = try await asset.load(.tracks)
+        if let track = tracks.first(where: { $0.mediaType == .audio }) {
+            let formatDescriptions = try await track.load(.formatDescriptions)
+            if let desc = formatDescriptions.first {
+                let audioDesc = CMAudioFormatDescriptionGetStreamBasicDescription(desc as! CMAudioFormatDescription)
+                if let audioDesc = audioDesc?.pointee {
+                    metadata.sampleRate = Int(audioDesc.mSampleRate)
+                    metadata.channels = Int(audioDesc.mChannelsPerFrame)
+                }
+            }
+            
+            // Estimate bitrate
+            if let duration = metadata.duration,
+               duration > 0,
+               let fileSize = try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64 {
+                let bitrate = Int((Double(fileSize) * 8.0) / duration / 1000.0)
+                metadata.bitrate = bitrate
+            }
+        }
+        
+        metadata.fileFormat = url.pathExtension.uppercased()
+        
+        // Check for artwork
+        let iTunesMetadata = try await asset.loadMetadata(for: .iTunesMetadata)
+        metadata.hasArtwork = !iTunesMetadata.filter {
+            $0.commonKey == .commonKeyArtwork
+        }.isEmpty
+        
+        return metadata
     }
     
     /// Fallback artwork extraction using AVFoundation
     private func extractArtworkUsingAVFoundation(from url: URL) async throws -> [AudioArtwork] {
-        return try await withCheckedThrowingContinuation { continuation in
-            queue.async {
-                do {
-                    let asset = AVAsset(url: url)
-                    var artworks: [AudioArtwork] = []
-                    
-                    // Check iTunes metadata format
-                    let iTunesMetadata = asset.metadata(forFormat: .iTunesMetadata)
-                    for item in iTunesMetadata {
-                        if item.commonKey == .commonKeyArtwork,
-                           let data = item.dataValue {
-                            let artwork = AudioArtwork(data: data, type: .frontCover)
-                            artworks.append(artwork)
-                        }
-                    }
-                    
-                    // Check ID3 metadata format
-                    let id3Metadata = asset.metadata(forFormat: .id3Metadata)
-                    for item in id3Metadata {
-                        if let data = item.dataValue,
-                           let key = item.key as? String,
-                           key.hasPrefix("APIC") {
-                            let artwork = AudioArtwork(data: data, type: .frontCover)
-                            artworks.append(artwork)
-                        }
-                    }
-                    
-                    continuation.resume(returning: artworks)
-                } catch {
-                    continuation.resume(throwing: MetadataError.extractionFailed(error.localizedDescription))
-                }
+        let asset = AVAsset(url: url)
+        var artworks: [AudioArtwork] = []
+        
+        // Check iTunes metadata format
+        let iTunesMetadata = try await asset.loadMetadata(for: .iTunesMetadata)
+        for item in iTunesMetadata {
+            if item.commonKey == .commonKeyArtwork,
+               let data = try? await item.load(.dataValue) {
+                let artwork = AudioArtwork(data: data, type: .frontCover)
+                artworks.append(artwork)
             }
         }
+        
+        // Check ID3 metadata format
+        let id3Metadata = try await asset.loadMetadata(for: .id3Metadata)
+        for item in id3Metadata {
+            if let key = item.key as? String,
+               key.hasPrefix("APIC"),
+               let data = try? await item.load(.dataValue) {
+                let artwork = AudioArtwork(data: data, type: .frontCover)
+                artworks.append(artwork)
+            }
+        }
+        
+        return artworks
     }
 }
 
