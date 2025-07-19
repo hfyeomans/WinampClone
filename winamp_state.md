@@ -47,6 +47,13 @@ This file tracks the development progress, sprint status, and overall project st
 - Fixed WinAmpWindow WindowControlButton calls to use correct parameters
 - Renamed MainPlayerView's WindowControlButton to ClutterbarButton
 - Reduced compilation errors from 673 to 525
+
+### PR #11 Merged ✅ (2025-07-19)
+- **Issue #11 Resolved**: Modernized deprecated AVFoundation APIs
+- Updated MP3Decoder to use async load() methods
+- Refactored Track.swift to load metadata asynchronously
+- Updated MetadataExtractor to use modern async/await patterns
+- Reduced deprecated API warnings from many to 10
 - **Major Achievement**: Removed all iOS-specific audio APIs
 - Created `macOSAudioDeviceManager.swift` with CoreAudio integration
 - Created `macOSAudioSystemManager.swift` replacing AVAudioSession

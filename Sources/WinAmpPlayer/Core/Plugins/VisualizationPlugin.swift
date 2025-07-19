@@ -117,6 +117,15 @@ public protocol VisualizationRenderContext {
 
 // MARK: - Configuration
 
+/// Type of configuration UI to display
+public enum VisualizationConfigurationType {
+    case slider(min: Double, max: Double, step: Double)
+    case toggle
+    case colorPicker
+    case dropdown(options: [String])
+    case text
+}
+
 /// Configuration options for a visualization plugin
 public protocol VisualizationConfiguration {
     /// Human-readable name for this configuration option
@@ -129,15 +138,7 @@ public protocol VisualizationConfiguration {
     var value: Any { get set }
     
     /// Type of configuration UI to display
-    var type: ConfigurationType { get }
-    
-    public enum ConfigurationType {
-        case slider(min: Double, max: Double, step: Double)
-        case toggle
-        case colorPicker
-        case dropdown(options: [String])
-        case text
-    }
+    var type: VisualizationConfigurationType { get }
 }
 
 // MARK: - Main Plugin Protocol
@@ -362,8 +363,9 @@ public final class SpectrumVisualizationPlugin: VisualizationPlugin {
                 barCount = count
             }
         case "barColor":
-            if let color = value as? CGColor {
-                barColor = color
+            // CGColor is a Core Foundation type, need to check CFTypeID
+            if CFGetTypeID(value as CFTypeRef) == CGColor.typeID {
+                barColor = value as! CGColor
             }
         case "peakHold":
             if let hold = value as? Bool {
@@ -506,23 +508,23 @@ public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
         path.addLine(to: CGPoint(x: context.size.width, y: midY))
         path.closeSubpath()
         
-        var color = lineColor.copy()!
-        let components = color.components ?? [0, 0, 0, 1]
-        color = CGColor(
-            red: components[0],
-            green: components[1],
-            blue: components[2],
-            alpha: 0.5
-        )
+        // Create a semi-transparent version of the line color
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let components = lineColor.components ?? [0, 0, 0, 1]
+        let semiTransparentColor = CGColor(
+            colorSpace: colorSpace,
+            components: [components[0], components[1], components[2], 0.5]
+        ) ?? lineColor
         
-        context.fillPath(path, color: color)
+        context.fillPath(path, color: semiTransparentColor)
     }
     
     public func updateConfiguration(key: String, value: Any) {
         switch key {
         case "lineColor":
-            if let color = value as? CGColor {
-                lineColor = color
+            // CGColor is a Core Foundation type, need to check CFTypeID
+            if CFGetTypeID(value as CFTypeRef) == CGColor.typeID {
+                lineColor = value as! CGColor
             }
         case "lineWidth":
             if let width = value as? Double {
@@ -549,7 +551,7 @@ private class SliderConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType
+    let type: VisualizationConfigurationType
     
     init(key: String, displayName: String, value: Double, min: Double, max: Double, step: Double) {
         self.key = key
@@ -563,7 +565,7 @@ private class ColorConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType = .colorPicker
+    let type: VisualizationConfigurationType = .colorPicker
     
     init(key: String, displayName: String, color: CGColor) {
         self.key = key
@@ -576,7 +578,7 @@ private class ToggleConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType = .toggle
+    let type: VisualizationConfigurationType = .toggle
     
     init(key: String, displayName: String, value: Bool) {
         self.key = key
@@ -589,7 +591,7 @@ private class DropdownConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType
+    let type: VisualizationConfigurationType
     
     init(key: String, displayName: String, value: String, options: [String]) {
         self.key = key
