@@ -17,8 +17,16 @@ public class FormatDetector {
     private let logger = Logger(subsystem: "com.winamp.player", category: "FormatDetector")
     private let queue = DispatchQueue(label: "com.winamp.formatdetector", qos: .userInitiated)
     
+    // Wrapper class for caching AudioFormatInfo structs
+    private final class AudioFormatInfoWrapper {
+        let value: AudioFormatInfo
+        init(_ value: AudioFormatInfo) {
+            self.value = value
+        }
+    }
+    
     // Cache for format detection results
-    private var cache = NSCache<NSURL, AudioFormatInfo>()
+    private var cache = NSCache<NSURL, AudioFormatInfoWrapper>()
     
     // MARK: - Initialization
     
@@ -35,7 +43,7 @@ public class FormatDetector {
         // Check cache first
         if let cached = cache.object(forKey: url as NSURL) {
             logger.debug("Using cached format detection for: \(url.lastPathComponent)")
-            return cached
+            return cached.value
         }
         
         // Start with file extension detection (fast path)
@@ -56,7 +64,7 @@ public class FormatDetector {
                         containerFormat: magicFormat.containerFormat,
                         detectionMethod: .combined
                     )
-                    cache.setObject(combinedInfo, forKey: url as NSURL)
+                    cache.setObject(AudioFormatInfoWrapper(combinedInfo), forKey: url as NSURL)
                     return combinedInfo
                 }
             }
@@ -64,7 +72,7 @@ public class FormatDetector {
         
         // Do deep inspection for more accurate detection
         let deepInfo = try await performDeepInspection(url: url)
-        cache.setObject(deepInfo, forKey: url as NSURL)
+        cache.setObject(AudioFormatInfoWrapper(deepInfo), forKey: url as NSURL)
         return deepInfo
     }
     

@@ -247,7 +247,7 @@ class DefaultMessageRouter: MessageRouter {
 
 // MARK: - Window Communicator
 
-class WindowCommunicator {
+class WindowCommunicator: ObservableObject {
     static let shared = WindowCommunicator()
     
     // MARK: - Properties

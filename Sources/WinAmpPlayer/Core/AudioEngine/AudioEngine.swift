@@ -151,6 +151,8 @@ class AudioEngine: ObservableObject {
     
     internal let audioEngine: AVAudioEngine
     private let playerNode: AVAudioPlayerNode
+    private let audioSystemManager = macOSAudioSystemManager.shared
+    private let deviceManager = macOSAudioDeviceManager.shared
     private var audioFile: AVAudioFile?
     private var audioFormat: AVAudioFormat?
     private var framePosition: AVAudioFramePosition = 0
@@ -175,6 +177,9 @@ class AudioEngine: ObservableObject {
     init() {
         self.audioEngine = AVAudioEngine()
         self.playerNode = AVAudioPlayerNode()
+        
+        // Configure the audio system for macOS
+        audioSystemManager.configure(for: audioEngine)
         
         setupAudioEngine()
         setupNotifications()
@@ -261,6 +266,13 @@ class AudioEngine: ObservableObject {
         guard audioFile != nil else {
             logger.warning("Attempted to play without loaded audio file")
             return
+        }
+        
+        // Activate the audio system first
+        do {
+            try audioSystemManager.activate()
+        } catch {
+            logger.error("Failed to activate audio system: \(error)")
         }
         
         // Start the engine if needed
@@ -395,7 +407,7 @@ class AudioEngine: ObservableObject {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleRouteChange),
-            name: AVAudioSession.routeChangeNotification,
+            name: .audioRouteChanged,
             object: nil
         )
         
@@ -403,7 +415,7 @@ class AudioEngine: ObservableObject {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleInterruption),
-            name: AVAudioSession.interruptionNotification,
+            name: .audioSystemInterrupted,
             object: nil
         )
     }
@@ -415,8 +427,7 @@ class AudioEngine: ObservableObject {
     
     @objc private func handleInterruption(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
-              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+              let type = userInfo["type"] as? macOSAudioSystemManager.InterruptionType else {
             return
         }
         
@@ -427,8 +438,6 @@ class AudioEngine: ObservableObject {
         case .ended:
             logger.info("Audio interruption ended")
             // Optionally resume playback
-        @unknown default:
-            break
         }
     }
     
@@ -548,6 +557,7 @@ class AudioEngine: ObservableObject {
         if audioEngine.isRunning {
             playerNode.stop()
             audioEngine.stop()
+            audioSystemManager.deactivate()
         }
         
         // Reset state

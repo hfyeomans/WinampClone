@@ -21,7 +21,7 @@ public protocol SmartPlaylistRuleProtocol: Codable {
 }
 
 /// Comparison operators for rules
-public enum ComparisonOperator: String, Codable, CaseIterable {
+public enum SmartPlaylistComparisonOperator: String, Codable, CaseIterable {
     case equals = "equals"
     case notEquals = "notEquals"
     case contains = "contains"
@@ -66,7 +66,7 @@ public enum DateUnit: String, Codable, CaseIterable {
 // MARK: - Metadata Rules
 
 /// Rule for string metadata fields
-public struct StringMetadataRule: SmartPlaylistRuleProtocol {
+public struct StringMetadataRule: SmartPlaylistRuleProtocol, Codable {
     public enum Field: String, Codable, CaseIterable {
         case title, artist, album, genre, albumArtist, composer, comment, encoder
         
@@ -85,11 +85,11 @@ public struct StringMetadataRule: SmartPlaylistRuleProtocol {
     }
     
     let field: Field
-    let `operator`: ComparisonOperator
+    let `operator`: SmartPlaylistComparisonOperator
     let value: String
     let caseSensitive: Bool
     
-    public init(field: Field, operator: ComparisonOperator, value: String, caseSensitive: Bool = false) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, value: String, caseSensitive: Bool = false) {
         self.field = field
         self.operator = `operator`
         self.value = value
@@ -151,7 +151,7 @@ public struct StringMetadataRule: SmartPlaylistRuleProtocol {
 }
 
 /// Rule for numeric metadata fields
-public struct NumericMetadataRule: SmartPlaylistRuleProtocol {
+public struct NumericMetadataRule: SmartPlaylistRuleProtocol, Codable {
     public enum Field: String, Codable, CaseIterable {
         case year, trackNumber, discNumber, bpm, duration
         
@@ -167,11 +167,11 @@ public struct NumericMetadataRule: SmartPlaylistRuleProtocol {
     }
     
     let field: Field
-    let `operator`: ComparisonOperator
+    let `operator`: SmartPlaylistComparisonOperator
     let value: Double
     let secondValue: Double? // For between operator
     
-    public init(field: Field, operator: ComparisonOperator, value: Double, secondValue: Double? = nil) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, value: Double, secondValue: Double? = nil) {
         self.field = field
         self.operator = `operator`
         self.value = value
@@ -241,7 +241,7 @@ public struct FilePropertyRule: SmartPlaylistRuleProtocol {
     }
     
     let field: Field
-    let `operator`: ComparisonOperator
+    let `operator`: SmartPlaylistComparisonOperator
     let value: Any
     let unit: DateUnit?
     
@@ -250,21 +250,21 @@ public struct FilePropertyRule: SmartPlaylistRuleProtocol {
         case stringValue, doubleValue, dateValue
     }
     
-    public init(field: Field, operator: ComparisonOperator, fileSize: Double) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, fileSize: Double) {
         self.field = field
         self.operator = `operator`
         self.value = fileSize
         self.unit = nil
     }
     
-    public init(field: Field, operator: ComparisonOperator, format: AudioFormat) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, format: AudioFormat) {
         self.field = field
         self.operator = `operator`
         self.value = format.rawValue
         self.unit = nil
     }
     
-    public init(field: Field, operator: ComparisonOperator, dateValue: Double, unit: DateUnit) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, dateValue: Double, unit: DateUnit) {
         self.field = field
         self.operator = `operator`
         self.value = dateValue
@@ -397,7 +397,7 @@ public struct PlayStatisticsRule: SmartPlaylistRuleProtocol {
     }
     
     let field: Field
-    let `operator`: ComparisonOperator
+    let `operator`: SmartPlaylistComparisonOperator
     let value: Any
     let unit: DateUnit?
     
@@ -406,14 +406,14 @@ public struct PlayStatisticsRule: SmartPlaylistRuleProtocol {
         case intValue, doubleValue
     }
     
-    public init(field: Field, operator: ComparisonOperator, count: Int) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, count: Int) {
         self.field = field
         self.operator = `operator`
         self.value = count
         self.unit = nil
     }
     
-    public init(field: Field, operator: ComparisonOperator, dateValue: Double, unit: DateUnit) {
+    public init(field: Field, operator: SmartPlaylistComparisonOperator, dateValue: Double, unit: DateUnit) {
         self.field = field
         self.operator = `operator`
         self.value = dateValue

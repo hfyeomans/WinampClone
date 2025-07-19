@@ -10,7 +10,7 @@ public struct ID3v1Parser {
     private static let tagIdentifier = "TAG"
     
     /// Genre list for ID3v1
-    private static let genres = [
+    static let genres = [
         "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop",
         "Jazz", "Metal", "New Age", "Oldies", "Other", "Pop", "R&B", "Rap",
         "Reggae", "Rock", "Techno", "Industrial", "Alternative", "Ska", "Death Metal", "Pranks",

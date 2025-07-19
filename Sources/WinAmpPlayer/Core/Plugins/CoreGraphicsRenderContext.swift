@@ -1,6 +1,7 @@
 import Foundation
 import CoreGraphics
 import AppKit
+import AVFoundation
 
 /// Core Graphics implementation of the visualization render context
 public final class CoreGraphicsRenderContext: VisualizationRenderContext {

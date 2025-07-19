@@ -1,8 +1,9 @@
 import Foundation
 import Accelerate
+import Combine
 
 /// FFT processor for spectrum analysis using Accelerate framework
-final class FFTProcessor {
+final class FFTProcessor: ObservableObject {
     
     // MARK: - Types
     
@@ -38,8 +39,8 @@ final class FFTProcessor {
     
     // Smoothing
     private var previousBands: [Float] = []
-    private let smoothingFactor: Float = 0.8
-    private let decayFactor: Float = 0.95
+    private var smoothingFactor: Float = 0.8
+    private var decayFactor: Float = 0.95
     
     // Thread safety
     private let processQueue = DispatchQueue(label: "com.winamp.fftprocessor", attributes: .concurrent)

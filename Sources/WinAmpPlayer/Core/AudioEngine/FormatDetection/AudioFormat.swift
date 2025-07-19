@@ -210,7 +210,7 @@ public struct AudioFormatInfo {
 }
 
 /// Audio properties extracted during format detection
-public struct AudioProperties: Codable {
+public struct AudioProperties: Codable, Equatable {
     /// Bitrate in bits per second
     let bitrate: Int?
     
