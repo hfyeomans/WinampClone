@@ -377,15 +377,15 @@ private struct TrackIndexes {
         addTrack(newTrack)
     }
     
-    func searchArtist(_ query: String, operator: ComparisonOperator) -> [Track] {
+    func searchArtist(_ query: String, operator: SmartPlaylistComparisonOperator) -> [Track] {
         artistIndex.search(query, operator: `operator`)
     }
     
-    func searchAlbum(_ query: String, operator: ComparisonOperator) -> [Track] {
+    func searchAlbum(_ query: String, operator: SmartPlaylistComparisonOperator) -> [Track] {
         albumIndex.search(query, operator: `operator`)
     }
     
-    func searchGenre(_ query: String, operator: ComparisonOperator) -> [Track] {
+    func searchGenre(_ query: String, operator: SmartPlaylistComparisonOperator) -> [Track] {
         genreIndex.search(query, operator: `operator`)
     }
 }
@@ -421,7 +421,7 @@ private struct TextIndex {
         }
     }
     
-    func search(_ query: String, operator: ComparisonOperator) -> [Track] {
+    func search(_ query: String, operator: SmartPlaylistComparisonOperator) -> [Track] {
         let normalized = query.lowercased()
         var matchingIds = Set<UUID>()
         
