@@ -1,5 +1,6 @@
 import Foundation
 import CoreGraphics
+import AppKit
 
 /// Example custom visualization plugin - Matrix Rain effect
 /// This demonstrates how to create a custom visualization using the plugin API
@@ -169,9 +170,15 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
                     components: (rainColor.components ?? [0, 1, 0, 1]).map { $0 * 1.5 }
                 ) ?? rainColor
                 
+                // Create a semi-transparent glow color
+                let glowColorWithAlpha = CGColor(
+                    colorSpace: glowColor.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
+                    components: (glowColor.components ?? [0, 1, 0, 1]).dropLast().map { $0 } + [glowAlpha]
+                ) ?? glowColor
+                
                 let attributes: [NSAttributedString.Key: Any] = [
                     .font: NSFont.monospacedSystemFont(ofSize: fontSize * 1.2, weight: .bold),
-                    .foregroundColor: glowColor.copy(alpha: glowAlpha)!
+                    .foregroundColor: glowColorWithAlpha
                 ]
                 
                 context.drawText(
@@ -183,11 +190,15 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
             
             // Draw the character
             let alpha = min(intensity, 1.0)
-            let color = rainColor.copy(alpha: alpha) ?? rainColor
+            // Create a semi-transparent rain color
+            let colorWithAlpha = CGColor(
+                colorSpace: rainColor.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
+                components: (rainColor.components ?? [0, 1, 0, 1]).dropLast().map { $0 } + [alpha]
+            ) ?? rainColor
             
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular),
-                .foregroundColor: color
+                .foregroundColor: colorWithAlpha
             ]
             
             context.drawText(
@@ -203,8 +214,9 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
     public func updateConfiguration(key: String, value: Any) {
         switch key {
         case "rainColor":
-            if let color = value as? CGColor {
-                rainColor = color
+            // CGColor is a Core Foundation type, need to check CFTypeID
+            if CFGetTypeID(value as CFTypeRef) == CGColor.typeID {
+                rainColor = value as! CGColor
             }
         case "dropSpeed":
             if let speed = value as? Double {
@@ -267,7 +279,7 @@ private class MatrixColorConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType = .colorPicker
+    let type: VisualizationConfigurationType = .colorPicker
     
     init(key: String, displayName: String, color: CGColor) {
         self.key = key
@@ -280,7 +292,7 @@ private class MatrixSliderConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType
+    let type: VisualizationConfigurationType
     
     init(key: String, displayName: String, value: Double, min: Double, max: Double, step: Double) {
         self.key = key
@@ -294,7 +306,7 @@ private class MatrixToggleConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
-    let type: ConfigurationType = .toggle
+    let type: VisualizationConfigurationType = .toggle
     
     init(key: String, displayName: String, value: Bool) {
         self.key = key
