@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:WinAmpPlayer}",
+            "name": "Debug WinAmpPlayer",
+            "program": "${workspaceFolder:WinAmpPlayer}/.build/debug/WinAmpPlayer",
+            "preLaunchTask": "swift: Build Debug WinAmpPlayer"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:WinAmpPlayer}",
+            "name": "Release WinAmpPlayer",
+            "program": "${workspaceFolder:WinAmpPlayer}/.build/release/WinAmpPlayer",
+            "preLaunchTask": "swift: Build Release WinAmpPlayer"
+        }
+    ]
+}

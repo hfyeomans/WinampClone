@@ -19,7 +19,7 @@ enum ShuffleMode {
 }
 
 /// Repeat modes for playlist playback
-enum RepeatMode {
+enum RepeatMode: Equatable, Codable {
     case off
     case all
     case one
