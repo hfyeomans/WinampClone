@@ -288,7 +288,7 @@ public class WindowManager: ObservableObject {
     
     // MARK: - Window Snapping/Docking
     
-    private func checkForSnapping(windowType: WindowType) {
+    internal func checkForSnapping(windowType: WindowType) {
         guard let sourceWindow = windows[windowType],
               let sourceNSWindow = sourceWindow.window else { return }
         
