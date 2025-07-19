@@ -249,6 +249,20 @@ struct ContentView: View {
         
         return true
     }
+    
+    private func loadTrack(_ track: Track) {
+        guard let url = track.fileURL else { return }
+        Task {
+            do {
+                try await audioEngine.loadURL(url)
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Subviews
@@ -500,21 +514,6 @@ struct SeekBar: View {
         guard duration > 0 else { return 0 }
         let progress = isDragging ? seekPosition / duration : currentTime / duration
         return CGFloat(progress) * totalWidth
-    }
-}
-
-    private func loadTrack(_ track: Track) {
-        guard let url = track.fileURL else { return }
-        Task {
-            do {
-                try await audioEngine.loadURL(url)
-            } catch {
-                await MainActor.run {
-                    errorMessage = error.localizedDescription
-                    showError = true
-                }
-            }
-        }
     }
 }
 

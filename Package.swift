@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "WinAmpPlayer",
     platforms: [
-        .macOS(.v15)
+        .macOS(.v14)
     ],
     products: [
         .executable(
@@ -21,8 +21,9 @@ let package = Package(
         .executableTarget(
             name: "WinAmpPlayer",
             dependencies: [],
+            exclude: ["Core/AudioEngine/Conversion/README.md"],
             resources: [
-                .process("Resources")
+                .process("Shaders")
             ]
         ),
         .testTarget(

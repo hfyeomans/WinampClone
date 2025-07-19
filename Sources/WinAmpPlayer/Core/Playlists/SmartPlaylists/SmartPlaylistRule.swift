@@ -9,7 +9,7 @@
 import Foundation
 
 /// Protocol for all smart playlist rules
-public protocol SmartPlaylistRule: Codable {
+public protocol SmartPlaylistRuleProtocol: Codable {
     /// Evaluates whether a track matches this rule
     func evaluate(track: Track) -> Bool
     
@@ -66,7 +66,7 @@ public enum DateUnit: String, Codable, CaseIterable {
 // MARK: - Metadata Rules
 
 /// Rule for string metadata fields
-public struct StringMetadataRule: SmartPlaylistRule {
+public struct StringMetadataRule: SmartPlaylistRuleProtocol {
     public enum Field: String, Codable, CaseIterable {
         case title, artist, album, genre, albumArtist, composer, comment, encoder
         
@@ -151,7 +151,7 @@ public struct StringMetadataRule: SmartPlaylistRule {
 }
 
 /// Rule for numeric metadata fields
-public struct NumericMetadataRule: SmartPlaylistRule {
+public struct NumericMetadataRule: SmartPlaylistRuleProtocol {
     public enum Field: String, Codable, CaseIterable {
         case year, trackNumber, discNumber, bpm, duration
         
@@ -227,7 +227,7 @@ public struct NumericMetadataRule: SmartPlaylistRule {
 // MARK: - File Property Rules
 
 /// Rule for file properties
-public struct FilePropertyRule: SmartPlaylistRule {
+public struct FilePropertyRule: SmartPlaylistRuleProtocol {
     public enum Field: String, Codable, CaseIterable {
         case fileSize, dateAdded, format
         
@@ -383,7 +383,7 @@ public struct FilePropertyRule: SmartPlaylistRule {
 // MARK: - Play Statistics Rules
 
 /// Rule for play statistics
-public struct PlayStatisticsRule: SmartPlaylistRule {
+public struct PlayStatisticsRule: SmartPlaylistRuleProtocol {
     public enum Field: String, Codable, CaseIterable {
         case playCount, lastPlayed, rating
         
@@ -526,11 +526,11 @@ public enum LogicalOperator: String, Codable {
 }
 
 /// Combines multiple rules with logical operators
-public struct CombinedRule: SmartPlaylistRule {
+public struct CombinedRule: SmartPlaylistRuleProtocol {
     let `operator`: LogicalOperator
     let rules: [AnySmartPlaylistRule]
     
-    public init(operator: LogicalOperator, rules: [any SmartPlaylistRule]) {
+    public init(operator: LogicalOperator, rules: [any SmartPlaylistRuleProtocol]) {
         self.operator = `operator`
         self.rules = rules.map(AnySmartPlaylistRule.init)
     }
@@ -566,13 +566,13 @@ public struct CombinedRule: SmartPlaylistRule {
 // MARK: - Type Erasure
 
 /// Type-erased wrapper for SmartPlaylistRule
-public struct AnySmartPlaylistRule: SmartPlaylistRule {
+public struct AnySmartPlaylistRule: SmartPlaylistRuleProtocol {
     private let _evaluate: (Track) -> Bool
     private let _description: () -> String
     private let _requiresIndexing: () -> Bool
     private let _encode: (Encoder) throws -> Void
     
-    public init<Rule: SmartPlaylistRule>(_ rule: Rule) {
+    public init<Rule: SmartPlaylistRuleProtocol>(_ rule: Rule) {
         self._evaluate = rule.evaluate
         self._description = { rule.description }
         self._requiresIndexing = { rule.requiresIndexing }

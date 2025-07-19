@@ -9,7 +9,7 @@
 import Foundation
 
 /// Supported audio format types
-public enum AudioFormat: String, CaseIterable {
+public enum AudioFormat: String, CaseIterable, Codable {
     case mp3 = "mp3"
     case aac = "aac"
     case m4a = "m4a"
@@ -210,7 +210,7 @@ public struct AudioFormatInfo {
 }
 
 /// Audio properties extracted during format detection
-public struct AudioProperties {
+public struct AudioProperties: Codable {
     /// Bitrate in bits per second
     let bitrate: Int?
     

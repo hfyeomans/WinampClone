@@ -1,0 +1,10 @@
+[0;34m======================================[0m
+[0;34m   WinAmp Player Test Suite Runner    [0m
+[0;34m   macOS 15.5 Compatibility Test      [0m
+[0;34m   Sat Jul 19 11:18:02 EDT 2025[0m
+[0;34m======================================[0m
+
+[1;33m[1/9] Checking System Compatibility...[0m
+Current macOS version: 26.0
+[0;32m✓ macOS version compatible[0m
+[0;31m✗ Required tool 'instruments' not found[0m
