@@ -1,0 +1,1094 @@
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[0/7] /Users/hank/dev/src/WinAmpPlayer/.build/arm64-apple-macosx/debug/WinAmpPlayerPackageTests.derived/runner.swift
+[2/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/13] Compiling WinAmpPlayerTests WindowManagerTests.swift
+[6/13] Compiling WinAmpPlayerTests AudioEngineTests.swift
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:121:14: error: 'frameLength' is inaccessible due to 'private' protection level
+119 |     func simulateFileLoad(duration: TimeInterval = 120.0, sampleRate: Double = 44100.0) {
+120 |         self.duration = duration
+121 |         self.frameLength = AVAudioFramePosition(duration * sampleRate)
+    |              `- error: 'frameLength' is inaccessible due to 'private' protection level
+122 |         self.currentTime = 0
+123 |         self.framePosition = 0
+
+WinAmpPlayer.AudioEngine.frameLength:2:13: note: 'frameLength' declared here
+1 | class AudioEngine {
+2 | private var frameLength: AVAudioFramePosition}
+  |             `- note: 'frameLength' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:123:14: error: 'framePosition' is inaccessible due to 'private' protection level
+121 |         self.frameLength = AVAudioFramePosition(duration * sampleRate)
+122 |         self.currentTime = 0
+123 |         self.framePosition = 0
+    |              `- error: 'framePosition' is inaccessible due to 'private' protection level
+124 |         self.playbackState = .stopped
+125 |     }
+
+WinAmpPlayer.AudioEngine.framePosition:2:13: note: 'framePosition' declared here
+1 | class AudioEngine {
+2 | private var framePosition: AVAudioFramePosition}
+  |             `- note: 'framePosition' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:201:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+199 |     
+200 |     func testInitialState() {
+201 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+202 |         XCTAssertEqual(audioEngine.currentTime, 0)
+203 |         XCTAssertEqual(audioEngine.duration, 0)
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:239:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+237 |         XCTAssertGreaterThan(audioEngine.duration, 0)
+238 |         XCTAssertEqual(audioEngine.currentTime, 0)
+239 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+240 |         XCTAssertFalse(audioEngine.isLoading)
+241 |     }
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:290:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+288 |         // Should not throw, just log warning
+289 |         XCTAssertNoThrow(try audioEngine.play())
+290 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+291 |     }
+292 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:301:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+299 |         // Test play
+300 |         try audioEngine.play()
+301 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+302 |         XCTAssertTrue(audioEngine.isPlaying)
+303 |         
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:306:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+304 |         // Test pause
+305 |         audioEngine.pause()
+306 |         XCTAssertEqual(audioEngine.playbackState, .paused)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+307 |         XCTAssertTrue(audioEngine.isPaused)
+308 |         XCTAssertFalse(audioEngine.isPlaying)
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:312:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+310 |         // Test resume from pause
+311 |         try audioEngine.play()
+312 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+313 |         
+314 |         // Test stop
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:316:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+314 |         // Test stop
+315 |         audioEngine.stop()
+316 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+317 |         XCTAssertEqual(audioEngine.currentTime, 0)
+318 |         XCTAssertFalse(audioEngine.isPlaying)
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:329:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+327 |         // Toggle from stopped to playing
+328 |         audioEngine.togglePlayPause()
+329 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+330 |         
+331 |         // Toggle from playing to paused
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:333:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+331 |         // Toggle from playing to paused
+332 |         audioEngine.togglePlayPause()
+333 |         XCTAssertEqual(audioEngine.playbackState, .paused)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+334 |         
+335 |         // Toggle from paused to playing
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:337:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+335 |         // Toggle from paused to playing
+336 |         audioEngine.togglePlayPause()
+337 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+338 |     }
+339 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:386:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+384 |         
+385 |         try audioEngine.play()
+386 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+387 |         
+388 |         try audioEngine.seek(to: 15.0)
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:390:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+388 |         try audioEngine.seek(to: 15.0)
+389 |         XCTAssertEqual(audioEngine.currentTime, 15.0, accuracy: 0.1)
+390 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+391 |     }
+392 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:433:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+431 |         
+432 |         // Initial state
+433 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+434 |         
+435 |         // Loading state
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:456:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+454 |         
+455 |         // After loading
+456 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+457 |         
+458 |         // Play state
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:460:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+458 |         // Play state
+459 |         try audioEngine.play()
+460 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+461 |         
+462 |         // Pause state
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:464:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+462 |         // Pause state
+463 |         audioEngine.pause()
+464 |         XCTAssertEqual(audioEngine.playbackState, .paused)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+465 |         
+466 |         // Stop state
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:468:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+466 |         // Stop state
+467 |         audioEngine.stop()
+468 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+469 |     }
+470 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:545:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+543 |         // Verify cleanup
+544 |         XCTAssertEqual(audioEngine.currentTime, 0)
+545 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+546 |     }
+547 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:596:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+594 |         try await audioEngine.loadURL(fileURL1)
+595 |         try audioEngine.play()
+596 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+597 |         
+598 |         // Load second file while first is playing
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:602:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+600 |         
+601 |         // Verify playback stopped and new file is ready
+602 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+603 |         XCTAssertEqual(audioEngine.currentTrack?.fileURL, fileURL2)
+604 |     }
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:659:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+657 |         
+658 |         // Verify state after completion
+659 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+660 |         XCTAssertEqual(audioEngine.currentTime, audioEngine.duration, accuracy: 0.1)
+661 |     }
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:717:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+715 |         // Load
+716 |         try await audioEngine.loadURL(fileURL)
+717 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+718 |         
+719 |         // Play
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:721:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+719 |         // Play
+720 |         try audioEngine.play()
+721 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+722 |         
+723 |         // Wait a bit
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:733:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+731 |         // Pause
+732 |         audioEngine.pause()
+733 |         XCTAssertEqual(audioEngine.playbackState, .paused)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+734 |         let pausedTime = audioEngine.currentTime
+735 |         
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:742:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+740 |         // Resume
+741 |         try audioEngine.play()
+742 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+743 |         
+744 |         // Stop
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:746:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+744 |         // Stop
+745 |         audioEngine.stop()
+746 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+747 |         XCTAssertEqual(audioEngine.currentTime, 0)
+748 |     }
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift:774:13: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+772 |             
+773 |             // Verify track is playing
+774 |             XCTAssertEqual(audioEngine.playbackState, .playing)
+    |             `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+775 |             XCTAssertEqual(audioEngine.currentTrack?.id, track.id)
+776 |             
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[7/13] Compiling WinAmpPlayerTests AudioEnginePerformanceTests.swift
+[8/13] Emitting module WinAmpPlayerTests
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:17:30: error: cannot find type 'AudioSessionManager' in scope
+ 15 | final class AudioEngineIntegrationTests: XCTestCase {
+ 16 |     var audioEngine: AudioEngine!
+ 17 |     var audioSessionManager: AudioSessionManager!
+    |                              `- error: cannot find type 'AudioSessionManager' in scope
+ 18 |     var playlist: Playlist!
+ 19 |     var cancellables: Set<AnyCancellable> = []
+[9/13] Compiling WinAmpPlayerTests AudioEngineIntegrationTests.swift
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:17:30: error: cannot find type 'AudioSessionManager' in scope
+ 15 | final class AudioEngineIntegrationTests: XCTestCase {
+ 16 |     var audioEngine: AudioEngine!
+ 17 |     var audioSessionManager: AudioSessionManager!
+    |                              `- error: cannot find type 'AudioSessionManager' in scope
+ 18 |     var playlist: Playlist!
+ 19 |     var cancellables: Set<AnyCancellable> = []
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:25:31: error: cannot find 'AudioSessionManager' in scope
+ 23 |         super.setUp()
+ 24 |         audioEngine = AudioEngine()
+ 25 |         audioSessionManager = AudioSessionManager.shared
+    |                               `- error: cannot find 'AudioSessionManager' in scope
+ 26 |         playlist = Playlist(name: "Test Playlist")
+ 27 |         cancellables.removeAll()
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:52:23: error: 'AVAudioSession' is unavailable in macOS
+ 50 |         
+ 51 |         // Verify audio session is active
+ 52 |         XCTAssertTrue(AVAudioSession.sharedInstance().isOtherAudioPlaying == false)
+    |                       `- error: 'AVAudioSession' is unavailable in macOS
+ 53 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+ 54 |         
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:52:38: error: 'sharedInstance()' is unavailable in macOS
+ 50 |         
+ 51 |         // Verify audio session is active
+ 52 |         XCTAssertTrue(AVAudioSession.sharedInstance().isOtherAudioPlaying == false)
+    |                                      `- error: 'sharedInstance()' is unavailable in macOS
+ 53 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+ 54 |         
+
+AVFAudio.AVAudioSession.sharedInstance:3:19: note: 'sharedInstance()' has been explicitly marked unavailable here
+1 | class AVAudioSession {
+2 | @available(macOS, unavailable)
+3 |   open class func sharedInstance() -> AVAudioSession}
+  |                   `- note: 'sharedInstance()' has been explicitly marked unavailable here
+4 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:52:55: error: 'isOtherAudioPlaying' is unavailable in macOS
+ 50 |         
+ 51 |         // Verify audio session is active
+ 52 |         XCTAssertTrue(AVAudioSession.sharedInstance().isOtherAudioPlaying == false)
+    |                                                       `- error: 'isOtherAudioPlaying' is unavailable in macOS
+ 53 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+ 54 |         
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:402:55: note: 'isOtherAudioPlaying' has been explicitly marked unavailable here
+400 |     application is playing.
+401 | */
+402 | @property (readonly, getter=isOtherAudioPlaying) BOOL otherAudioPlaying API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                                                       `- note: 'isOtherAudioPlaying' has been explicitly marked unavailable here
+403 | 
+404 | /*!
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:53:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+ 51 |         // Verify audio session is active
+ 52 |         XCTAssertTrue(AVAudioSession.sharedInstance().isOtherAudioPlaying == false)
+ 53 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+ 54 |         
+ 55 |         audioEngine.stop()
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:66:19: error: 'AVAudioSession' is unavailable in macOS
+ 64 |         // Simulate interruption began
+ 65 |         NotificationCenter.default.post(
+ 66 |             name: AVAudioSession.interruptionNotification,
+    |                   `- error: 'AVAudioSession' is unavailable in macOS
+ 67 |             object: AVAudioSession.sharedInstance(),
+ 68 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:66:34: error: 'interruptionNotification' is unavailable in macOS
+ 64 |         // Simulate interruption began
+ 65 |         NotificationCenter.default.post(
+ 66 |             name: AVAudioSession.interruptionNotification,
+    |                                  `- error: 'interruptionNotification' is unavailable in macOS
+ 67 |             object: AVAudioSession.sharedInstance(),
+ 68 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:609:37: note: 'interruptionNotification' has been explicitly marked unavailable here
+607 |     within the info dictionary under the key AVAudioSessionInterruptionReasonKey.
+608 | */
+609 | OS_EXPORT NSNotificationName const  AVAudioSessionInterruptionNotification API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                                     `- note: 'interruptionNotification' has been explicitly marked unavailable here
+610 | 
+611 | /*!
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:67:21: error: 'AVAudioSession' is unavailable in macOS
+ 65 |         NotificationCenter.default.post(
+ 66 |             name: AVAudioSession.interruptionNotification,
+ 67 |             object: AVAudioSession.sharedInstance(),
+    |                     `- error: 'AVAudioSession' is unavailable in macOS
+ 68 |             userInfo: [
+ 69 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.began.rawValue
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:67:36: error: 'sharedInstance()' is unavailable in macOS
+ 65 |         NotificationCenter.default.post(
+ 66 |             name: AVAudioSession.interruptionNotification,
+ 67 |             object: AVAudioSession.sharedInstance(),
+    |                                    `- error: 'sharedInstance()' is unavailable in macOS
+ 68 |             userInfo: [
+ 69 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.began.rawValue
+
+AVFAudio.AVAudioSession.sharedInstance:3:19: note: 'sharedInstance()' has been explicitly marked unavailable here
+1 | class AVAudioSession {
+2 | @available(macOS, unavailable)
+3 |   open class func sharedInstance() -> AVAudioSession}
+  |                   `- note: 'sharedInstance()' has been explicitly marked unavailable here
+4 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:69:17: error: 'AVAudioSessionInterruptionTypeKey' is unavailable in macOS
+ 67 |             object: AVAudioSession.sharedInstance(),
+ 68 |             userInfo: [
+ 69 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.began.rawValue
+    |                 `- error: 'AVAudioSessionInterruptionTypeKey' is unavailable in macOS
+ 70 |             ]
+ 71 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:684:27: note: 'AVAudioSessionInterruptionTypeKey' has been explicitly marked unavailable here
+682 | /// keys for AVAudioSessionInterruptionNotification
+683 | /// Value is an NSNumber representing an AVAudioSessionInterruptionType
+684 | OS_EXPORT NSString *const AVAudioSessionInterruptionTypeKey API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                           `- note: 'AVAudioSessionInterruptionTypeKey' has been explicitly marked unavailable here
+685 | 
+686 | /// Only present for end interruption events.  Value is of type AVAudioSessionInterruptionOptions.
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:69:52: error: 'AVAudioSession' is unavailable in macOS
+ 67 |             object: AVAudioSession.sharedInstance(),
+ 68 |             userInfo: [
+ 69 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.began.rawValue
+    |                                                    `- error: 'AVAudioSession' is unavailable in macOS
+ 70 |             ]
+ 71 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:77:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+ 75 |         
+ 76 |         // Verify playback was paused
+ 77 |         XCTAssertEqual(audioEngine.playbackState, .paused)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+ 78 |         
+ 79 |         // Simulate interruption ended
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:81:19: error: 'AVAudioSession' is unavailable in macOS
+ 79 |         // Simulate interruption ended
+ 80 |         NotificationCenter.default.post(
+ 81 |             name: AVAudioSession.interruptionNotification,
+    |                   `- error: 'AVAudioSession' is unavailable in macOS
+ 82 |             object: AVAudioSession.sharedInstance(),
+ 83 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:81:34: error: 'interruptionNotification' is unavailable in macOS
+ 79 |         // Simulate interruption ended
+ 80 |         NotificationCenter.default.post(
+ 81 |             name: AVAudioSession.interruptionNotification,
+    |                                  `- error: 'interruptionNotification' is unavailable in macOS
+ 82 |             object: AVAudioSession.sharedInstance(),
+ 83 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:609:37: note: 'interruptionNotification' has been explicitly marked unavailable here
+607 |     within the info dictionary under the key AVAudioSessionInterruptionReasonKey.
+608 | */
+609 | OS_EXPORT NSNotificationName const  AVAudioSessionInterruptionNotification API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                                     `- note: 'interruptionNotification' has been explicitly marked unavailable here
+610 | 
+611 | /*!
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:82:21: error: 'AVAudioSession' is unavailable in macOS
+ 80 |         NotificationCenter.default.post(
+ 81 |             name: AVAudioSession.interruptionNotification,
+ 82 |             object: AVAudioSession.sharedInstance(),
+    |                     `- error: 'AVAudioSession' is unavailable in macOS
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:82:36: error: 'sharedInstance()' is unavailable in macOS
+ 80 |         NotificationCenter.default.post(
+ 81 |             name: AVAudioSession.interruptionNotification,
+ 82 |             object: AVAudioSession.sharedInstance(),
+    |                                    `- error: 'sharedInstance()' is unavailable in macOS
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+
+AVFAudio.AVAudioSession.sharedInstance:3:19: note: 'sharedInstance()' has been explicitly marked unavailable here
+1 | class AVAudioSession {
+2 | @available(macOS, unavailable)
+3 |   open class func sharedInstance() -> AVAudioSession}
+  |                   `- note: 'sharedInstance()' has been explicitly marked unavailable here
+4 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:84:17: error: 'AVAudioSessionInterruptionTypeKey' is unavailable in macOS
+ 82 |             object: AVAudioSession.sharedInstance(),
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+    |                 `- error: 'AVAudioSessionInterruptionTypeKey' is unavailable in macOS
+ 85 |                 AVAudioSessionInterruptionOptionKey: AVAudioSession.InterruptionOptions.shouldResume.rawValue
+ 86 |             ]
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:684:27: note: 'AVAudioSessionInterruptionTypeKey' has been explicitly marked unavailable here
+682 | /// keys for AVAudioSessionInterruptionNotification
+683 | /// Value is an NSNumber representing an AVAudioSessionInterruptionType
+684 | OS_EXPORT NSString *const AVAudioSessionInterruptionTypeKey API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                           `- note: 'AVAudioSessionInterruptionTypeKey' has been explicitly marked unavailable here
+685 | 
+686 | /// Only present for end interruption events.  Value is of type AVAudioSessionInterruptionOptions.
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:84:52: error: 'AVAudioSession' is unavailable in macOS
+ 82 |             object: AVAudioSession.sharedInstance(),
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+    |                                                    `- error: 'AVAudioSession' is unavailable in macOS
+ 85 |                 AVAudioSessionInterruptionOptionKey: AVAudioSession.InterruptionOptions.shouldResume.rawValue
+ 86 |             ]
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:85:17: error: 'AVAudioSessionInterruptionOptionKey' is unavailable in macOS
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+ 85 |                 AVAudioSessionInterruptionOptionKey: AVAudioSession.InterruptionOptions.shouldResume.rawValue
+    |                 `- error: 'AVAudioSessionInterruptionOptionKey' is unavailable in macOS
+ 86 |             ]
+ 87 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:687:27: note: 'AVAudioSessionInterruptionOptionKey' has been explicitly marked unavailable here
+685 | 
+686 | /// Only present for end interruption events.  Value is of type AVAudioSessionInterruptionOptions.
+687 | OS_EXPORT NSString *const AVAudioSessionInterruptionOptionKey API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                           `- note: 'AVAudioSessionInterruptionOptionKey' has been explicitly marked unavailable here
+688 | 
+689 | /// Only present in begin interruption events. Value is of type AVAudioSessionInterruptionReason.
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:85:54: error: 'AVAudioSession' is unavailable in macOS
+ 83 |             userInfo: [
+ 84 |                 AVAudioSessionInterruptionTypeKey: AVAudioSession.InterruptionType.ended.rawValue,
+ 85 |                 AVAudioSessionInterruptionOptionKey: AVAudioSession.InterruptionOptions.shouldResume.rawValue
+    |                                                      `- error: 'AVAudioSession' is unavailable in macOS
+ 86 |             ]
+ 87 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:98:19: error: 'AVAudioSession' is unavailable in macOS
+ 96 |         // Simulate route change (e.g., headphones unplugged)
+ 97 |         NotificationCenter.default.post(
+ 98 |             name: AVAudioSession.routeChangeNotification,
+    |                   `- error: 'AVAudioSession' is unavailable in macOS
+ 99 |             object: AVAudioSession.sharedInstance(),
+100 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:98:34: error: 'routeChangeNotification' is unavailable in macOS
+ 96 |         // Simulate route change (e.g., headphones unplugged)
+ 97 |         NotificationCenter.default.post(
+ 98 |             name: AVAudioSession.routeChangeNotification,
+    |                                  `- error: 'routeChangeNotification' is unavailable in macOS
+ 99 |             object: AVAudioSession.sharedInstance(),
+100 |             userInfo: [
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:617:37: note: 'routeChangeNotification' has been explicitly marked unavailable here
+615 | 	of the previous audio route.
+616 | */
+617 | OS_EXPORT NSNotificationName const  AVAudioSessionRouteChangeNotification API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                                     `- note: 'routeChangeNotification' has been explicitly marked unavailable here
+618 | 
+619 | /*!
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:99:21: error: 'AVAudioSession' is unavailable in macOS
+ 97 |         NotificationCenter.default.post(
+ 98 |             name: AVAudioSession.routeChangeNotification,
+ 99 |             object: AVAudioSession.sharedInstance(),
+    |                     `- error: 'AVAudioSession' is unavailable in macOS
+100 |             userInfo: [
+101 |                 AVAudioSessionRouteChangeReasonKey: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:99:36: error: 'sharedInstance()' is unavailable in macOS
+ 97 |         NotificationCenter.default.post(
+ 98 |             name: AVAudioSession.routeChangeNotification,
+ 99 |             object: AVAudioSession.sharedInstance(),
+    |                                    `- error: 'sharedInstance()' is unavailable in macOS
+100 |             userInfo: [
+101 |                 AVAudioSessionRouteChangeReasonKey: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
+
+AVFAudio.AVAudioSession.sharedInstance:3:19: note: 'sharedInstance()' has been explicitly marked unavailable here
+1 | class AVAudioSession {
+2 | @available(macOS, unavailable)
+3 |   open class func sharedInstance() -> AVAudioSession}
+  |                   `- note: 'sharedInstance()' has been explicitly marked unavailable here
+4 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:101:17: error: 'AVAudioSessionRouteChangeReasonKey' is unavailable in macOS
+ 99 |             object: AVAudioSession.sharedInstance(),
+100 |             userInfo: [
+101 |                 AVAudioSessionRouteChangeReasonKey: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
+    |                 `- error: 'AVAudioSessionRouteChangeReasonKey' is unavailable in macOS
+102 |             ]
+103 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:709:27: note: 'AVAudioSessionRouteChangeReasonKey' has been explicitly marked unavailable here
+707 | /// keys for AVAudioSessionRouteChangeNotification
+708 | /// value is an NSNumber representing an AVAudioSessionRouteChangeReason
+709 | OS_EXPORT NSString *const AVAudioSessionRouteChangeReasonKey API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+    |                           `- note: 'AVAudioSessionRouteChangeReasonKey' has been explicitly marked unavailable here
+710 | /// value is AVAudioSessionRouteDescription *
+711 | OS_EXPORT NSString *const AVAudioSessionRouteChangePreviousRouteKey API_AVAILABLE(ios(6.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:101:53: error: 'AVAudioSession' is unavailable in macOS
+ 99 |             object: AVAudioSession.sharedInstance(),
+100 |             userInfo: [
+101 |                 AVAudioSessionRouteChangeReasonKey: AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue
+    |                                                     `- error: 'AVAudioSession' is unavailable in macOS
+102 |             ]
+103 |         )
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioSession.h:29:12: note: 'AVAudioSession' has been explicitly marked unavailable here
+ 27 | NS_SWIFT_SENDABLE
+ 28 | API_AVAILABLE(ios(3.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos) 
+ 29 | @interface AVAudioSession : NSObject {
+    |            `- note: 'AVAudioSession' has been explicitly marked unavailable here
+ 30 | @private
+ 31 | 	void *_impl;
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:149:18: error: value of type 'Playlist' has no member 'next'
+147 |         // Test next track
+148 |         let firstTrack = playlist.currentTrack
+149 |         playlist.next()
+    |                  `- error: value of type 'Playlist' has no member 'next'
+150 |         let secondTrack = playlist.currentTrack
+151 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:161:18: error: value of type 'Playlist' has no member 'previous'
+159 |         
+160 |         // Test previous track
+161 |         playlist.previous()
+    |                  `- error: value of type 'Playlist' has no member 'previous'
+162 |         XCTAssertEqual(playlist.currentTrack?.id, firstTrack?.id)
+163 |     }
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:167:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it
+165 |     func testPlaylistCompletion() async throws {
+166 |         // Create a short playlist
+167 |         for i in 0..<2 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it
+168 |             let file = try AudioTestFixtures.createTestAudioFile(duration: 0.5) // Short files
+169 |             testFileURLs.append(file)
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:187:17: warning: capture of 'completedTracks' with non-sendable type '[Track]' in a '@Sendable' closure
+185 |         ) { notification in
+186 |             if let track = notification.userInfo?["track"] as? Track {
+187 |                 completedTracks.append(track)
+    |                 `- warning: capture of 'completedTracks' with non-sendable type '[Track]' in a '@Sendable' closure
+188 |                 completionExpectation.fulfill()
+189 |             }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Models/Track.swift:13:15: note: struct 'Track' does not conform to the 'Sendable' protocol
+ 11 | 
+ 12 | /// Represents an audio track with metadata and playback information
+ 13 | public struct Track: Identifiable, Equatable, Codable, Hashable {
+    |               `- note: struct 'Track' does not conform to the 'Sendable' protocol
+ 14 |     // MARK: - Properties
+ 15 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:13:11: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'WinAmpPlayer'
+ 11 | import AVFoundation
+ 12 | import AppKit
+ 13 | @testable import WinAmpPlayer
+    |           `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'WinAmpPlayer'
+ 14 | 
+ 15 | final class AudioEngineIntegrationTests: XCTestCase {
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:291:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+289 |         
+290 |         try await audioEngine.loadURL(validFile)
+291 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+292 |         
+293 |         // Verify can play after error
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:295:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+293 |         // Verify can play after error
+294 |         try audioEngine.play()
+295 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+296 |         
+297 |         audioEngine.stop()
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:329:18: error: value of type 'Playlist' has no member 'next'
+327 |         
+328 |         // 5. User skips to next track
+329 |         playlist.next()
+    |                  `- error: value of type 'Playlist' has no member 'next'
+330 |         if let nextTrack = playlist.currentTrack {
+331 |             try await audioEngine.loadTrack(nextTrack)
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:350:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+348 |         
+349 |         // Verify final state
+350 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+351 |         XCTAssertEqual(audioEngine.volume, 0.7)
+352 |         XCTAssertEqual(playlist.currentIndex, 1)
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:352:33: error: value of type 'Playlist' has no member 'currentIndex'
+350 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+351 |         XCTAssertEqual(audioEngine.volume, 0.7)
+352 |         XCTAssertEqual(playlist.currentIndex, 1)
+    |                                 `- error: value of type 'Playlist' has no member 'currentIndex'
+353 |     }
+354 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:368:19: error: cannot find 'UIApplication' in scope
+366 |         // Simulate app going to background
+367 |         NotificationCenter.default.post(
+368 |             name: UIApplication.didEnterBackgroundNotification,
+    |                   `- error: cannot find 'UIApplication' in scope
+369 |             object: nil
+370 |         )
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:374:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+372 |         // Playback should continue
+373 |         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+374 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+375 |         
+376 |         // Simulate app coming to foreground
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:378:19: error: cannot find 'UIApplication' in scope
+376 |         // Simulate app coming to foreground
+377 |         NotificationCenter.default.post(
+378 |             name: UIApplication.willEnterForegroundNotification,
+    |                   `- error: cannot find 'UIApplication' in scope
+379 |             object: nil
+380 |         )
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:383:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+381 |         
+382 |         // Playback should still be active
+383 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+384 |         
+385 |         audioEngine.stop()
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift:431:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+429 |         // Engine should still be functional
+430 |         audioEngine.stop()
+431 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+432 |     }
+433 | }
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+[10/13] Compiling WinAmpPlayerTests AudioEngineConcurrencyTests.swift
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:134:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+132 |         XCTAssertGreaterThanOrEqual(audioEngine.currentTime, 0)
+133 |         XCTAssertLessThanOrEqual(audioEngine.currentTime, audioEngine.duration)
+134 |         XCTAssertEqual(audioEngine.playbackState, .playing)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+135 |     }
+136 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:171:19: warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+169 |         
+170 |         // Verify observers received updates
+171 |         stateLock.lock()
+    |                   `- warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+172 |         let finalCount = stateChanges.count
+173 |         stateLock.unlock()
+
+Foundation.NSLock.lock:2:11: note: 'lock()' declared here
+1 | class NSLock {
+2 | open func lock()}
+  |           `- note: 'lock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:173:19: warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+171 |         stateLock.lock()
+172 |         let finalCount = stateChanges.count
+173 |         stateLock.unlock()
+    |                   `- warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+174 |         
+175 |         // Each observer should have received multiple state changes
+
+Foundation.NSLock.unlock:2:11: note: 'unlock()' declared here
+1 | class NSLock {
+2 | open func unlock()}
+  |           `- note: 'unlock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:244:18: warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+242 |         
+243 |         // Verify time updates were received
+244 |         timeLock.lock()
+    |                  `- warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+245 |         let updateCount = timeUpdates.count
+246 |         timeLock.unlock()
+
+Foundation.NSLock.lock:2:11: note: 'lock()' declared here
+1 | class NSLock {
+2 | open func lock()}
+  |           `- note: 'lock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:246:18: warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+244 |         timeLock.lock()
+245 |         let updateCount = timeUpdates.count
+246 |         timeLock.unlock()
+    |                  `- warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+247 |         
+248 |         XCTAssertGreaterThan(updateCount, 0)
+
+Foundation.NSLock.unlock:2:11: note: 'unlock()' declared here
+1 | class NSLock {
+2 | open func unlock()}
+  |           `- note: 'unlock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:298:9: error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+296 |         // Verify engine is still functional
+297 |         audioEngine.stop()
+298 |         XCTAssertEqual(audioEngine.playbackState, .stopped)
+    |         `- error: global function 'XCTAssertEqual(_:_:_:file:line:)' requires that 'PlaybackState' conform to 'Equatable'
+299 |     }
+300 |     
+
+XCTest.XCTAssertEqual:1:13: note: where 'T' = 'PlaybackState'
+1 | public func XCTAssertEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : Equatable
+  |             `- note: where 'T' = 'PlaybackState'
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:350:18: warning: immutable value 'index' was never used; consider replacing with '_' or removing it
+348 |         
+349 |         await withTaskGroup(of: Void.self) { group in
+350 |             for (index, engine) in engines.enumerated() {
+    |                  `- warning: immutable value 'index' was never used; consider replacing with '_' or removing it
+351 |                 group.addTask {
+352 |                     // Load file
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:411:35: warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+409 |                     // Time should not go backwards during playback
+410 |                     if currentTime < lastTime && self?.audioEngine.isPlaying == true {
+411 |                         checkLock.lock()
+    |                                   `- warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+412 |                         inconsistencies += 1
+413 |                         checkLock.unlock()
+
+Foundation.NSLock.lock:2:11: note: 'lock()' declared here
+1 | class NSLock {
+2 | open func lock()}
+  |           `- note: 'lock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:413:35: warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+411 |                         checkLock.lock()
+412 |                         inconsistencies += 1
+413 |                         checkLock.unlock()
+    |                                   `- warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+414 |                     }
+415 |                     lastTime = currentTime
+
+Foundation.NSLock.unlock:2:11: note: 'unlock()' declared here
+1 | class NSLock {
+2 | open func unlock()}
+  |           `- note: 'unlock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:434:19: warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+432 |         
+433 |         // Should have minimal or no inconsistencies
+434 |         checkLock.lock()
+    |                   `- warning: instance method 'lock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+435 |         let finalInconsistencies = inconsistencies
+436 |         checkLock.unlock()
+
+Foundation.NSLock.lock:2:11: note: 'lock()' declared here
+1 | class NSLock {
+2 | open func lock()}
+  |           `- note: 'lock()' declared here
+3 | 
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift:436:19: warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+434 |         checkLock.lock()
+435 |         let finalInconsistencies = inconsistencies
+436 |         checkLock.unlock()
+    |                   `- warning: instance method 'unlock' is unavailable from asynchronous contexts; Use async-safe scoped locking instead; this is an error in the Swift 6 language mode
+437 |         
+438 |         XCTAssertLessThanOrEqual(finalInconsistencies, 5) // Allow small tolerance
+
+Foundation.NSLock.unlock:2:11: note: 'unlock()' declared here
+1 | class NSLock {
+2 | open func unlock()}
+  |           `- note: 'unlock()' declared here
+3 | 
+[11/13] Compiling WinAmpPlayerTests AudioTestFixtures.swift
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Fixtures/AudioTestFixtures.swift:254:23: error: cannot find 'CIImage' in scope
+252 |         
+253 |         // Convert to PNG data
+254 |         let ciImage = CIImage(cgImage: cgImage)
+    |                       `- error: cannot find 'CIImage' in scope
+255 |         let ciContext = CIContext()
+256 |         return ciContext.pngRepresentation(
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Fixtures/AudioTestFixtures.swift:255:25: error: cannot find 'CIContext' in scope
+253 |         // Convert to PNG data
+254 |         let ciImage = CIImage(cgImage: cgImage)
+255 |         let ciContext = CIContext()
+    |                         `- error: cannot find 'CIContext' in scope
+256 |         return ciContext.pngRepresentation(
+257 |             of: ciImage,
+
+/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Fixtures/AudioTestFixtures.swift:258:22: error: cannot infer contextual base in reference to member 'RGBA8'
+256 |         return ciContext.pngRepresentation(
+257 |             of: ciImage,
+258 |             format: .RGBA8,
+    |                      `- error: cannot infer contextual base in reference to member 'RGBA8'
+259 |             colorSpace: colorSpace
+260 |         )
+error: fatalError

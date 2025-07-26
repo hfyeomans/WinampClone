@@ -352,6 +352,7 @@ struct MainPlayerClutterbarButton: View {
 public struct MainPlayerView: View {
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
+    @StateObject private var playlistController: PlaylistController
     @StateObject private var windowCommunicator = WindowCommunicator.shared
     @StateObject private var fftProcessor = FFTProcessor()
     
@@ -374,9 +375,12 @@ public struct MainPlayerView: View {
     
     public init() {
         let engine = AudioEngine()
-        let controller = VolumeBalanceController(audioEngine: engine.audioEngine)
+        let volumeCtrl = VolumeBalanceController(audioEngine: engine.audioEngine)
+        let playlistCtrl = PlaylistController(audioEngine: engine, volumeController: volumeCtrl)
+        engine.setVolumeController(volumeCtrl)
         _audioEngine = StateObject(wrappedValue: engine)
-        _volumeController = StateObject(wrappedValue: controller)
+        _volumeController = StateObject(wrappedValue: volumeCtrl)
+        _playlistController = StateObject(wrappedValue: playlistCtrl)
     }
     
     public var body: some View {
@@ -549,7 +553,7 @@ public struct MainPlayerView: View {
                             WindowManager.shared.toggleWindow(.equalizer)
                         }
                         MainPlayerClutterbarButton(icon: "list.bullet") {
-                            WindowManager.shared.toggleWindow(.playlist)
+                            SecondaryWindowManager.shared.toggleWindow(.playlist, playlistController: playlistController)
                         }
                     }
                 }
