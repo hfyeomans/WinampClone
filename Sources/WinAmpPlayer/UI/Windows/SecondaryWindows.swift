@@ -14,12 +14,14 @@ enum SecondaryWindowType: String, CaseIterable {
     case playlist = "playlist"
     case equalizer = "equalizer"
     case library = "library"
+    case skinBrowser = "skinBrowser"
     
     var title: String {
         switch self {
         case .playlist: return "Playlist Editor"
         case .equalizer: return "Equalizer"
         case .library: return "Media Library"
+        case .skinBrowser: return "Skin Browser"
         }
     }
     
@@ -28,6 +30,7 @@ enum SecondaryWindowType: String, CaseIterable {
         case .playlist: return CGSize(width: 275, height: 232)
         case .equalizer: return CGSize(width: 275, height: 116)
         case .library: return CGSize(width: 400, height: 300)
+        case .skinBrowser: return CGSize(width: 600, height: 400)
         }
     }
 }
@@ -62,19 +65,22 @@ class SecondaryWindowManager: ObservableObject {
         switch type {
         case .playlist:
             if let controller = playlistController {
-                let contentView = PlaylistWindow(playlistController: controller)
+                let contentView = SkinnablePlaylistWindow(playlistController: controller)
                 window.contentView = NSHostingView(rootView: contentView)
             }
         case .equalizer:
             if let engine = audioEngine {
-                let contentView = EqualizerWindow(audioEngine: engine)
+                let contentView = SkinnableEqualizerWindow(audioEngine: engine)
                 window.contentView = NSHostingView(rootView: contentView)
             }
         case .library:
             if let controller = playlistController {
-                let contentView = LibraryWindow(playlistController: controller)
+                let contentView = SkinnableLibraryWindow(playlistController: controller)
                 window.contentView = NSHostingView(rootView: contentView)
             }
+        case .skinBrowser:
+            let contentView = SkinBrowserWindow()
+            window.contentView = NSHostingView(rootView: contentView)
         }
         
         window.makeKeyAndOrderFront(nil)
@@ -94,6 +100,11 @@ class SecondaryWindowManager: ObservableObject {
         } else {
             openWindow(type, playlistController: playlistController, audioEngine: audioEngine)
         }
+    }
+    
+    /// Open skin browser window
+    func openSkinBrowser() {
+        openWindow(.skinBrowser)
     }
     
     /// Check if window is open
