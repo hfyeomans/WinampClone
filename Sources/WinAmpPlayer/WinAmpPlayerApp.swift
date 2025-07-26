@@ -12,6 +12,7 @@ import SwiftUI
 struct WinAmpPlayerApp: App {
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
+    @StateObject private var skinManager = SkinManager.shared
     
     init() {
         let engine = AudioEngine()
@@ -19,13 +20,19 @@ struct WinAmpPlayerApp: App {
         engine.setVolumeController(controller)
         _audioEngine = StateObject(wrappedValue: engine)
         _volumeController = StateObject(wrappedValue: controller)
+        
+        // Initialize skin system
+        Task {
+            try? await SkinAssetCache.shared.preloadDefaultSkin()
+        }
     }
     
     var body: some Scene {
         WindowGroup("WinAmp Player") {
-            MainPlayerView()
+            SkinnableMainPlayerView()
                 .environmentObject(audioEngine)
                 .environmentObject(volumeController)
+                .environmentObject(skinManager)
                 .preferredColorScheme(.dark)
         }
         .windowStyle(.hiddenTitleBar)
@@ -35,6 +42,51 @@ struct WinAmpPlayerApp: App {
             CommandGroup(replacing: .newItem) { }
             CommandGroup(replacing: .undoRedo) { }
             CommandGroup(replacing: .pasteboard) { }
+            
+            // Add skin menu
+            CommandMenu("Skins") {
+                ForEach(skinManager.availableSkins.prefix(10)) { skin in
+                    Button(skin.name) {
+                        Task {
+                            try? await skinManager.applySkin(skin)
+                        }
+                    }
+                    .disabled(skinManager.currentSkin.id == skin.id)
+                }
+                
+                if skinManager.availableSkins.count > 10 {
+                    Divider()
+                    Text("More skins available...")
+                        .foregroundColor(.secondary)
+                }
+                
+                Divider()
+                
+                Button("Browse Skins...") {
+                    SecondaryWindowManager.shared.openSkinBrowser()
+                }
+                .keyboardShortcut("K", modifiers: [.command, .shift])
+                
+                Button("Load Skin File...") {
+                    let panel = NSOpenPanel()
+                    panel.allowedFileTypes = ["wsz", "zip"]
+                    panel.allowsMultipleSelection = false
+                    
+                    if panel.runModal() == .OK, let url = panel.url {
+                        Task {
+                            if let skin = try? await skinManager.installSkin(from: url) {
+                                try? await skinManager.applySkin(skin)
+                            }
+                        }
+                    }
+                }
+                
+                Divider()
+                
+                Button("Get More Skins Online...") {
+                    NSWorkspace.shared.open(URL(string: "https://skins.webamp.org/")!)
+                }
+            }
         }
         
         // Equalizer Window
