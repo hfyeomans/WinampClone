@@ -41,7 +41,7 @@ class SecondaryWindowManager: ObservableObject {
     private init() {}
     
     /// Open or focus a secondary window
-    func openWindow(_ type: SecondaryWindowType, playlistController: PlaylistController? = nil) {
+    func openWindow(_ type: SecondaryWindowType, playlistController: PlaylistController? = nil, audioEngine: AudioEngine? = nil) {
         if let existingWindow = windows[type] {
             existingWindow.makeKeyAndOrderFront(nil)
             return
@@ -66,17 +66,15 @@ class SecondaryWindowManager: ObservableObject {
                 window.contentView = NSHostingView(rootView: contentView)
             }
         case .equalizer:
-            // TODO: Implement equalizer window
-            let placeholderView = Text("Equalizer Window - Coming Soon")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(WinAmpColors.background)
-            window.contentView = NSHostingView(rootView: placeholderView)
+            if let engine = audioEngine {
+                let contentView = EqualizerWindow(audioEngine: engine)
+                window.contentView = NSHostingView(rootView: contentView)
+            }
         case .library:
-            // TODO: Implement library window
-            let placeholderView = Text("Media Library - Coming Soon")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(WinAmpColors.background)
-            window.contentView = NSHostingView(rootView: placeholderView)
+            if let controller = playlistController {
+                let contentView = LibraryWindow(playlistController: controller)
+                window.contentView = NSHostingView(rootView: contentView)
+            }
         }
         
         window.makeKeyAndOrderFront(nil)
@@ -90,11 +88,11 @@ class SecondaryWindowManager: ObservableObject {
     }
     
     /// Toggle window visibility
-    func toggleWindow(_ type: SecondaryWindowType, playlistController: PlaylistController? = nil) {
+    func toggleWindow(_ type: SecondaryWindowType, playlistController: PlaylistController? = nil, audioEngine: AudioEngine? = nil) {
         if let window = windows[type], window.isVisible {
             window.close()
         } else {
-            openWindow(type, playlistController: playlistController)
+            openWindow(type, playlistController: playlistController, audioEngine: audioEngine)
         }
     }
     
