@@ -550,10 +550,13 @@ public struct MainPlayerView: View {
                     // Window buttons
                     HStack(spacing: 2) {
                         MainPlayerClutterbarButton(icon: "waveform.badge.plus") {
-                            WindowManager.shared.toggleWindow(.equalizer)
+                            SecondaryWindowManager.shared.toggleWindow(.equalizer, audioEngine: audioEngine)
                         }
                         MainPlayerClutterbarButton(icon: "list.bullet") {
                             SecondaryWindowManager.shared.toggleWindow(.playlist, playlistController: playlistController)
+                        }
+                        MainPlayerClutterbarButton(icon: "folder") {
+                            SecondaryWindowManager.shared.toggleWindow(.library, playlistController: playlistController)
                         }
                     }
                 }
