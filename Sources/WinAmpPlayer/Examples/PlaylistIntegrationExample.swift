@@ -163,7 +163,7 @@ struct PlaylistIntegrationExample: View {
     }
 }
 
-@main
+// Removed @main to avoid conflicts with WinAmpPlayerApp
 struct PlaylistIntegrationExampleApp: App {
     var body: some Scene {
         WindowGroup {

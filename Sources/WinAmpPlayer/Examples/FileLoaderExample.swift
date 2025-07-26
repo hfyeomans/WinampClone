@@ -146,7 +146,7 @@ class FileLoaderExample {
                 .store(in: &cancellables)
             
             // Start playback
-            audioEngine.play()
+            try? audioEngine.play()
             
             // Seek to middle of track
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

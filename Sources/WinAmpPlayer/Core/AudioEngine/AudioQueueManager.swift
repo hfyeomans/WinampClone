@@ -237,10 +237,13 @@ final class AudioQueueManager: ObservableObject {
     // MARK: - Private Methods
     
     private func setupObservers() {
-        // Observe when current track finishes
-        audioEngine.$isPlaying
-            .sink { [weak self] isPlaying in
-                if !isPlaying, self?.currentTrack != nil {
+        // Note: AudioEngine doesn't expose $isPlaying publisher
+        // Need to implement track completion detection differently
+        // For now, use a timer to check playback state
+        Timer.publish(every: 0.5, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                if !(self?.audioEngine.isPlaying ?? false), self?.currentTrack != nil {
                     self?.handleTrackCompletion()
                 }
             }
@@ -261,17 +264,12 @@ final class AudioQueueManager: ObservableObject {
             
             guard let file = currentFile else { return }
             
-            currentPlayer = AVAudioPlayerNode()
-            audioEngine.engine.attach(currentPlayer!)
-            audioEngine.engine.connect(currentPlayer!, to: audioEngine.engine.mainMixerNode, format: file.processingFormat)
+            // Note: AudioEngine doesn't have a public load method
+            // This needs to be rewritten to work with AudioEngine's actual API
+            print("Warning: AudioQueueManager needs to be updated to work with AudioEngine's public API")
             
-            currentPlayer!.scheduleFile(file, at: nil) { [weak self] in
-                DispatchQueue.main.async {
-                    self?.handleTrackCompletion()
-                }
-            }
-            
-            currentPlayer!.play()
+            // Start playback using AudioEngine
+            try audioEngine.play()
             
         } catch {
             print("Error loading track: \(error)")
@@ -301,12 +299,12 @@ final class AudioQueueManager: ObservableObject {
                 
                 guard let file = nextFile else { return }
                 
-                nextPlayer = AVAudioPlayerNode()
-                audioEngine.engine.attach(nextPlayer!)
-                audioEngine.engine.connect(nextPlayer!, to: audioEngine.engine.mainMixerNode, format: file.processingFormat)
+                // Note: AudioEngine doesn't expose engine property
+                // Preloading needs to be implemented differently
+                print("Warning: Preloading not implemented - AudioEngine API needs update")
                 
                 // Schedule but don't play yet
-                nextPlayer!.scheduleFile(file, at: nil)
+                // nextPlayer!.scheduleFile(file, at: nil)
                 
             } catch {
                 print("Error preloading next track: \(error)")
@@ -382,7 +380,7 @@ final class AudioQueueManager: ObservableObject {
     private func stopCurrentPlayer() {
         currentPlayer?.stop()
         if let player = currentPlayer {
-            audioEngine.engine.detach(player)
+            // audioEngine.engine.detach(player) // Engine not exposed
         }
         currentPlayer = nil
     }

@@ -102,6 +102,9 @@ class MetadataExample {
 
 // MARK: - Integration with Track model
 
+// Example of how Track model could integrate with MetadataExtractor
+// Note: This is commented out to avoid conflicts with the actual Track implementation
+/*
 extension Track {
     /// Populate this track with metadata from the file
     mutating func loadMetadata() async throws {
@@ -130,3 +133,4 @@ extension Track {
     }
     #endif
 }
+*/

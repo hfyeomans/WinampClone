@@ -27,7 +27,7 @@ enum RepeatMode: Equatable {
 }
 
 /// Smart playlist rule types
-enum SmartPlaylistRuleType {
+public enum SmartPlaylistRuleType {
     case artist(String)
     case album(String)
     case genre(String)
@@ -42,7 +42,7 @@ enum SmartPlaylistRuleType {
 
 // Note: There's also a more complete ComparisonOperator in SmartPlaylistRule.swift
 // This simplified version is kept here to avoid circular dependencies
-enum ComparisonOperator: String, Codable {
+public enum ComparisonOperator: String, Codable {
     case equals
     case notEquals
     case greaterThan
@@ -123,12 +123,12 @@ struct PlaylistMetadata: Codable {
 }
 
 /// Smart playlist rule definition
-struct SmartPlaylistRule: Codable {
-    let id: UUID
-    let ruleType: SmartPlaylistRuleType
-    let isInclude: Bool  // true = include, false = exclude
+public struct SmartPlaylistRule: Codable {
+    public let id: UUID
+    public let ruleType: SmartPlaylistRuleType
+    public let isInclude: Bool  // true = include, false = exclude
     
-    init(ruleType: SmartPlaylistRuleType, isInclude: Bool = true) {
+    public init(ruleType: SmartPlaylistRuleType, isInclude: Bool = true) {
         self.id = UUID()
         self.ruleType = ruleType
         self.isInclude = isInclude
@@ -1070,7 +1070,7 @@ extension SmartPlaylistRuleType: Codable {
         case type, value, comparison
     }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(String.self, forKey: .type)
         
@@ -1117,7 +1117,7 @@ extension SmartPlaylistRuleType: Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         switch self {

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Common audio conversion presets
-public struct ConversionPreset {
+public struct ConversionPreset: Hashable {
     /// Preset name
     public let name: String
     

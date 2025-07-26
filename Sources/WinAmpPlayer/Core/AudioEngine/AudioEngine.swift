@@ -310,7 +310,7 @@ class AudioEngine: ObservableObject {
         // Save current position for resuming
         updateFramePosition()
         
-        logger.info("Playback paused at \(currentTime)s")
+        logger.info("Playback paused at \(self.currentTime)s")
     }
     
     /// Stop playback and reset to beginning
@@ -479,7 +479,7 @@ class AudioEngine: ObservableObject {
             }
             
             needsFileScheduling = false
-            logger.info("Scheduled audio file from frame \(framePosition)")
+            logger.info("Scheduled audio file from frame \(self.framePosition)")
         }
     }
     

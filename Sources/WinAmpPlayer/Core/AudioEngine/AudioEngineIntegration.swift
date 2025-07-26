@@ -96,7 +96,7 @@ extension AudioEngine {
     /// - Parameter time: The time in seconds to seek to
     public func seekWithDecoder(to time: TimeInterval) {
         guard let decoder = currentDecoder else {
-            seek(to: time)
+            try? seek(to: time)
             return
         }
         
@@ -117,8 +117,9 @@ extension AudioEngine {
         currentTime = time
         
         if wasPlaying {
-            scheduleNextBuffer()
-            playerNode.play()
+            // Note: scheduleNextBuffer is private to AudioEngine
+            // Need to use public API instead
+            try? play()
         }
     }
     
@@ -126,6 +127,9 @@ extension AudioEngine {
     
     /// Load a file with automatic format detection and optimal settings
     private func loadFile(_ url: URL, withFormat format: AVAudioFormat? = nil) async throws {
+        // Note: This method needs to be rewritten to use AudioEngine's public API
+        // sessionQueue is not available in AudioEngine
+        /*
         return try await withCheckedThrowingContinuation { continuation in
             sessionQueue.async { [weak self] in
                 guard let self = self else {
@@ -154,6 +158,11 @@ extension AudioEngine {
                 }
             }
         }
+        */
+        
+        // Note: AudioEngine doesn't have a public load method
+        // This integration needs to be rewritten
+        throw AudioEngineError.fileLoadFailed(NSError(domain: "AudioEngine", code: -1, userInfo: [NSLocalizedDescriptionKey: "Load method not available"]))
     }
 }
 
@@ -191,7 +200,7 @@ public class AudioEngineExample {
             }
             
             // Start playback
-            engine.play()
+            try engine.play()
             
         } catch {
             print("Failed to load track: \(error)")

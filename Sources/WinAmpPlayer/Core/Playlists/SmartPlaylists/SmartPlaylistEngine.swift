@@ -111,7 +111,7 @@ public final class SmartPlaylistEngine {
     }
     
     /// Evaluates a rule and returns matching tracks synchronously (for testing)
-    public func evaluateSync(rule: any SmartPlaylistRule) -> [Track] {
+    public func evaluateSync(rule: AnySmartPlaylistRule) -> [Track] {
         processingQueue.sync {
             evaluateRules(rule, against: trackLibrary)
         }
@@ -153,7 +153,7 @@ public final class SmartPlaylistEngine {
         }
     }
     
-    private func evaluateRules(_ rule: any SmartPlaylistRule, against tracks: [Track]) -> [Track] {
+    private func evaluateRules(_ rule: AnySmartPlaylistRule, against tracks: [Track]) -> [Track] {
         // Use indexes for certain rule types if available
         if rule.requiresIndexing, let optimizedResults = evaluateWithIndexes(rule) {
             return optimizedResults
@@ -163,7 +163,7 @@ public final class SmartPlaylistEngine {
         return tracks.filter { rule.evaluate(track: $0) }
     }
     
-    private func evaluateWithIndexes(_ rule: any SmartPlaylistRule) -> [Track]? {
+    private func evaluateWithIndexes(_ rule: AnySmartPlaylistRule) -> [Track]? {
         // Implement index-based evaluation for specific rule types
         if let stringRule = rule as? StringMetadataRule {
             return evaluateStringRuleWithIndex(stringRule)
@@ -204,6 +204,10 @@ public final class SmartPlaylistEngine {
                     return (track1.artist ?? "").compare(track2.artist ?? "")
                 case .album:
                     return (track1.album ?? "").compare(track2.album ?? "")
+                case .year:
+                    let year1 = track1.year ?? 0
+                    let year2 = track2.year ?? 0
+                    return year1 < year2 ? .orderedAscending : year1 > year2 ? .orderedDescending : .orderedSame
                 case .dateAdded:
                     let date1 = track1.dateAdded ?? Date.distantPast
                     let date2 = track2.dateAdded ?? Date.distantPast
@@ -275,10 +279,10 @@ public struct SmartPlaylist: Identifiable, Codable {
     public let sorting: SmartPlaylistSorting?
     public let limit: Int?
     
-    public init(id: UUID = UUID(), name: String, rule: any SmartPlaylistRule, sorting: SmartPlaylistSorting? = nil, limit: Int? = nil) {
+    public init(id: UUID = UUID(), name: String, rule: AnySmartPlaylistRule, sorting: SmartPlaylistSorting? = nil, limit: Int? = nil) {
         self.id = id
         self.name = name
-        self.rootRule = AnySmartPlaylistRule(rule)
+        self.rootRule = rule
         self.sorting = sorting
         self.limit = limit
     }
@@ -287,7 +291,7 @@ public struct SmartPlaylist: Identifiable, Codable {
 /// Sorting options for smart playlists
 public struct SmartPlaylistSorting: Codable {
     public enum Field: String, Codable, CaseIterable {
-        case title, artist, album, dateAdded, lastPlayed, playCount, duration, random
+        case title, artist, album, year, dateAdded, lastPlayed, playCount, duration, random
     }
     
     public let field: Field

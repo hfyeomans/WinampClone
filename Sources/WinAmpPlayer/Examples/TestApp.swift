@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@main
+// Removed @main to avoid conflicts with WinAmpPlayerApp
 struct TestApp: App {
     var body: some Scene {
         WindowGroup {

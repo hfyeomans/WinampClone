@@ -4,7 +4,7 @@ import AVFoundation
 /// MP3 decoder that wraps AVAudioFile for MP3 playback
 public class MP3Decoder {
     private var audioFile: AVAudioFile?
-    private let fileURL: URL
+    internal let url: URL
     
     /// Metadata extracted from the MP3 file
     public private(set) var metadata: MP3Metadata
@@ -32,7 +32,7 @@ public class MP3Decoder {
     
     /// Initialize the MP3 decoder with a file URL
     public init(url: URL) throws {
-        self.fileURL = url
+        self.url = url
         self.metadata = MP3Metadata()
         
         // Initialize the audio file

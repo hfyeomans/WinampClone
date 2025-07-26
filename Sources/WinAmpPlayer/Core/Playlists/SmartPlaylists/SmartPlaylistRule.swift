@@ -530,7 +530,7 @@ public struct CombinedRule: SmartPlaylistRuleProtocol {
     let `operator`: LogicalOperator
     let rules: [AnySmartPlaylistRule]
     
-    public init(operator: LogicalOperator, rules: [any SmartPlaylistRuleProtocol]) {
+    public init<Rule: SmartPlaylistRuleProtocol>(operator: LogicalOperator, rules: [Rule]) {
         self.operator = `operator`
         self.rules = rules.map(AnySmartPlaylistRule.init)
     }

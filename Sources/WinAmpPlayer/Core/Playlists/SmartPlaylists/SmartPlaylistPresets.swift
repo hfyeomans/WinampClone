@@ -24,7 +24,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Recently Added",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .dateAdded, ascending: false),
             limit: nil
         )
@@ -41,7 +41,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Newest \(limit) Tracks",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .dateAdded, ascending: false),
             limit: limit
         )
@@ -59,7 +59,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Most Played",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .playCount, ascending: false),
             limit: limit
         )
@@ -75,7 +75,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Top \(limit) Tracks",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .playCount, ascending: false),
             limit: limit
         )
@@ -93,7 +93,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Never Played",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .dateAdded, ascending: true),
             limit: nil
         )
@@ -121,7 +121,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Not Recently Played",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .lastPlayed, ascending: true),
             limit: nil
         )
@@ -138,7 +138,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Recently Played",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .lastPlayed, ascending: false),
             limit: limit
         )
@@ -157,7 +157,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Top Rated",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .playCount, ascending: false),
             limit: limit
         )
@@ -176,7 +176,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Random Mix",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .random, ascending: true),
             limit: limit
         )
@@ -193,7 +193,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "\(genre) Mix",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .random, ascending: true),
             limit: limit
         )
@@ -212,7 +212,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: artist,
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .album, ascending: true),
             limit: nil
         )
@@ -242,14 +242,14 @@ public struct SmartPlaylistPresets {
             
             return SmartPlaylist(
                 name: "\(album) - \(artist)",
-                rule: rule,
+                rule: AnySmartPlaylistRule(rule),
                 sorting: SmartPlaylistSorting(field: .title, ascending: true),
                 limit: nil
             )
         } else {
             return SmartPlaylist(
                 name: album,
-                rule: albumRule,
+                rule: AnySmartPlaylistRule(albumRule),
                 sorting: SmartPlaylistSorting(field: .title, ascending: true),
                 limit: nil
             )
@@ -268,7 +268,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "\(year)",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .artist, ascending: true),
             limit: nil
         )
@@ -285,7 +285,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "\(decade)s",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .year, ascending: true),
             limit: nil
         )
@@ -305,7 +305,7 @@ public struct SmartPlaylistPresets {
         // like FLAC, ALAC, WAV, AIFF
         return SmartPlaylist(
             name: "Lossless Audio",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .artist, ascending: true),
             limit: nil
         )
@@ -323,7 +323,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Short Tracks",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .duration, ascending: true),
             limit: nil
         )
@@ -339,7 +339,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Long Tracks",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .duration, ascending: false),
             limit: nil
         )
@@ -357,7 +357,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: "Workout Mix",
-            rule: bpmRule,
+            rule: AnySmartPlaylistRule(bpmRule),
             sorting: SmartPlaylistSorting(field: .random, ascending: true),
             limit: limit
         )
@@ -381,12 +381,12 @@ public struct SmartPlaylistPresets {
         
         let rule = CombinedRule(
             operator: .and,
-            rules: [neverPlayedRule, artistRule]
+            rules: [AnySmartPlaylistRule(neverPlayedRule), AnySmartPlaylistRule(artistRule)]
         )
         
         return SmartPlaylist(
             name: "Discovery",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .random, ascending: true),
             limit: 25
         )
@@ -404,7 +404,7 @@ public struct SmartPlaylistPresets {
         // Note: This would ideally group by album, but for now returns all tracks
         return SmartPlaylist(
             name: "Recent Albums",
-            rule: dateRule,
+            rule: AnySmartPlaylistRule(dateRule),
             sorting: SmartPlaylistSorting(field: .album, ascending: true),
             limit: nil
         )
@@ -426,7 +426,7 @@ public struct SmartPlaylistPresets {
         
         return SmartPlaylist(
             name: playlistName,
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .random, ascending: true),
             limit: nil
         )
@@ -449,12 +449,12 @@ public struct SmartPlaylistPresets {
         
         let rule = CombinedRule(
             operator: .and,
-            rules: [artistRule, playCountRule]
+            rules: [AnySmartPlaylistRule(artistRule), AnySmartPlaylistRule(playCountRule)]
         )
         
         return SmartPlaylist(
             name: "Best of \(artist)",
-            rule: rule,
+            rule: AnySmartPlaylistRule(rule),
             sorting: SmartPlaylistSorting(field: .playCount, ascending: false),
             limit: limit
         )

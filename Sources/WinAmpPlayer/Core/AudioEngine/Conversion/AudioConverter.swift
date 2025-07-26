@@ -10,7 +10,7 @@ import Foundation
 import AVFoundation
 
 /// Errors that can occur during audio conversion
-public enum AudioConversionError: LocalizedError {
+public enum AudioConversionError: LocalizedError, Equatable {
     case unsupportedFormat(AudioFormat)
     case fileNotFound(URL)
     case conversionFailed(String)
@@ -64,7 +64,7 @@ public struct ConversionProgress {
 public class AudioConverter {
     
     /// Conversion quality settings
-    public struct ConversionSettings {
+    public struct ConversionSettings: Hashable {
         /// Output format
         let outputFormat: AudioFormat
         
@@ -335,10 +335,8 @@ public class AudioConverter {
         exportSession.outputFileType = getOutputFileType(for: settings.outputFormat)
         exportSession.audioMix = createAudioMix(for: audioTrack, settings: settings)
         
-        // Apply audio settings if available
-        if let audioSettings = createAudioSettings(for: settings) {
-            exportSession.audioSettings = audioSettings
-        }
+        // Note: AVAssetExportSession doesn't have audioSettings property
+        // Audio settings are configured through the preset and audio mix
         
         // Start export
         let semaphore = DispatchSemaphore(value: 0)

@@ -105,7 +105,7 @@ public class GenericAudioDecoder: AudioDecoder {
 /// MP3 decoder adapter to conform to AudioDecoder protocol
 extension MP3Decoder: AudioDecoder {
     public var fileURL: URL {
-        return self.fileURL
+        return self.url
     }
 }
 
@@ -155,9 +155,9 @@ public class AudioDecoderFactory {
     /// - Parameter url: The URL of the audio file
     /// - Returns: An appropriate decoder for the detected format
     /// - Throws: AudioDecoderError if format detection or decoder creation fails
-    public static func createDecoder(for url: URL) throws -> AudioDecoder {
+    public static func createDecoder(for url: URL) async throws -> AudioDecoder {
         let detector = FormatDetector()
-        let formatInfo = try detector.detectFormat(from: url)
+        let formatInfo = try await detector.detectFormat(from: url)
         
         guard formatInfo.format != .unknown else {
             throw AudioDecoderError.unknownFormat

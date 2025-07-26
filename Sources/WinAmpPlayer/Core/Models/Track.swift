@@ -10,45 +10,45 @@ import Foundation
 import AVFoundation
 
 /// Represents an audio track with metadata and playback information
-struct Track: Identifiable, Equatable, Codable {
+public struct Track: Identifiable, Equatable, Codable, Hashable {
     // MARK: - Properties
     
-    let id: UUID
-    let title: String
-    let artist: String?
-    let album: String?
-    let genre: String?
-    let year: Int?
-    let duration: TimeInterval
-    let fileURL: URL?
-    let trackNumber: Int?
-    let albumArtwork: Data?
+    public let id: UUID
+    public let title: String
+    public let artist: String?
+    public let album: String?
+    public let genre: String?
+    public let year: Int?
+    public let duration: TimeInterval
+    public let fileURL: URL?
+    public let trackNumber: Int?
+    public let albumArtwork: Data?
     
     // Audio format information
-    let audioFormat: AudioFormat?
-    let audioProperties: AudioProperties?
+    public let audioFormat: AudioFormat?
+    public let audioProperties: AudioProperties?
     
     // Extended metadata
-    let albumArtist: String?
-    let composer: String?
-    let comment: String?
-    let lyrics: String?
-    let bpm: Int?
-    let discNumber: Int?
-    let totalDiscs: Int?
-    let totalTracks: Int?
-    let encoder: String?
+    public let albumArtist: String?
+    public let composer: String?
+    public let comment: String?
+    public let lyrics: String?
+    public let bpm: Int?
+    public let discNumber: Int?
+    public let totalDiscs: Int?
+    public let totalTracks: Int?
+    public let encoder: String?
     
     // File information
-    let fileSize: Int64?
-    let dateAdded: Date?
-    let lastPlayed: Date?
-    let playCount: Int?
+    public let fileSize: Int64?
+    public let dateAdded: Date?
+    public let lastPlayed: Date?
+    public let playCount: Int?
     
     // MARK: - Computed Properties
     
     /// Display title (falls back to filename if title is empty)
-    var displayTitle: String {
+    public var displayTitle: String {
         if !title.isEmpty {
             return title
         } else if let url = fileURL {
@@ -59,12 +59,12 @@ struct Track: Identifiable, Equatable, Codable {
     }
     
     /// Display artist (falls back to "Unknown Artist" if nil)
-    var displayArtist: String {
+    public var displayArtist: String {
         artist ?? "Unknown Artist"
     }
     
     /// Formatted duration string (MM:SS)
-    var formattedDuration: String {
+    public var formattedDuration: String {
         let minutes = Int(duration) / 60
         let seconds = Int(duration) % 60
         return String(format: "%d:%02d", minutes, seconds)
@@ -72,7 +72,7 @@ struct Track: Identifiable, Equatable, Codable {
     
     // MARK: - Initialization
     
-    init(
+    public init(
         id: UUID = UUID(),
         title: String,
         artist: String? = nil,
@@ -162,13 +162,17 @@ struct Track: Identifiable, Equatable, Codable {
         self.albumArtwork = nil
         self.duration = 0
         
-        // Load metadata asynchronously
-        Task {
-            await loadMetadata()
-        }
+        // Note: Cannot load metadata asynchronously in struct initializer
+        // Metadata should be loaded externally and passed to init
+        // Task {
+        //     await loadMetadata()
+        // }
     }
     
     /// Load metadata asynchronously
+    /// Note: This method cannot work as designed because Track is a struct
+    /// and properties are immutable. Metadata loading should be done externally.
+    /*
     private func loadMetadata() async {
         guard let url = fileURL else { return }
         let asset = AVAsset(url: url)
@@ -250,6 +254,16 @@ struct Track: Identifiable, Equatable, Codable {
         } catch {
             // If loading fails, keep default values
         }
+    }
+    */
+}
+
+// MARK: - Hashable Conformance
+
+extension Track {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        // Only hash the id since it's unique
     }
 }
 

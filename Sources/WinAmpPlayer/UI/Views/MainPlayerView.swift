@@ -318,9 +318,9 @@ struct WinAmpSlider: View {
     }
 }
 
-// MARK: - Clutterbar Button
+// MARK: - Main Player Clutterbar Button
 
-struct ClutterbarButton: View {
+struct MainPlayerClutterbarButton: View {
     let icon: String
     let action: () -> Void
     @State private var isHovered = false
@@ -444,13 +444,13 @@ public struct MainPlayerView: View {
                     
                     // Clutterbar
                     HStack(spacing: 2) {
-                        ClutterbarButton(icon: "option") {
+                        MainPlayerClutterbarButton(icon: "option") {
                             // Options menu
                         }
-                        ClutterbarButton(icon: "filemenu.and.selection") {
+                        MainPlayerClutterbarButton(icon: "filemenu.and.selection") {
                             // File menu
                         }
-                        ClutterbarButton(icon: "waveform") {
+                        MainPlayerClutterbarButton(icon: "waveform") {
                             isVisualizationVisible.toggle()
                         }
                     }
@@ -545,10 +545,10 @@ public struct MainPlayerView: View {
                     
                     // Window buttons
                     HStack(spacing: 2) {
-                        ClutterbarButton(icon: "waveform.badge.plus") {
+                        MainPlayerClutterbarButton(icon: "waveform.badge.plus") {
                             WindowManager.shared.toggleWindow(.equalizer)
                         }
-                        ClutterbarButton(icon: "list.bullet") {
+                        MainPlayerClutterbarButton(icon: "list.bullet") {
                             WindowManager.shared.toggleWindow(.playlist)
                         }
                     }

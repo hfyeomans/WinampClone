@@ -350,7 +350,15 @@ public class FormatDetector {
         
         let fileSize = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64
         
-        if let audioTrack = track ?? try await finalAsset.load(.tracks).first(where: { $0.mediaType == .audio }) {
+        let audioTrack: AVAssetTrack?
+        if let existingTrack = track {
+            audioTrack = existingTrack
+        } else {
+            let tracks = try await finalAsset.load(.tracks)
+            audioTrack = tracks.first(where: { $0.mediaType == .audio })
+        }
+        
+        if let audioTrack = audioTrack {
             let bitrate = try? await audioTrack.load(.estimatedDataRate)
             let formatDescriptions = try await audioTrack.load(.formatDescriptions)
             

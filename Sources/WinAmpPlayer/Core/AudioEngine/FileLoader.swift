@@ -105,7 +105,7 @@ public class FileLoader {
         let metadata = try await extractMetadata(at: url, format: formatInfo.format)
         
         // Step 5: Create decoder
-        let decoder = try createDecoder(for: url, format: formatInfo.format)
+        let decoder = try await createDecoder(for: url, format: formatInfo.format)
         
         // Step 6: Build track object
         let track = try buildTrack(
@@ -164,15 +164,15 @@ public class FileLoader {
     }
     
     private func validateFormat(at url: URL, format: AudioFormat) async throws -> ValidationResult {
-        return formatValidator.validate(url: url, expectedFormat: format)
+        return try await formatValidator.validate(url: url, expectedFormat: format)
     }
     
     private func extractMetadata(at url: URL, format: AudioFormat) async throws -> AudioMetadata {
-        return try metadataExtractor.extractMetadata(from: url)
+        return try await metadataExtractor.extractMetadata(from: url)
     }
     
-    private func createDecoder(for url: URL, format: AudioFormat) throws -> AudioDecoder {
-        return try AudioDecoderFactory.createDecoder(for: url, format: format)
+    private func createDecoder(for url: URL, format: AudioFormat) async throws -> AudioDecoder {
+        return try await AudioDecoderFactory.createDecoder(for: url, format: format)
     }
     
     private func buildTrack(
@@ -200,7 +200,7 @@ public class FileLoader {
             duration: duration,
             fileURL: url,
             trackNumber: metadata.trackNumber != nil ? Int(metadata.trackNumber!) : nil,
-            albumArtwork: metadata.albumArt,
+            albumArtwork: nil, // AudioMetadata doesn't store artwork data
             audioFormat: format,
             audioProperties: properties,
             albumArtist: metadata.albumArtist,
@@ -209,9 +209,9 @@ public class FileLoader {
             lyrics: metadata.lyrics,
             bpm: metadata.bpm != nil ? Int(metadata.bpm!) : nil,
             discNumber: metadata.discNumber != nil ? Int(metadata.discNumber!) : nil,
-            totalDiscs: metadata.discTotal != nil ? Int(metadata.discTotal!) : nil,
-            totalTracks: metadata.trackTotal != nil ? Int(metadata.trackTotal!) : nil,
-            encoder: metadata.encoder,
+            totalDiscs: metadata.totalDiscs != nil ? Int(metadata.totalDiscs!) : nil,
+            totalTracks: metadata.totalTracks != nil ? Int(metadata.totalTracks!) : nil,
+            encoder: metadata.encodedBy,
             fileSize: fileSize,
             dateAdded: Date(),
             lastPlayed: nil,

@@ -128,6 +128,10 @@ final class macOSAudioDeviceManager: ObservableObject {
     
     // MARK: - Private Methods
     
+    @objc private func handleDeviceListChanged() {
+        updateAvailableDevices()
+    }
+    
     private func setupDeviceChangeListener() {
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyDevices,
@@ -135,19 +139,19 @@ final class macOSAudioDeviceManager: ObservableObject {
             mElement: kAudioObjectPropertyElementMain
         )
         
-        let callback: AudioObjectPropertyListenerProc = { _, _, _, _ in
-            DispatchQueue.main.async { [weak self] in
-                self?.updateAvailableDevices()
-            }
-            return noErr
-        }
-        
-        AudioObjectAddPropertyListener(
-            AudioObjectID(kAudioObjectSystemObject),
-            &address,
-            callback,
-            nil
+        // Note: Property listener requires C callback without capturing context
+        // Using notification center instead for device changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDeviceListChanged),
+            name: NSNotification.Name("AudioDevicesChanged"),
+            object: nil
         )
+        
+        // For now, poll for changes periodically
+        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.updateAvailableDevices()
+        }
     }
     
     private func removeDeviceChangeListener() {

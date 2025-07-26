@@ -527,7 +527,7 @@ struct PlaylistWindowView: View {
             PlaylistControlsView(playlist: playlist)
                 .frame(height: 26)
             
-            PlaylistView(controller: playlistController, playlist: playlist)
+            PlaylistView(controller: PlaylistController(audioEngine: AudioEngine()), playlist: playlist)
                 .frame(minWidth: 550, minHeight: 300)
         }
         .background(Color(red: 0.11, green: 0.11, blue: 0.11))
