@@ -582,7 +582,17 @@ class AudioEngine: ObservableObject {
     private func installAudioTap() {
         guard !audioTapInstalled else { return }
         
+        // Check if engine is running before installing tap
+        guard audioEngine.isRunning else {
+            logger.warning("Audio engine not running, deferring tap installation")
+            return
+        }
+        
         let mainMixer = audioEngine.mainMixerNode
+        
+        // Remove any existing tap first
+        mainMixer.removeTap(onBus: 0)
+        
         let format = mainMixer.outputFormat(forBus: 0)
         
         // Ensure we have a valid format
@@ -749,6 +759,16 @@ class AudioEngine: ObservableObject {
     
     /// Enable audio visualization
     public func enableVisualization() {
+        // Start engine if not running
+        if !audioEngine.isRunning {
+            do {
+                try audioEngine.start()
+                logger.info("Started audio engine for visualization")
+            } catch {
+                logger.error("Failed to start audio engine for visualization: \(error)")
+                return
+            }
+        }
         isVisualizationEnabled = true
     }
     

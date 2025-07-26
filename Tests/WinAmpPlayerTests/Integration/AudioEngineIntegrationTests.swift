@@ -9,7 +9,7 @@
 import XCTest
 import Combine
 import AVFoundation
-import UIKit
+import AppKit
 @testable import WinAmpPlayer
 
 final class AudioEngineIntegrationTests: XCTestCase {
