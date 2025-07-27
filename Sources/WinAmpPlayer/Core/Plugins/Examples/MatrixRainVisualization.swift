@@ -320,7 +320,7 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
     }
     
     public func exportSettings() -> Data? {
-        let settings = [
+        let settings: [String: Any] = [
             "rainColor": rainColor,
             "dropSpeed": dropSpeed,
             "dropDensity": dropDensity,
@@ -332,7 +332,7 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
     
     public func importSettings(_ data: Data) throws {
         guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw PluginError.configurationError("Invalid settings format")
+            throw PluginError.invalidConfiguration
         }
         
         if let color = settings["rainColor"] as? CGColor {

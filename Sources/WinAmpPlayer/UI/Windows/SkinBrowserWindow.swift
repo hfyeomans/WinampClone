@@ -22,7 +22,7 @@ struct SkinItemView: View {
     
     private func exportSkin(_ skin: Skin) {
         let panel = NSSavePanel()
-        panel.allowedFileTypes = ["wsz", "zip"]
+        panel.allowedContentTypes = [UTType(filenameExtension: "wsz")!, UTType.zip].compactMap { $0 }
         panel.nameFieldStringValue = "\(skin.name).wsz"
         panel.prompt = "Export"
         
@@ -275,7 +275,7 @@ public struct SkinBrowserWindow: View {
     
     private func addSkin() {
         let panel = NSOpenPanel()
-        panel.allowedFileTypes = ["wsz", "zip"]
+        panel.allowedContentTypes = [UTType(filenameExtension: "wsz")!, UTType.zip].compactMap { $0 }
         panel.allowsMultipleSelection = true
         panel.prompt = "Add Skin"
         panel.message = "Select skin files (.wsz) or skin packs (.zip)"
