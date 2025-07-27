@@ -48,6 +48,7 @@ struct ContentView: View {
         
         // Ensure default skin is generated
         DefaultSkin.shared.preload()
+    }
     
     var body: some View {
         Group {
@@ -57,7 +58,10 @@ struct ContentView: View {
                     .frame(width: 275, height: 116)
                     .onAppear {
                         // Populate with sample data for demonstration
-                        SamplePlaylistData.populateWithSampleData(playlistController)
+                        let samplePlaylist = SamplePlaylistData.createSamplePlaylist()
+                        for track in samplePlaylist.tracks {
+                            playlist.addTrack(track)
+                        }
                     }
             } else {
                 // Legacy view for comparison
