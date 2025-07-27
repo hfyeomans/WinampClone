@@ -32,7 +32,7 @@ struct LegacyClassicEQSlider: View {
                     
                     // Thumb
                     RoundedRectangle(cornerRadius: 1)
-                        .fill(WinAmpColors.buttonNormal)
+                        .fill(Color(red: 0.75, green: 0.75, blue: 0.75))
                         .frame(width: 11, height: 6)
                         .overlay(BeveledBorder(raised: !isDragging))
                         .position(
@@ -95,7 +95,7 @@ struct LegacyClassicHorizontalSlider: View {
                 
                 // Thumb
                 RoundedRectangle(cornerRadius: 1)
-                    .fill(WinAmpColors.buttonNormal)
+                    .fill(Color(red: 0.75, green: 0.75, blue: 0.75))
                     .frame(width: 14, height: 11)
                     .overlay(BeveledBorder(raised: !isDragging))
                     .overlay(
@@ -153,7 +153,7 @@ struct LegacyClassicPositionSlider: View {
                 // Thumb (only visible when dragging)
                 if isDragging {
                     RoundedRectangle(cornerRadius: 1)
-                        .fill(WinAmpColors.buttonNormal)
+                        .fill(Color(red: 0.75, green: 0.75, blue: 0.75))
                         .frame(width: 10, height: geometry.size.height - 2)
                         .overlay(BeveledBorder(raised: false))
                         .position(
