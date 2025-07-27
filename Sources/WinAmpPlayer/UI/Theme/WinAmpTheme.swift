@@ -41,11 +41,11 @@ struct LegacyWinAmpColors {
 
 // MARK: - Button Styles
 
-struct ClassicWinAmpButtonStyle: ButtonStyle {
+struct ClassicWinAmpButtonStyle: SwiftUI.ButtonStyle {
     @State private var isPressed = false
     @State private var isHovered = false
     
-    func makeBody(configuration: Self.Configuration) -> some View {
+    func makeBody(configuration: ButtonStyleConfiguration) -> some View {
         configuration.label
             .background(
                 RoundedRectangle(cornerRadius: 0)
@@ -102,12 +102,6 @@ struct ThemeLCDDisplayStyle: ViewModifier {
     }
 }
 
-extension View {
-    func lcdDisplayStyle() -> some View {
-        modifier(ThemeLCDDisplayStyle())
-    }
-}
-
 // MARK: - Classic Window Style
 
 struct ThemeClassicWindowStyle: ViewModifier {
@@ -115,11 +109,5 @@ struct ThemeClassicWindowStyle: ViewModifier {
         content
             .background(LegacyWinAmpColors.background)
             .overlay(BeveledBorder(raised: true))
-    }
-}
-
-extension View {
-    func classicWindowStyle() -> some View {
-        modifier(ThemeClassicWindowStyle())
     }
 }
