@@ -60,10 +60,8 @@ struct LCDDisplayStyle: ViewModifier {
 }
 
 /// View modifier for classic button styling
-struct ClassicButtonStyle: ButtonStyle {
-    @State private var isPressed = false
-    
-    func makeBody(configuration: Self.Configuration) -> some View {
+struct ClassicButtonStyle: SwiftUI.ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(
                 Color(configuration.isPressed ? WinAmpColors.buttonPressed : WinAmpColors.buttonFace)
@@ -79,7 +77,7 @@ extension View {
         modifier(ClassicWindowStyle(raised: raised, borderWidth: borderWidth))
     }
     
-    func lcdDisplayStyle() -> some View {
+    func classicLCDDisplayStyle() -> some View {
         modifier(LCDDisplayStyle())
     }
 }
