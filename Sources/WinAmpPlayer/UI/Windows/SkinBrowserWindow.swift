@@ -37,54 +37,11 @@ struct SkinItemView: View {
     
     var body: some View {
         VStack(spacing: 4) {
-            // Thumbnail
-            ZStack {
-                if let thumbnail = thumbnail {
-                    Image(nsImage: thumbnail)
-                        .resizable()
-                        .interpolation(.none)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 137.5, height: 58)
-                } else {
-                    // Placeholder
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(WinAmpColors.backgroundLight)
-                        .frame(width: 137.5, height: 58)
-                        .overlay(
-                            ProgressView()
-                                .scaleEffect(0.5)
-                        )
-                }
-                
-                // Selection overlay
-                if isSelected {
-                    RoundedRectangle(cornerRadius: 4)
-                        .stroke(WinAmpColors.accent, lineWidth: 2)
-                }
-            }
-            .scaleEffect(isHovered ? 1.05 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: isHovered)
-            
-            // Name
-            Text(skin.name)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .foregroundColor(isSelected ? WinAmpColors.textHighlight : WinAmpColors.text)
-                .lineLimit(1)
-                .frame(width: 137.5)
-            
-            // Info
-            if let author = skin.author {
-                Text(author)
-                    .font(.system(size: 9, weight: .regular, design: .monospaced))
-                    .foregroundColor(WinAmpColors.textDim)
-                    .lineLimit(1)
-            }
+            thumbnailView
+            skinInfoView
         }
         .padding(8)
-        .background(
-            RoundedRectangle(cornerRadius: 4)
-                .fill(isHovered ? WinAmpColors.backgroundLight : Color.clear)
-        )
+        .background(backgroundView)
         .onHover { hovering in
             isHovered = hovering
         }
@@ -92,28 +49,95 @@ struct SkinItemView: View {
             onSelect()
         }
         .contextMenu {
-            Button("Apply Skin") {
-                onSelect()
-            }
-            
-            if !skin.isDefault {
-                Divider()
-                
-                Button("Export Skin...") {
-                    exportSkin(skin)
-                }
-                
-                Button("Delete Skin") {
-                    onDelete()
-                }
-                .foregroundColor(.red)
-            }
+            contextMenuContent
         }
         .task {
-            // Load thumbnail
-            if thumbnail == nil {
-                thumbnail = await SkinManager.shared.createThumbnail(for: skin)
+            await loadThumbnailIfNeeded()
+        }
+    }
+    
+    private var thumbnailView: some View {
+        ZStack {
+            thumbnailContent
+            selectionOverlay
+        }
+        .scaleEffect(isHovered ? 1.05 : 1.0)
+        .animation(.easeInOut(duration: 0.1), value: isHovered)
+    }
+    
+    private var thumbnailContent: some View {
+        Group {
+            if let thumbnail = thumbnail {
+                Image(nsImage: thumbnail)
+                    .resizable()
+                    .interpolation(.none)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 137.5, height: 58)
+            } else {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(WinAmpColors.backgroundLight)
+                    .frame(width: 137.5, height: 58)
+                    .overlay(
+                        ProgressView()
+                            .scaleEffect(0.5)
+                    )
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var selectionOverlay: some View {
+        if isSelected {
+            RoundedRectangle(cornerRadius: 4)
+                .stroke(WinAmpColors.accent, lineWidth: 2)
+        }
+    }
+    
+    private var skinInfoView: some View {
+        VStack(spacing: 2) {
+            Text(skin.name)
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundColor(isSelected ? WinAmpColors.textHighlight : WinAmpColors.text)
+                .lineLimit(1)
+                .frame(width: 137.5)
+            
+            if let author = skin.author {
+                Text(author)
+                    .font(.system(size: 9, weight: .regular, design: .monospaced))
+                    .foregroundColor(WinAmpColors.textDim)
+                    .lineLimit(1)
+            }
+        }
+    }
+    
+    private var backgroundView: some View {
+        RoundedRectangle(cornerRadius: 4)
+            .fill(isHovered ? WinAmpColors.backgroundLight : Color.clear)
+    }
+    
+    @ViewBuilder
+    private var contextMenuContent: some View {
+        Button("Apply Skin") {
+            onSelect()
+        }
+        
+        if !skin.isDefault {
+            Divider()
+            
+            Button("Export Skin...") {
+                exportSkin(skin)
+            }
+            
+            Button("Delete Skin") {
+                onDelete()
+            }
+            .foregroundColor(.red)
+        }
+    }
+    
+    private func loadThumbnailIfNeeded() async {
+        if thumbnail == nil {
+            thumbnail = await SkinManager.shared.createThumbnail(for: skin)
         }
     }
 }

@@ -124,19 +124,8 @@ extension SkinManager {
     }
 }
 
-/// Extension to load sprites from current skin
+/// Extension to load skin configuration
 extension SkinManager {
-    
-    /// Get a sprite from the current skin
-    public func getSprite(_ type: SpriteType) -> NSImage? {
-        // First try cached skin
-        if let cached = currentCachedSkin {
-            return cached.getSprite(type)
-        }
-        
-        // Fall back to default skin
-        return DefaultSkin.shared.getSprite(type)
-    }
     
     /// Get skin configuration
     public func getSkinConfiguration() -> SkinConfiguration {

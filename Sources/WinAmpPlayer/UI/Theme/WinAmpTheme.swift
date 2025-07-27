@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Color Scheme
 
-struct WinAmpColors {
+struct LegacyWinAmpColors {
     // Classic WinAmp 2.x colors
     static let background = Color(red: 58/255, green: 58/255, blue: 58/255)
     static let backgroundLight = Color(red: 74/255, green: 74/255, blue: 74/255)
@@ -49,8 +49,8 @@ struct ClassicWinAmpButtonStyle: ButtonStyle {
         configuration.label
             .background(
                 RoundedRectangle(cornerRadius: 0)
-                    .fill(configuration.isPressed ? WinAmpColors.buttonPressed : 
-                          (isHovered ? WinAmpColors.buttonHover : WinAmpColors.buttonNormal))
+                    .fill(configuration.isPressed ? LegacyWinAmpColors.buttonPressed : 
+                          (isHovered ? LegacyWinAmpColors.buttonHover : LegacyWinAmpColors.buttonNormal))
             )
             .overlay(
                 BeveledBorder(raised: !configuration.isPressed)
@@ -78,7 +78,7 @@ struct BeveledBorder: View {
                 path.addLine(to: CGPoint(x: 0, y: 0))
                 path.addLine(to: CGPoint(x: rect.width, y: 0))
             }
-            .stroke(raised ? WinAmpColors.lightBorder : WinAmpColors.darkBorder, lineWidth: lineWidth)
+            .stroke(raised ? LegacyWinAmpColors.lightBorder : LegacyWinAmpColors.darkBorder, lineWidth: lineWidth)
             
             // Bottom and right edges
             Path { path in
@@ -86,40 +86,40 @@ struct BeveledBorder: View {
                 path.addLine(to: CGPoint(x: rect.width, y: rect.height))
                 path.addLine(to: CGPoint(x: 0, y: rect.height))
             }
-            .stroke(raised ? WinAmpColors.darkBorder : WinAmpColors.lightBorder, lineWidth: lineWidth)
+            .stroke(raised ? LegacyWinAmpColors.darkBorder : LegacyWinAmpColors.lightBorder, lineWidth: lineWidth)
         }
     }
 }
 
 // MARK: - LCD Display Style
 
-struct LCDDisplayStyle: ViewModifier {
+struct ThemeLCDDisplayStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(WinAmpColors.lcdBackground)
-            .foregroundColor(WinAmpColors.lcdText)
+            .background(LegacyWinAmpColors.lcdBackground)
+            .foregroundColor(LegacyWinAmpColors.lcdText)
             .overlay(BeveledBorder(raised: false))
     }
 }
 
 extension View {
     func lcdDisplayStyle() -> some View {
-        modifier(LCDDisplayStyle())
+        modifier(ThemeLCDDisplayStyle())
     }
 }
 
 // MARK: - Classic Window Style
 
-struct ClassicWindowStyle: ViewModifier {
+struct ThemeClassicWindowStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(WinAmpColors.background)
+            .background(LegacyWinAmpColors.background)
             .overlay(BeveledBorder(raised: true))
     }
 }
 
 extension View {
     func classicWindowStyle() -> some View {
-        modifier(ClassicWindowStyle())
+        modifier(ThemeClassicWindowStyle())
     }
 }

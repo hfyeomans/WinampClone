@@ -20,6 +20,8 @@ public struct WinAmpColors {
     static let border = Color(red: 0.2, green: 0.2, blue: 0.2) // #333333
     static let borderHighlight = Color(red: 0.4, green: 0.4, blue: 0.4) // #666666 - Light edge
     static let borderShadow = Color(red: 0.0, green: 0.0, blue: 0.0) // #000000 - Dark edge
+    static let darkBorder = Color(red: 31/255, green: 31/255, blue: 31/255) // For legacy compatibility
+    static let lightBorder = Color(red: 165/255, green: 165/255, blue: 165/255) // For legacy compatibility
     
     // LCD display colors
     static let lcdBackground = Color(red: 0.0, green: 0.0, blue: 0.0) // Pure black
@@ -34,6 +36,7 @@ public struct WinAmpColors {
     
     // Button colors
     static let buttonFace = Color(red: 0.75, green: 0.75, blue: 0.75) // #BFBFBF - Classic button gray
+    static let buttonNormal = Color(red: 0.75, green: 0.75, blue: 0.75) // Alias for buttonFace
     static let buttonHighlight = Color(red: 0.95, green: 0.95, blue: 0.95) // #F2F2F2 - Button highlight
     static let buttonShadow = Color(red: 0.25, green: 0.25, blue: 0.25) // #404040 - Button shadow
     static let buttonPressed = Color(red: 0.1, green: 0.1, blue: 0.1) // #1A1A1A - Pressed state

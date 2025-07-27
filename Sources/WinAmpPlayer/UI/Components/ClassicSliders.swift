@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Vertical EQ Slider
 
-struct ClassicEQSlider: View {
+struct LegacyClassicEQSlider: View {
     @Binding var value: Double // -12 to +12 dB
     let frequency: String
     
@@ -73,7 +73,7 @@ struct ClassicEQSlider: View {
 
 // MARK: - Horizontal Volume/Balance Slider
 
-struct ClassicHorizontalSlider: View {
+struct LegacyClassicHorizontalSlider: View {
     @Binding var value: Double // 0.0 to 1.0
     let width: CGFloat = 68
     let height: CGFloat = 13
@@ -127,7 +127,7 @@ struct ClassicHorizontalSlider: View {
 
 // MARK: - Position Slider (Seek Bar)
 
-struct ClassicPositionSlider: View {
+struct LegacyClassicPositionSlider: View {
     @Binding var value: Double // 0.0 to 1.0
     let onSeek: (Double) -> Void
     

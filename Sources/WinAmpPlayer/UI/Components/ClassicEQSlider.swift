@@ -31,72 +31,83 @@ public struct ClassicEQSlider: View {
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Track background
-                ClassicSliderTrack(
-                    width: 14,
-                    height: geometry.size.height,
-                    orientation: .vertical
-                )
-                
-                // Center line (0 dB)
-                Rectangle()
-                    .fill(Color(WinAmpColors.borderHighlight))
-                    .frame(width: 20, height: 1)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                
-                // Tick marks
-                VStack(spacing: 0) {
-                    ForEach([-12, -6, 0, 6, 12], id: \.self) { tickValue in
-                        if tickValue != 0 {
-                            Spacer()
-                        }
-                        
-                        Rectangle()
-                            .fill(Color(WinAmpColors.border))
-                            .frame(width: 8, height: 1)
-                        
-                        if tickValue != 12 {
-                            Spacer()
-                        }
-                    }
-                }
-                .frame(height: geometry.size.height)
-                
-                // Thumb
-                let normalizedValue = (value - range.lowerBound) / (range.upperBound - range.lowerBound)
-                let yPosition = geometry.size.height * (1 - CGFloat(normalizedValue))
-                
-                ClassicEQThumb(isPressed: isDragging)
-                    .position(x: geometry.size.width / 2, y: yPosition)
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { drag in
-                                if !isDragging {
-                                    isDragging = true
-                                    dragOffset = drag.location.y - yPosition
-                                }
-                                
-                                let newY = drag.location.y - dragOffset
-                                let clampedY = max(0, min(geometry.size.height, newY))
-                                let normalizedY = 1 - (clampedY / geometry.size.height)
-                                let newValue = range.lowerBound + Float(normalizedY) * (range.upperBound - range.lowerBound)
-                                
-                                // Snap to center (0 dB)
-                                if abs(newValue) < 0.5 {
-                                    value = 0
-                                } else {
-                                    value = newValue
-                                }
-                                
-                                onChanged(value)
-                            }
-                            .onEnded { _ in
-                                isDragging = false
-                                dragOffset = 0
-                            }
-                    )
+                sliderTrack(height: geometry.size.height)
+                centerLine(geometry: geometry)
+                tickMarks(height: geometry.size.height)
+                sliderThumb(geometry: geometry)
             }
         }
+    }
+    
+    private func sliderTrack(height: CGFloat) -> some View {
+        ClassicSliderTrack(
+            width: 14,
+            height: height,
+            orientation: .vertical
+        )
+    }
+    
+    private func centerLine(geometry: GeometryProxy) -> some View {
+        Rectangle()
+            .fill(Color(WinAmpColors.borderHighlight))
+            .frame(width: 20, height: 1)
+            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+    }
+    
+    private func tickMarks(height: CGFloat) -> some View {
+        VStack(spacing: 0) {
+            ForEach([-12, -6, 0, 6, 12], id: \.self) { tickValue in
+                if tickValue != 0 {
+                    Spacer()
+                }
+                
+                Rectangle()
+                    .fill(Color(WinAmpColors.border))
+                    .frame(width: 8, height: 1)
+                
+                if tickValue != 12 {
+                    Spacer()
+                }
+            }
+        }
+        .frame(height: height)
+    }
+    
+    private func sliderThumb(geometry: GeometryProxy) -> some View {
+        let normalizedValue = (value - range.lowerBound) / (range.upperBound - range.lowerBound)
+        let yPosition = geometry.size.height * (1 - CGFloat(normalizedValue))
+        
+        return ClassicEQThumb(isPressed: isDragging)
+            .position(x: geometry.size.width / 2, y: yPosition)
+            .gesture(thumbDragGesture(geometry: geometry, currentY: yPosition))
+    }
+    
+    private func thumbDragGesture(geometry: GeometryProxy, currentY: CGFloat) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { drag in
+                if !isDragging {
+                    isDragging = true
+                    dragOffset = drag.location.y - currentY
+                }
+                
+                let newY = drag.location.y - dragOffset
+                let clampedY = max(0, min(geometry.size.height, newY))
+                let normalizedY = 1 - (clampedY / geometry.size.height)
+                let newValue = range.lowerBound + Float(normalizedY) * (range.upperBound - range.lowerBound)
+                
+                // Snap to center (0 dB)
+                if abs(newValue) < 0.5 {
+                    value = 0
+                } else {
+                    value = newValue
+                }
+                
+                onChanged(value)
+            }
+            .onEnded { _ in
+                isDragging = false
+                dragOffset = 0
+            }
     }
 }
 
@@ -197,7 +208,7 @@ public struct ClassicHorizontalSlider: View {
 }
 
 /// Position slider for seek bar
-public struct SkinnablePositionSlider: View {
+public struct ClassicPositionSlider: View {
     @Binding var position: TimeInterval
     let duration: TimeInterval
     let onSeek: (TimeInterval) -> Void
@@ -264,7 +275,7 @@ struct PositionThumb: View {
 }
 
 /// Volume slider component
-public struct SkinnableVolumeSlider: View {
+public struct ClassicVolumeSlider: View {
     @Binding var volume: Float
     let onChanged: (Float) -> Void
     
@@ -279,7 +290,7 @@ public struct SkinnableVolumeSlider: View {
 }
 
 /// Balance slider component
-public struct SkinnableBalanceSlider: View {
+public struct ClassicBalanceSlider: View {
     @Binding var balance: Float
     let onChanged: (Float) -> Void
     
