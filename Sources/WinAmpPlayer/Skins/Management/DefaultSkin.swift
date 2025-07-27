@@ -80,7 +80,7 @@ public class DefaultSkin {
         sprites[.previousButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "◀◀",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.previousButton(.pressed)] = createButtonImage(
@@ -94,7 +94,7 @@ public class DefaultSkin {
         sprites[.playButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "▶",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.playButton(.pressed)] = createButtonImage(
@@ -108,7 +108,7 @@ public class DefaultSkin {
         sprites[.pauseButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "❚❚",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.pauseButton(.pressed)] = createButtonImage(
@@ -122,7 +122,7 @@ public class DefaultSkin {
         sprites[.stopButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "■",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.stopButton(.pressed)] = createButtonImage(
@@ -136,7 +136,7 @@ public class DefaultSkin {
         sprites[.nextButton(.normal)] = createButtonImage(
             size: CGSize(width: 22, height: 18),
             symbol: "▶▶",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.nextButton(.pressed)] = createButtonImage(
@@ -150,7 +150,7 @@ public class DefaultSkin {
         sprites[.ejectButton(.normal)] = createButtonImage(
             size: CGSize(width: 22, height: 16),
             symbol: "⏏",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.ejectButton(.pressed)] = createButtonImage(
@@ -169,7 +169,7 @@ public class DefaultSkin {
         sprites[.closeButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "×",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.closeButton(.pressed)] = createButtonImage(
@@ -183,7 +183,7 @@ public class DefaultSkin {
         sprites[.minimizeButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "_",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.minimizeButton(.pressed)] = createButtonImage(
@@ -197,7 +197,7 @@ public class DefaultSkin {
         sprites[.shadeButton(.normal)] = createButtonImage(
             size: buttonSize,
             symbol: "▬",
-            backgroundColor: WinAmpColors.buttonNormal,
+            backgroundColor: Color(red: 0.75, green: 0.75, blue: 0.75),
             foregroundColor: WinAmpColors.text
         )
         sprites[.shadeButton(.pressed)] = createButtonImage(
@@ -413,7 +413,7 @@ public class DefaultSkin {
     }
     
     private func createToggleButton(size: CGSize, text: String, isOn: Bool, isPressed: Bool) -> NSImage {
-        let backgroundColor = isPressed ? WinAmpColors.buttonPressed : (isOn ? WinAmpColors.buttonActive : WinAmpColors.buttonNormal)
+        let backgroundColor = isPressed ? WinAmpColors.buttonPressed : (isOn ? WinAmpColors.buttonActive : Color(red: 0.75, green: 0.75, blue: 0.75))
         let textColor = isOn ? WinAmpColors.textHighlight : WinAmpColors.text
         
         return createButtonImage(size: size, symbol: text, backgroundColor: backgroundColor, foregroundColor: textColor)
@@ -541,9 +541,7 @@ public class DefaultSkin {
 // MARK: - WinAmp Color Extensions
 
 extension WinAmpColors {
-    static let buttonNormal = backgroundLight
     static let playingIndicator = Color.green
     static let pausedIndicator = Color.yellow
     static let stoppedIndicator = Color.red
-    static let accentDark = Color(red: 0.0, green: 0.4, blue: 0.8)
 }

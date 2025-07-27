@@ -30,7 +30,7 @@ public class SkinManager: ObservableObject {
     @Published public private(set) var availableSkins: [Skin] = []
     
     /// Current cached skin data
-    private var currentCachedSkin: CachedSkin?
+    internal var currentCachedSkin: CachedSkin?
     
     /// Main skins directory
     public var skinsDirectory: URL {
@@ -39,10 +39,10 @@ public class SkinManager: ObservableObject {
     }
     
     /// Skin directories
-    private let skinDirectories: [URL]
+    internal let skinDirectories: [URL]
     
     /// Queue for skin operations
-    private let skinQueue = DispatchQueue(label: "com.winamp.skinmanager")
+    internal let skinQueue = DispatchQueue(label: "com.winamp.skinmanager")
     
     private init() {
         // Setup skin directories
@@ -64,11 +64,14 @@ public class SkinManager: ObservableObject {
         // Load default skin
         Task {
             await loadDefaultSkin()
+            
+            // Generate prebuilt skins on first launch
+            await generatePrebuiltSkins()
         }
     }
     
     /// Load default skin
-    private func loadDefaultSkin() async {
+    internal func loadDefaultSkin() async {
         do {
             try await SkinAssetCache.shared.preloadDefaultSkin()
             await MainActor.run {

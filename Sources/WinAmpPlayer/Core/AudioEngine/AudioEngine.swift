@@ -208,14 +208,25 @@ class AudioEngine: ObservableObject {
     /// - Parameter track: The track to load
     /// - Throws: AudioEngineError if the track cannot be loaded
     func loadTrack(_ track: Track) async throws {
+        #if DEBUG
+        print("[WinAmpPlayer] Loading track: \(track.displayTitle)")
+        print("[WinAmpPlayer] File URL: \(track.fileURL?.path ?? "nil")")
+        #endif
+        
         // Clean up any existing playback
         await cleanup()
         
         guard let url = track.fileURL else {
+            #if DEBUG
+            print("[WinAmpPlayer] ERROR: Track has no file URL")
+            #endif
             throw AudioEngineError.invalidURL
         }
         
         guard FileManager.default.fileExists(atPath: url.path) else {
+            #if DEBUG
+            print("[WinAmpPlayer] ERROR: File does not exist at path: \(url.path)")
+            #endif
             throw AudioEngineError.fileNotFound
         }
         
@@ -274,16 +285,30 @@ class AudioEngine: ObservableObject {
     /// Start or resume playback
     /// - Throws: AudioEngineError if playback cannot be started
     func play() throws {
+        #if DEBUG
+        print("[WinAmpPlayer] Play button pressed - Current state: \(playbackState)")
+        #endif
+        
         guard audioFile != nil else {
             logger.warning("Attempted to play without loaded audio file")
+            #if DEBUG
+            print("[WinAmpPlayer] ERROR: No audio file loaded!")
+            #endif
             return
         }
+        
+        #if DEBUG
+        print("[WinAmpPlayer] Audio file is loaded, activating audio system...")
+        #endif
         
         // Activate the audio system first
         do {
             try audioSystemManager.activate()
         } catch {
             logger.error("Failed to activate audio system: \(error)")
+            #if DEBUG
+            print("[WinAmpPlayer] ERROR: Failed to activate audio system: \(error)")
+            #endif
         }
         
         // Start the engine if needed
@@ -291,14 +316,23 @@ class AudioEngine: ObservableObject {
             do {
                 try audioEngine.start()
                 logger.info("Audio engine started")
+                #if DEBUG
+                print("[WinAmpPlayer] Audio engine started successfully")
+                #endif
             } catch {
                 playbackState = .error(AudioEngineError.engineStartFailed(error))
+                #if DEBUG
+                print("[WinAmpPlayer] ERROR: Failed to start audio engine: \(error)")
+                #endif
                 throw AudioEngineError.engineStartFailed(error)
             }
         }
         
         // Schedule the file if needed
         if needsFileScheduling {
+            #if DEBUG
+            print("[WinAmpPlayer] Scheduling audio file...")
+            #endif
             try scheduleAudioFile()
         }
         
@@ -308,6 +342,9 @@ class AudioEngine: ObservableObject {
         startDisplayLink()
         
         logger.info("Playback started")
+        #if DEBUG
+        print("[WinAmpPlayer] Playback started! Player node playing: \(playerNode.isPlaying)")
+        #endif
     }
     
     /// Pause playback

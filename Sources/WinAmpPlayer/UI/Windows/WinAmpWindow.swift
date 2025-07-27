@@ -11,16 +11,53 @@ import AppKit
 // MARK: - WinAmp Color Scheme
 
 public struct WinAmpColors {
-    static let background = Color(red: 0.11, green: 0.11, blue: 0.11) // #1C1C1C
-    static let backgroundLight = Color(red: 0.15, green: 0.15, blue: 0.15) // #262626
+    // Main window colors - matching classic WinAmp skin
+    static let background = Color(red: 0.11, green: 0.11, blue: 0.11) // #1C1C1C - Dark gray
+    static let backgroundDark = Color(red: 0.05, green: 0.05, blue: 0.05) // #0D0D0D - Almost black
+    static let backgroundLight = Color(red: 0.15, green: 0.15, blue: 0.15) // #262626 - Light gray
+    
+    // Border colors for 3D beveled effect
     static let border = Color(red: 0.2, green: 0.2, blue: 0.2) // #333333
-    static let borderHighlight = Color(red: 0.3, green: 0.3, blue: 0.3) // #4D4D4D
+    static let borderHighlight = Color(red: 0.4, green: 0.4, blue: 0.4) // #666666 - Light edge
+    static let borderShadow = Color(red: 0.0, green: 0.0, blue: 0.0) // #000000 - Dark edge
+    static let darkBorder = Color(red: 31/255, green: 31/255, blue: 31/255) // For legacy compatibility
+    static let lightBorder = Color(red: 165/255, green: 165/255, blue: 165/255) // For legacy compatibility
+    
+    // LCD display colors
+    static let lcdBackground = Color(red: 0.0, green: 0.0, blue: 0.0) // Pure black
+    static let lcdText = Color(red: 0.0, green: 1.0, blue: 0.0) // #00FF00 - Bright green
+    static let lcdTextDim = Color(red: 0.0, green: 0.4, blue: 0.0) // #006600 - Dim green
+    
+    // Text colors
     static let text = Color(red: 0.0, green: 1.0, blue: 0.0) // #00FF00 - Classic green
     static let textDim = Color(red: 0.0, green: 0.6, blue: 0.0) // #009900
-    static let accent = Color(red: 0.0, green: 0.8, blue: 0.0) // #00CC00
+    static let textHighlight = Color(red: 0.0, green: 1.0, blue: 1.0) // #00FFFF - Cyan for current track
+    static let textSelected = Color(red: 1.0, green: 1.0, blue: 0.0) // #FFFF00 - Yellow for selected
+    
+    // Button colors
+    static let buttonFace = Color(red: 0.75, green: 0.75, blue: 0.75) // #BFBFBF - Classic button gray
+    static let buttonNormal = Color(red: 0.75, green: 0.75, blue: 0.75) // Alias for buttonFace
+    static let buttonHighlight = Color(red: 0.95, green: 0.95, blue: 0.95) // #F2F2F2 - Button highlight
+    static let buttonShadow = Color(red: 0.25, green: 0.25, blue: 0.25) // #404040 - Button shadow
+    static let buttonPressed = Color(red: 0.1, green: 0.1, blue: 0.1) // #1A1A1A - Pressed state
     static let buttonHover = Color(red: 0.2, green: 0.25, blue: 0.2) // Subtle green tint
     static let buttonActive = Color(red: 0.1, green: 0.2, blue: 0.1)
+    
+    // Other UI elements
+    static let accent = Color(red: 0.0, green: 0.8, blue: 0.0) // #00CC00
+    static let accentDark = Color(red: 0.0, green: 0.5, blue: 0.0) // #008000
+    static let selection = Color(red: 0.0, green: 0.3, blue: 0.3) // #004D4D - Dark teal
     static let shadow = Color.black.opacity(0.8)
+    static let button = Color(red: 0.2, green: 0.2, blue: 0.2) // #333333 - Dark button
+    
+    // Additional text colors
+    static let textSecondary = Color(red: 0.0, green: 0.8, blue: 0.0) // #00CC00 - Secondary text
+    
+    // Playlist specific colors
+    static let playlistBackground = Color(red: 0.05, green: 0.05, blue: 0.05) // #0D0D0D - Dark playlist background
+    static let playlistText = Color(red: 0.0, green: 1.0, blue: 0.0) // #00FF00 - Green text
+    static let playlistPlaying = Color(red: 0.0, green: 1.0, blue: 1.0) // #00FFFF - Cyan for playing track
+    static let playlistSelected = Color(red: 0.0, green: 0.3, blue: 0.3) // #004D4D - Dark teal for selection
 }
 
 // MARK: - Window Control Button Type

@@ -14,7 +14,10 @@ import AppKit
 // Note: mp3 UTType is already defined in the system
 
 struct ContentView: View {
-    // Supported audio file types
+    @State private var useClassicSkin = true
+    @StateObject private var skinManager = SkinManager.shared
+    
+    // For legacy view
     private let audioContentTypes: [UTType] = [
         .audio,
         .mp3,
@@ -42,68 +45,87 @@ struct ContentView: View {
         _audioEngine = StateObject(wrappedValue: engine)
         _volumeController = StateObject(wrappedValue: volumeCtrl)
         _playlistController = StateObject(wrappedValue: playlistCtrl)
+        
+        // Ensure default skin is generated
+        DefaultSkin.shared.preload()
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Title Bar
-            TitleBarView(onOpenFile: openFile)
-            
-            // Display Area with seek bar
-            VStack(spacing: 2) {
-                DisplayView(
-                    isPlaying: audioEngine.isPlaying,
-                    currentTime: isDraggingSeekBar ? seekPosition : audioEngine.currentTime,
-                    duration: audioEngine.duration,
-                    track: audioEngine.currentTrack,
-                    isLoading: audioEngine.isLoading
-                )
-                
-                // Seek bar
-                if audioEngine.currentTrack != nil {
-                    ContentSeekBar(
-                        currentTime: $audioEngine.currentTime,
-                        duration: audioEngine.duration,
-                        isDragging: $isDraggingSeekBar,
-                        seekPosition: $seekPosition,
-                        onSeek: { time in
-                            try? audioEngine.seek(to: time)
+        Group {
+            if useClassicSkin {
+                // Use the skinnable main player view
+                SkinnableMainPlayerView()
+                    .frame(width: 275, height: 116)
+                    .onAppear {
+                        // Populate with sample data for demonstration
+                        let samplePlaylist = SamplePlaylistData.createSamplePlaylist()
+                        for track in samplePlaylist.tracks {
+                            playlist.addTrack(track)
                         }
+                    }
+            } else {
+                // Legacy view for comparison
+                VStack(spacing: 0) {
+                    // Title Bar
+                    TitleBarView(onOpenFile: openFile)
+                    
+                    // Display Area with seek bar
+                    VStack(spacing: 2) {
+                        DisplayView(
+                            isPlaying: audioEngine.isPlaying,
+                            currentTime: isDraggingSeekBar ? seekPosition : audioEngine.currentTime,
+                            duration: audioEngine.duration,
+                            track: audioEngine.currentTrack,
+                            isLoading: audioEngine.isLoading
+                        )
+                        
+                        // Seek bar
+                        if audioEngine.currentTrack != nil {
+                            ContentSeekBar(
+                                currentTime: $audioEngine.currentTime,
+                                duration: audioEngine.duration,
+                                isDragging: $isDraggingSeekBar,
+                                seekPosition: $seekPosition,
+                                onSeek: { time in
+                                    try? audioEngine.seek(to: time)
+                                }
+                            )
+                            .frame(height: 8)
+                            .padding(.horizontal, 4)
+                        }
+                    }
+                    
+                    // Control Buttons
+                    ControlsView(
+                        isPlaying: audioEngine.isPlaying,
+                        onPlayPause: togglePlayPause,
+                        onPrevious: previousTrack,
+                        onNext: nextTrack,
+                        onStop: stopPlayback
                     )
-                    .frame(height: 8)
-                    .padding(.horizontal, 4)
+                    
+                    // Volume and Balance
+                    VolumeBalanceView(
+                        volume: Binding(
+                            get: { Double(volumeController.volume) },
+                            set: { volumeController.setVolume(Float($0)) }
+                        ),
+                        balance: Binding(
+                            get: { Double(volumeController.balance) },
+                            set: { volumeController.setBalance(Float($0)) }
+                        )
+                    )
+                    
+                    // Equalizer and Playlist toggles
+                    ToggleButtonsView(
+                        showEqualizer: .constant(false),
+                        showPlaylist: $showPlaylist
+                    )
                 }
+                .background(Color.black)
+                .frame(width: 275, height: 116)
             }
-            
-            // Control Buttons
-            ControlsView(
-                isPlaying: audioEngine.isPlaying,
-                onPlayPause: togglePlayPause,
-                onPrevious: previousTrack,
-                onNext: nextTrack,
-                onStop: stopPlayback
-            )
-            
-            // Volume and Balance
-            VolumeBalanceView(
-                volume: Binding(
-                    get: { Double(volumeController.volume) },
-                    set: { volumeController.setVolume(Float($0)) }
-                ),
-                balance: Binding(
-                    get: { Double(volumeController.balance) },
-                    set: { volumeController.setBalance(Float($0)) }
-                )
-            )
-            
-            // Equalizer and Playlist toggles
-            ToggleButtonsView(
-                showEqualizer: .constant(false),
-                showPlaylist: $showPlaylist
-            )
         }
-        .background(Color.black)
-        .frame(width: 275, height: 116)
         .sheet(isPresented: $showPlaylist) {
             PlaylistWindowView(playlist: playlist)
         }

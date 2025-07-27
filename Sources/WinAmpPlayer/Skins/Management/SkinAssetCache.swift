@@ -63,6 +63,32 @@ public class SkinAssetCache {
         }
     }
     
+    /// Cache a skin from a Skin object
+    public func cacheSkin(_ skin: Skin) async throws -> CachedSkin {
+        // Parse the skin first to get ParsedSkin
+        guard let url = skin.url else {
+            throw NSError(domain: "SkinAssetCache", code: 1, userInfo: [NSLocalizedDescriptionKey: "Skin has no URL"])
+        }
+        
+        let parser = try SkinParser()
+        let parsedSkin = try await parser.parseSkin(from: url)
+        
+        // Extract sprites
+        let sprites = SpriteExtractor.extractAllSprites(from: parsedSkin)
+        
+        // Create cached skin
+        let cachedSkin = CachedSkin(
+            url: url,
+            name: skin.name,
+            sprites: sprites,
+            configurations: parsedSkin.configurations,
+            loadedAt: Date()
+        )
+        
+        try await cacheSkin(cachedSkin, for: url)
+        return cachedSkin
+    }
+    
     /// Cache a skin
     private func cacheSkin(_ skin: CachedSkin, for url: URL) async throws {
         let estimatedSize = estimateSkinMemorySize(skin)
@@ -174,6 +200,12 @@ public class CachedSkin {
     
     func updateLastAccessed() {
         lastAccessedAt = Date()
+    }
+    
+    /// Get a sprite from the cached skin
+    public func getSprite(_ type: SpriteType) -> NSImage? {
+        updateLastAccessed()
+        return sprites[type]
     }
     
     /// Get playlist configuration
