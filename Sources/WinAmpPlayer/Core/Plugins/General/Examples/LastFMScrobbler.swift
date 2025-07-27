@@ -167,12 +167,12 @@ public final class LastFMScrobblerPlugin: BaseGeneralPlugin {
                 HStack {
                     if !isAuthenticated {
                         Button("Authenticate") {
-                            showAuthenticationWindow()
+                            self.showAuthenticationWindow()
                         }
                     }
                     
                     Button("View on Last.fm") {
-                        if let url = URL(string: "https://last.fm/user/\(username)") {
+                        if let url = URL(string: "https://last.fm/user/\(self.username)") {
                             NSWorkspace.shared.open(url)
                         }
                     }

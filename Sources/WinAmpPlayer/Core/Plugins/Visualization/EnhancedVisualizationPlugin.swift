@@ -132,9 +132,9 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
         
         return AnyView(
             VStack(alignment: .leading, spacing: 16) {
-                ForEach(configurationOptions.indices, id: \.self) { index in
+                ForEach(self.configurationOptions.indices, id: \.self) { index in
                     ConfigurationItemView(
-                        configuration: configurationOptions[index],
+                        configuration: self.configurationOptions[index],
                         onChange: { [weak self] newValue in
                             self?.updateConfiguration(
                                 key: self?.configurationOptions[index].key ?? "",
