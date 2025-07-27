@@ -63,7 +63,7 @@ struct LCDDisplayStyle: ViewModifier {
 struct ClassicButtonStyle: ButtonStyle {
     @State private var isPressed = false
     
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .background(
                 Color(configuration.isPressed ? WinAmpColors.buttonPressed : WinAmpColors.buttonFace)

@@ -45,7 +45,7 @@ struct ClassicWinAmpButtonStyle: ButtonStyle {
     @State private var isPressed = false
     @State private var isHovered = false
     
-    func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .background(
                 RoundedRectangle(cornerRadius: 0)
