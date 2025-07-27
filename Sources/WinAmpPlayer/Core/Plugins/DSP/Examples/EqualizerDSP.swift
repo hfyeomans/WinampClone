@@ -99,7 +99,7 @@ public final class EqualizerDSPPlugin: BaseDSPPlugin {
         
         // Get preamp gain
         let preampGain = parameters.first(where: { $0.id == "preamp" })?.value as? Float ?? 0.0
-        let preampLinear = pow(10.0, preampGain / 20.0)
+        var preampLinear = pow(10.0, preampGain / 20.0)
         
         // Process each channel
         for channel in 0..<channelCount {

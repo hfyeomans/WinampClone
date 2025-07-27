@@ -109,22 +109,12 @@ extension AudioEngine {
     
     /// Process visualization data through plugin system
     func processVisualizationData() {
-        guard let visualizationData = currentVisualizationData else { return }
-        
-        // Convert to plugin format
-        let audioData = VisualizationAudioData(
-            samples: visualizationData.leftChannel, // Use left channel for mono compatibility
-            frequencyData: fftProcessor?.performFFT(on: visualizationData.leftChannel),
-            sampleRate: visualizationData.sampleRate,
-            channelCount: 2,
-            timestamp: visualizationData.timestamp,
-            beatInfo: nil // Could add beat detection here
-        )
+        // TODO: Implement when visualization data system is ready
+        // This method will process audio data for visualization plugins
+        return
         
         // Get render context (this would come from the visualization view)
-        if let context = currentRenderContext {
-            PluginManager.shared.processVisualizationData(audioData, context: context)
-        }
+        // TODO: Implement when render context system is ready
     }
     
     /// Set the current render context for visualizations
@@ -156,7 +146,7 @@ extension AudioEngine {
     private func updatePlaybackStateWithPlugins(_ newState: AudioPlaybackState) {
         playbackState = newState
         
-        let pluginState: PlayerEvent.PlaybackState
+        let pluginState: PlaybackState
         switch newState {
         case .playing:
             pluginState = .playing

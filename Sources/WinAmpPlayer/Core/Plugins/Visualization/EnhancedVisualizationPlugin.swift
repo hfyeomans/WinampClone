@@ -112,18 +112,6 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
         stateSubject.send(.loaded)
     }
     
-    // MARK: - VisualizationPlugin Protocol Methods
-    
-    /// Synchronous activate for VisualizationPlugin protocol
-    public func activate() {
-        isActive = true
-    }
-    
-    /// Synchronous deactivate for VisualizationPlugin protocol  
-    public func deactivate() {
-        isActive = false
-    }
-    
     public func shutdown() async {
         if isActive {
             try? await deactivate()

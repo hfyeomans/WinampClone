@@ -876,6 +876,9 @@ public class SkinPackager {
         case .eq_ex: return "eq_ex"
         case .visColor: return "viscolor"
         case .avs: return "avs"
+        default:
+            // For complex enum cases with associated values, extract base filename
+            return "unknown"
         }
     }
     

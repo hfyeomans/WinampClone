@@ -33,11 +33,7 @@ struct WinAmpPlayerApp: App {
     
     var body: some Scene {
         WindowGroup("WinAmp Player") {
-            SkinnableMainPlayerView()
-                .environmentObject(audioEngine)
-                .environmentObject(volumeController)
-                .environmentObject(skinManager)
-                .preferredColorScheme(.dark)
+            mainPlayerView
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
@@ -198,5 +194,13 @@ struct WinAmpPlayerApp: App {
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
+    }
+    
+    private var mainPlayerView: some View {
+        SkinnableMainPlayerView()
+            .environmentObject(audioEngine)
+            .environmentObject(volumeController)
+            .environmentObject(skinManager)
+            .preferredColorScheme(.dark)
     }
 }
