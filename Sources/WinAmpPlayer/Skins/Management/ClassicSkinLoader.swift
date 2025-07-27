@@ -14,43 +14,15 @@ extension SkinManager {
     
     /// Generate and install the classic WinAmp skin
     public func generateClassicSkin() async {
-        await skinQueue.async {
-            do {
-                // Generate classic skin assets
-                let assets = ClassicSkinGenerator.generateClassicSkin()
-                
-                // Create skin directory
-                let classicSkinDir = self.skinsDirectory.appendingPathComponent("Classic")
-                try? FileManager.default.createDirectory(at: classicSkinDir, withIntermediateDirectories: true)
-                
-                // Save assets to disk
-                for (filename, image) in assets {
-                    let fileURL = classicSkinDir.appendingPathComponent(filename)
-                    if let tiffData = image.tiffRepresentation,
-                       let bitmap = NSBitmapImageRep(data: tiffData) {
-                        let data = bitmap.representation(using: .bmp, properties: [:])
-                        try? data?.write(to: fileURL)
-                    }
-                }
-                
-                // Create skin info file
-                let skinInfo = """
-                [WinampSkin]
-                Name=Classic
-                Author=WinAmpPlayer
-                Version=1.0
-                Description=Classic WinAmp 2.x skin
-                """
-                
-                let infoURL = classicSkinDir.appendingPathComponent("skin.txt")
-                try? skinInfo.write(to: infoURL, atomically: true, encoding: .utf8)
-                
-                // Load the classic skin
-                await self.loadSkin(named: "Classic")
-                
-            } catch {
-                print("Failed to generate classic skin: \(error)")
-            }
+        do {
+            // Generate classic skin assets (writes to disk directly)
+            try await ClassicSkinGenerator.generateClassicSkin()
+            
+            // Load the classic skin
+            await self.loadSkin(named: "Classic")
+            
+        } catch {
+            print("Failed to generate classic skin: \(error)")
         }
     }
     
@@ -90,21 +62,22 @@ extension SkinManager {
     private func loadSkinFromDirectory(_ directory: URL) async {
         do {
             // Parse skin
-            let parser = SkinParser()
-            let skin = try await parser.parseSkinDirectory(directory)
+            let parser = try SkinParser()
+            let parsedSkin = try await parser.parseSkin(from: directory)
             
-            // Cache the skin
-            let cachedSkin = try await SkinAssetCache.shared.cacheSkin(skin)
+            // Create Skin object from ParsedSkin
+            let skin = Skin(
+                name: parsedSkin.name,
+                url: directory,
+                isDefault: false
+            )
             
-            // Update current skin
-            await MainActor.run {
-                self.currentCachedSkin = cachedSkin
-                self.currentSkin = skin
-                
-                // Notify observers
-                NotificationCenter.default.post(name: .skinWillChange, object: self)
-                NotificationCenter.default.post(name: .skinDidChange, object: self)
-            }
+            // Cache the parsed skin data
+            let cachedSkin = try await SkinAssetCache.shared.loadSkin(from: directory)
+            
+            // Update current skin through applySkin method
+            currentCachedSkin = cachedSkin
+            try await applySkin(skin)
         } catch {
             print("Failed to load skin from directory: \(error)")
             await MainActor.run {
@@ -129,6 +102,21 @@ extension SkinManager {
     
     /// Get skin configuration
     public func getSkinConfiguration() -> SkinConfiguration {
-        return currentSkin.configuration ?? SkinConfiguration()
+        guard let cachedSkin = currentCachedSkin else {
+            return SkinConfiguration.defaultConfiguration
+        }
+        
+        // Convert cached skin data to configuration format
+        let playlistColors = PlaylistColors.default
+        let visualizationColors = VisualizationColors.defaultColors
+        let buttonRegions: [String: ButtonRegion] = 
+            Dictionary(uniqueKeysWithValues: (cachedSkin.buttonRegions ?? []).map { ($0.name, $0) })
+        
+        return SkinConfiguration(
+            playlistColors: playlistColors,
+            visualizationColors: visualizationColors,
+            buttonRegions: buttonRegions,
+            fontName: cachedSkin.configurations["font"]
+        )
     }
 }
