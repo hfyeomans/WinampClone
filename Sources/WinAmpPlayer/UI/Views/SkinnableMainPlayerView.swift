@@ -371,11 +371,15 @@ public struct SkinnableMainPlayerView: View {
     }
     
     private func previousTrack() {
-        playlistController.previousTrack()
+        Task {
+            try? await playlistController.playPrevious()
+        }
     }
     
     private func nextTrack() {
-        playlistController.nextTrack()
+        Task {
+            try? await playlistController.playNext()
+        }
     }
     
     private func openFile() {

@@ -31,13 +31,8 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
     
     // MARK: - VisualizationPlugin Requirements
     
-    // Use a different name since 'metadata' is used for WAPlugin
+    // VisualizationPlugin protocol requires visualizationMetadata
     public var visualizationMetadata: VisualizationPluginMetadata {
-        return metadata
-    }
-    
-    // VisualizationPlugin protocol requires a property called 'metadata'
-    public var metadata: VisualizationPluginMetadata {
         VisualizationPluginMetadata(
             identifier: pluginMetadata.identifier,
             name: pluginMetadata.name,

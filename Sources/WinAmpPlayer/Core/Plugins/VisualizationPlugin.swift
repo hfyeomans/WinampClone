@@ -1,6 +1,8 @@
 import Foundation
 import CoreGraphics
 import AVFoundation
+import SwiftUI
+import Combine
 
 // MARK: - Plugin Metadata
 
@@ -144,9 +146,9 @@ public protocol VisualizationConfiguration {
 // MARK: - Main Plugin Protocol
 
 /// Protocol that all visualization plugins must implement
-public protocol VisualizationPlugin: AnyObject {
-    /// Metadata about the plugin
-    var metadata: VisualizationPluginMetadata { get }
+public protocol VisualizationPlugin: WAPlugin {
+    /// Visualization-specific metadata (derived from WAPlugin metadata)
+    var visualizationMetadata: VisualizationPluginMetadata { get }
     
     /// Capabilities supported by this plugin
     var capabilities: VisualizationCapabilities { get }
@@ -254,14 +256,36 @@ public final class VisualizationPluginManager {
 
 /// Built-in spectrum analyzer visualization
 public final class SpectrumVisualizationPlugin: VisualizationPlugin {
-    public let metadata = VisualizationPluginMetadata(
+    // MARK: - WAPlugin Requirements
+    
+    public let metadata = PluginMetadata(
         identifier: "com.winamp.visualization.spectrum",
         name: "Spectrum Analyzer",
-        author: "WinAmp Team",
+        type: .visualization,
         version: "1.0.0",
+        author: "WinAmp Team",
         description: "Classic spectrum analyzer with customizable colors and styles",
         iconName: "spectrum_icon"
     )
+    
+    public private(set) var state: PluginState = .unloaded
+    private let stateSubject = CurrentValueSubject<PluginState, Never>(.unloaded)
+    public var statePublisher: AnyPublisher<PluginState, Never> {
+        stateSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: - VisualizationPlugin Requirements
+    
+    public var visualizationMetadata: VisualizationPluginMetadata {
+        VisualizationPluginMetadata(
+            identifier: metadata.identifier,
+            name: metadata.name,
+            author: metadata.author,
+            version: metadata.version,
+            description: metadata.description,
+            iconName: metadata.iconName
+        )
+    }
     
     public let capabilities: VisualizationCapabilities = [.spectrum, .customConfiguration]
     
@@ -379,20 +403,99 @@ public final class SpectrumVisualizationPlugin: VisualizationPlugin {
     public func resize(to size: CGSize) {
         // Handle resize if needed
     }
+    
+    // MARK: - WAPlugin Lifecycle Methods
+    
+    public func initialize(host: PluginHost) async throws {
+        stateSubject.send(.initializing)
+        peaks = Array(repeating: 0.0, count: barCount)
+        stateSubject.send(.inactive)
+    }
+    
+    public func activate() async throws {
+        stateSubject.send(.activating)
+        stateSubject.send(.active)
+    }
+    
+    public func deactivate() async throws {
+        stateSubject.send(.deactivating)
+        stateSubject.send(.inactive)
+    }
+    
+    public func shutdown() async {
+        stateSubject.send(.unloading)
+        peaks.removeAll()
+        stateSubject.send(.unloaded)
+    }
+    
+    public func configurationView() -> AnyView? {
+        return nil // Could return SwiftUI configuration view
+    }
+    
+    public func exportSettings() -> Data? {
+        let settings = [
+            "barCount": barCount,
+            "barColor": barColor,
+            "peakHold": peakHold
+        ]
+        return try? JSONSerialization.data(withJSONObject: settings)
+    }
+    
+    public func importSettings(_ data: Data) throws {
+        guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw PluginError.configurationError("Invalid settings format")
+        }
+        
+        if let count = settings["barCount"] as? Int {
+            barCount = count
+        }
+        if let color = settings["barColor"] as? CGColor {
+            barColor = color
+        }
+        if let hold = settings["peakHold"] as? Bool {
+            peakHold = hold
+        }
+    }
+    
+    public func handleMessage(_ message: PluginMessage) {
+        // Handle inter-plugin messages if needed
+    }
 }
 
 // MARK: - Built-in Oscilloscope Visualization
 
 /// Built-in oscilloscope visualization
 public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
-    public let metadata = VisualizationPluginMetadata(
+    // MARK: - WAPlugin Requirements
+    
+    public let metadata = PluginMetadata(
         identifier: "com.winamp.visualization.oscilloscope",
         name: "Oscilloscope",
-        author: "WinAmp Team",
+        type: .visualization,
         version: "1.0.0",
+        author: "WinAmp Team",
         description: "Classic waveform oscilloscope display",
         iconName: "oscilloscope_icon"
     )
+    
+    public private(set) var state: PluginState = .unloaded
+    private let stateSubject = CurrentValueSubject<PluginState, Never>(.unloaded)
+    public var statePublisher: AnyPublisher<PluginState, Never> {
+        stateSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: - VisualizationPlugin Requirements
+    
+    public var visualizationMetadata: VisualizationPluginMetadata {
+        VisualizationPluginMetadata(
+            identifier: metadata.identifier,
+            name: metadata.name,
+            author: metadata.author,
+            version: metadata.version,
+            description: metadata.description,
+            iconName: metadata.iconName
+        )
+    }
     
     public let capabilities: VisualizationCapabilities = [.waveform, .customConfiguration]
     
@@ -543,15 +646,72 @@ public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
     public func resize(to size: CGSize) {
         // Handle resize if needed
     }
+    
+    // MARK: - WAPlugin Lifecycle Methods
+    
+    public func initialize(host: PluginHost) async throws {
+        stateSubject.send(.initializing)
+        // Initialize plugin with host
+        stateSubject.send(.inactive)
+    }
+    
+    public func activate() async throws {
+        stateSubject.send(.activating)
+        stateSubject.send(.active)
+    }
+    
+    public func deactivate() async throws {
+        stateSubject.send(.deactivating)
+        stateSubject.send(.inactive)
+    }
+    
+    public func shutdown() async {
+        stateSubject.send(.unloading)
+        stateSubject.send(.unloaded)
+    }
+    
+    public func configurationView() -> AnyView? {
+        return nil // Could return SwiftUI configuration view
+    }
+    
+    public func exportSettings() -> Data? {
+        let settings = [
+            "lineColor": lineColor,
+            "lineWidth": lineWidth,
+            "drawMode": drawMode.rawValue
+        ]
+        return try? JSONSerialization.data(withJSONObject: settings)
+    }
+    
+    public func importSettings(_ data: Data) throws {
+        guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw PluginError.configurationError("Invalid settings format")
+        }
+        
+        if let color = settings["lineColor"] as? CGColor {
+            lineColor = color
+        }
+        if let width = settings["lineWidth"] as? CGFloat {
+            lineWidth = width
+        }
+        if let modeString = settings["drawMode"] as? String,
+           let mode = DrawMode(rawValue: modeString) {
+            drawMode = mode
+        }
+    }
+    
+    public func handleMessage(_ message: PluginMessage) {
+        // Handle inter-plugin messages if needed
+    }
 }
 
 // MARK: - Configuration Implementations
 
 public class SliderConfiguration: VisualizationConfiguration {
-    let displayName: String
-    let key: String
-    var value: Any
-    let type: VisualizationConfigurationType
+    public let displayName: String
+    public let key: String
+    public var value: Any
+    public let type: VisualizationConfigurationType
     
     init(key: String, displayName: String, value: Double, min: Double, max: Double, step: Double) {
         self.key = key
@@ -562,10 +722,10 @@ public class SliderConfiguration: VisualizationConfiguration {
 }
 
 public class ColorConfiguration: VisualizationConfiguration {
-    let displayName: String
-    let key: String
-    var value: Any
-    let type: VisualizationConfigurationType = .colorPicker
+    public let displayName: String
+    public let key: String
+    public var value: Any
+    public let type: VisualizationConfigurationType = .colorPicker
     
     init(key: String, displayName: String, color: CGColor) {
         self.key = key
@@ -575,10 +735,10 @@ public class ColorConfiguration: VisualizationConfiguration {
 }
 
 public class ToggleConfiguration: VisualizationConfiguration {
-    let displayName: String
-    let key: String
-    var value: Any
-    let type: VisualizationConfigurationType = .toggle
+    public let displayName: String
+    public let key: String
+    public var value: Any
+    public let type: VisualizationConfigurationType = .toggle
     
     init(key: String, displayName: String, value: Bool) {
         self.key = key
@@ -587,11 +747,11 @@ public class ToggleConfiguration: VisualizationConfiguration {
     }
 }
 
-private class DropdownConfiguration: VisualizationConfiguration {
-    let displayName: String
-    let key: String
-    var value: Any
-    let type: VisualizationConfigurationType
+public class DropdownConfiguration: VisualizationConfiguration {
+    public let displayName: String
+    public let key: String
+    public var value: Any
+    public let type: VisualizationConfigurationType
     
     init(key: String, displayName: String, value: String, options: [String]) {
         self.key = key

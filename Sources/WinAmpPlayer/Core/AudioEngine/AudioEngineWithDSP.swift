@@ -153,7 +153,7 @@ extension AudioEngine {
     }
     
     /// Override playback state changes to notify plugins
-    private func updatePlaybackStateWithPlugins(_ newState: PlaybackState) {
+    private func updatePlaybackStateWithPlugins(_ newState: AudioPlaybackState) {
         playbackState = newState
         
         let pluginState: PlayerEvent.PlaybackState
@@ -166,8 +166,8 @@ extension AudioEngine {
             pluginState = .stopped
         case .loading:
             pluginState = .loading
-        default:
-            pluginState = .stopped
+        case .error:
+            pluginState = .stopped // Map error state to stopped for plugins
         }
         
         notifyPlugins(event: .playbackStateChanged(pluginState))
