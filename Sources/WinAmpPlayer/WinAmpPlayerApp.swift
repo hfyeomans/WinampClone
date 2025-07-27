@@ -13,6 +13,7 @@ struct WinAmpPlayerApp: App {
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
     @StateObject private var skinManager = SkinManager.shared
+    @StateObject private var pluginManager = PluginManager.shared
     
     init() {
         let engine = AudioEngine()
@@ -25,6 +26,9 @@ struct WinAmpPlayerApp: App {
         Task {
             try? await SkinAssetCache.shared.preloadDefaultSkin()
         }
+        
+        // Setup DSP processing in audio engine
+        engine.setupDSPProcessing()
     }
     
     var body: some Scene {
@@ -86,6 +90,81 @@ struct WinAmpPlayerApp: App {
                 Button("Get More Skins Online...") {
                     NSWorkspace.shared.open(URL(string: "https://skins.webamp.org/")!)
                 }
+            }
+            
+            // Add plugin menu
+            CommandMenu("Plugins") {
+                // Visualization plugins
+                Menu("Visualization") {
+                    ForEach(pluginManager.visualizationPlugins, id: \.metadata.identifier) { plugin in
+                        Button(action: {
+                            Task {
+                                await pluginManager.activateVisualization(plugin)
+                            }
+                        }) {
+                            HStack {
+                                Text(plugin.metadata.name)
+                                if pluginManager.activeVisualization?.metadata.identifier == plugin.metadata.identifier {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                Divider()
+                
+                // DSP plugins
+                Menu("DSP Effects") {
+                    ForEach(pluginManager.dspPlugins, id: \.metadata.identifier) { plugin in
+                        let isActive = pluginManager.activeDSPChain.allEffects.contains { $0.metadata.identifier == plugin.metadata.identifier }
+                        Button(action: {
+                            if isActive {
+                                pluginManager.removeDSPFromChain(plugin)
+                            } else {
+                                pluginManager.addDSPToChain(plugin)
+                            }
+                        }) {
+                            HStack {
+                                Text(plugin.metadata.name)
+                                if isActive {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                Divider()
+                
+                // General plugins
+                ForEach(pluginManager.generalPlugins, id: \.metadata.identifier) { plugin in
+                    let isActive = pluginManager.activeGeneralPlugins.contains { $0.metadata.identifier == plugin.metadata.identifier }
+                    Button(action: {
+                        Task {
+                            if isActive {
+                                await pluginManager.deactivateGeneralPlugin(plugin)
+                            } else {
+                                await pluginManager.activateGeneralPlugin(plugin)
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Text(plugin.metadata.name)
+                            if isActive {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+                
+                Divider()
+                
+                // Plugin preferences
+                Button("Plugin Preferences...") {
+                    SecondaryWindowManager.shared.openPluginPreferences()
+                }
+                .keyboardShortcut("P", modifiers: [.command, .shift])
             }
         }
         
