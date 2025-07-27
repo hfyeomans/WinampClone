@@ -1,0 +1,885 @@
+Building for debugging...
+[0/4] Write swift-version--58304C5D6DBC2206.txt
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[2/20] Compiling WinAmpPlayer AudioEngine.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:201:9: warning: no 'async' operations occur within 'await' expression
+199 |     func loadTrack(_ track: Track) async throws {
+200 |         // Clean up any existing playback
+201 |         await cleanup()
+    |         `- warning: no 'async' operations occur within 'await' expression
+202 |         
+203 |         guard let url = track.fileURL else {
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:216:34: warning: no 'async' operations occur within 'await' expression
+214 |         do {
+215 |             // Load audio file on background queue
+216 |             let loadedFile = try await audioQueue.sync {
+    |                                  `- warning: no 'async' operations occur within 'await' expression
+217 |                 try AVAudioFile(forReading: url)
+218 |             }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:542:19: warning: immutable value 'audioFile' was never used; consider replacing with '_' or removing it
+540 |         guard let nodeTime = playerNode.lastRenderTime,
+541 |               let playerTime = playerNode.playerTime(forNodeTime: nodeTime),
+542 |               let audioFile = audioFile else {
+    |                   `- warning: immutable value 'audioFile' was never used; consider replacing with '_' or removing it
+543 |             return
+544 |         }
+[3/20] Compiling WinAmpPlayer GeneralPlugin.swift
+[4/20] Compiling WinAmpPlayer DiscordPresence.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/Examples/DiscordPresence.swift:183:17: warning: variable 'activity' was never mutated; consider changing to 'let' constant
+181 |             startTime = Date()
+182 |             
+183 |             var activity = DiscordActivity(
+    |                 `- warning: variable 'activity' was never mutated; consider changing to 'let' constant
+184 |                 details: showTrackDetails ? track.displayTitle : "Listening to music",
+185 |                 state: showTrackDetails ? "by \(track.displayArtist)" : nil,
+[5/20] Emitting module WinAmpPlayer
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/Metadata/MetadataExample.swift:95:13: warning: initialization of immutable value 'customExtractor' was never used; consider replacing with assignment to '_' or removing it
+ 93 |         
+ 94 |         // Create extractor with custom format support
+ 95 |         let customExtractor = MetadataExtractor(extractors: [
+    |             `- warning: initialization of immutable value 'customExtractor' was never used; consider replacing with assignment to '_' or removing it
+ 96 |             ID3TagParser(),
+ 97 |             CustomFormatExtractor()
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:40:16: error: invalid redeclaration of 'metadata'
+ 38 |     
+ 39 |     // VisualizationPlugin protocol requires a property called 'metadata'
+ 40 |     public var metadata: VisualizationPluginMetadata {
+    |                `- error: invalid redeclaration of 'metadata'
+ 41 |         VisualizationPluginMetadata(
+ 42 |             identifier: pluginMetadata.identifier,
+[6/20] Compiling WinAmpPlayer EnhancedVisualizationPlugin.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:40:16: error: invalid redeclaration of 'metadata'
+ 38 |     
+ 39 |     // VisualizationPlugin protocol requires a property called 'metadata'
+ 40 |     public var metadata: VisualizationPluginMetadata {
+    |                `- error: invalid redeclaration of 'metadata'
+ 41 |         VisualizationPluginMetadata(
+ 42 |             identifier: pluginMetadata.identifier,
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:36:16: error: cannot convert return expression of type 'PluginMetadata' to return type 'VisualizationPluginMetadata'
+ 34 |     // Use a different name since 'metadata' is used for WAPlugin
+ 35 |     public var visualizationMetadata: VisualizationPluginMetadata {
+ 36 |         return metadata
+    |                `- error: cannot convert return expression of type 'PluginMetadata' to return type 'VisualizationPluginMetadata'
+ 37 |     }
+ 38 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:113:9: error: call can throw but is not marked with 'try'
+111 |         
+112 |         // Call the sync version for VisualizationPlugin protocol
+113 |         activate()
+    |         |- error: call can throw but is not marked with 'try'
+    |         |- note: did you mean to use 'try'?
+    |         |- note: did you mean to handle error as optional value?
+    |         `- note: did you mean to disable error propagation?
+114 |     }
+115 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:113:9: error: expression is 'async' but is not marked with 'await'
+111 |         
+112 |         // Call the sync version for VisualizationPlugin protocol
+113 |         activate()
+    |         |- error: expression is 'async' but is not marked with 'await'
+    |         `- note: call is 'async'
+114 |     }
+115 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:123:9: error: call can throw but is not marked with 'try'
+121 |         
+122 |         // Call the sync version for VisualizationPlugin protocol
+123 |         deactivate()
+    |         |- error: call can throw but is not marked with 'try'
+    |         |- note: did you mean to use 'try'?
+    |         |- note: did you mean to handle error as optional value?
+    |         `- note: did you mean to disable error propagation?
+124 |     }
+125 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:123:9: error: expression is 'async' but is not marked with 'await'
+121 |         
+122 |         // Call the sync version for VisualizationPlugin protocol
+123 |         deactivate()
+    |         |- error: expression is 'async' but is not marked with 'await'
+    |         `- note: call is 'async'
+124 |     }
+125 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:142:40: error: reference to property 'configurationOptions' in closure requires explicit use of 'self' to make capture semantics explicit
+138 |         return AnyView(
+139 |             VStack(alignment: .leading, spacing: 16) {
+140 |                 ForEach(configurationOptions.indices, id: \.self) { index in
+    |                                                                   `- note: capture 'self' explicitly to enable implicit 'self' in this closure
+141 |                     ConfigurationItemView(
+142 |                         configuration: configurationOptions[index],
+    |                                        |- error: reference to property 'configurationOptions' in closure requires explicit use of 'self' to make capture semantics explicit
+    |                                        `- note: reference 'self.' explicitly
+143 |                         onChange: { [weak self] newValue in
+144 |                             self?.updateConfiguration(
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:265:58: error: conditional downcast to CoreFoundation type 'CGColor' will always succeed
+263 |                 .labelsHidden()
+264 |                 .onAppear {
+265 |                     if let cgColor = configuration.value as? CGColor,
+    |                                                          |- error: conditional downcast to CoreFoundation type 'CGColor' will always succeed
+    |                                                          `- note: did you mean to explicitly compare the CFTypeIDs of 'value' and 'CGColor'?
+266 |                        let components = cgColor.components {
+267 |                         colorComponents = Array(components)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:233:22: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+231 |                 Toggle("", isOn: $toggleValue)
+232 |                     .labelsHidden()
+233 |                     .onChange(of: toggleValue) { newValue in
+    |                      `- warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+234 |                         onChange(newValue)
+235 |                     }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:279:18: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+277 |                 }
+278 |                 .pickerStyle(MenuPickerStyle())
+279 |                 .onChange(of: selectedIndex) { newValue in
+    |                  `- warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+280 |                     onChange(options[newValue])
+281 |                 }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:323:13: error: cannot find 'SliderConfiguration' in scope
+321 |     public override var configurationOptions: [VisualizationConfiguration] {
+322 |         [
+323 |             SliderConfiguration(
+    |             `- error: cannot find 'SliderConfiguration' in scope
+324 |                 key: "barCount",
+325 |                 displayName: "Number of Bars",
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:331:13: error: cannot find 'ColorConfiguration' in scope
+329 |                 step: 8
+330 |             ),
+331 |             ColorConfiguration(
+    |             `- error: cannot find 'ColorConfiguration' in scope
+332 |                 key: "barColor", 
+333 |                 displayName: "Bar Color",
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/Visualization/EnhancedVisualizationPlugin.swift:336:13: error: cannot find 'ToggleConfiguration' in scope
+334 |                 color: barColor
+335 |             ),
+336 |             ToggleConfiguration(
+    |             `- error: cannot find 'ToggleConfiguration' in scope
+337 |                 key: "peakHold",
+338 |                 displayName: "Peak Hold",
+[7/20] Compiling WinAmpPlayer AudioEngineWithDSP.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:17:13: warning: initialization of immutable value 'dspChain' was never used; consider replacing with assignment to '_' or removing it
+ 15 |     func setupDSPProcessing() {
+ 16 |         // Get the DSP chain from plugin manager
+ 17 |         let dspChain = PluginManager.shared.activeDSPChain
+    |             `- warning: initialization of immutable value 'dspChain' was never used; consider replacing with assignment to '_' or removing it
+ 18 |         
+ 19 |         // Install tap after player node for DSP processing
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:46:9: error: 'logger' is inaccessible due to 'private' protection level
+ 44 |         }
+ 45 |         
+ 46 |         logger.info("DSP processing chain installed")
+    |         `- error: 'logger' is inaccessible due to 'private' protection level
+ 47 |     }
+ 48 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:165:17: note: 'logger' declared here
+163 |     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
+164 |     
+165 |     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    |                 `- note: 'logger' declared here
+166 |     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
+167 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:53:13: error: 'logger' is inaccessible due to 'private' protection level
+ 51 |         // Convert to DSP buffer format
+ 52 |         guard var dspBuffer = DSPAudioBuffer(from: buffer) else {
+ 53 |             logger.warning("Failed to create DSP buffer")
+    |             `- error: 'logger' is inaccessible due to 'private' protection level
+ 54 |             return
+ 55 |         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:165:17: note: 'logger' declared here
+163 |     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
+164 |     
+165 |     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    |                 `- note: 'logger' declared here
+166 |     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
+167 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:76:13: error: 'logger' is inaccessible due to 'private' protection level
+ 74 |             }
+ 75 |         } catch {
+ 76 |             logger.error("DSP processing failed: \(error.localizedDescription)")
+    |             `- error: 'logger' is inaccessible due to 'private' protection level
+ 77 |         }
+ 78 |     }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:165:17: note: 'logger' declared here
+163 |     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
+164 |     
+165 |     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    |                 `- note: 'logger' declared here
+166 |     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
+167 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:92:13: error: 'logger' is inaccessible due to 'private' protection level
+ 90 |                 maxFrames: maxFrames
+ 91 |             )
+ 92 |             logger.info("DSP chain prepared for format: \(format)")
+    |             `- error: 'logger' is inaccessible due to 'private' protection level
+ 93 |         } catch {
+ 94 |             logger.error("Failed to prepare DSP chain: \(error)")
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:165:17: note: 'logger' declared here
+163 |     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
+164 |     
+165 |     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    |                 `- note: 'logger' declared here
+166 |     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
+167 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:94:13: error: 'logger' is inaccessible due to 'private' protection level
+ 92 |             logger.info("DSP chain prepared for format: \(format)")
+ 93 |         } catch {
+ 94 |             logger.error("Failed to prepare DSP chain: \(error)")
+    |             `- error: 'logger' is inaccessible due to 'private' protection level
+ 95 |         }
+ 96 |     }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngine.swift:165:17: note: 'logger' declared here
+163 |     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
+164 |     
+165 |     private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    |                 `- note: 'logger' declared here
+166 |     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
+167 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:112:39: error: cannot find 'currentVisualizationData' in scope
+110 |     /// Process visualization data through plugin system
+111 |     func processVisualizationData() {
+112 |         guard let visualizationData = currentVisualizationData else { return }
+    |                                       `- error: cannot find 'currentVisualizationData' in scope
+113 |         
+114 |         // Convert to plugin format
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:117:28: error: cannot find 'fftProcessor' in scope
+115 |         let audioData = VisualizationAudioData(
+116 |             samples: visualizationData.leftChannel, // Use left channel for mono compatibility
+117 |             frequencyData: fftProcessor?.performFFT(on: visualizationData.leftChannel),
+    |                            `- error: cannot find 'fftProcessor' in scope
+118 |             sampleRate: visualizationData.sampleRate,
+119 |             channelCount: 2,
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:125:26: error: cannot find 'currentRenderContext' in scope
+123 |         
+124 |         // Get render context (this would come from the visualization view)
+125 |         if let context = currentRenderContext {
+    |                          `- error: cannot find 'currentRenderContext' in scope
+126 |             PluginManager.shared.processVisualizationData(audioData, context: context)
+127 |         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:157:25: error: cannot assign value of type 'PlaybackState' to type 'AudioPlaybackState'
+155 |     /// Override playback state changes to notify plugins
+156 |     private func updatePlaybackStateWithPlugins(_ newState: PlaybackState) {
+157 |         playbackState = newState
+    |                         `- error: cannot assign value of type 'PlaybackState' to type 'AudioPlaybackState'
+158 |         
+159 |         let pluginState: PlayerEvent.PlaybackState
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/AudioEngine/AudioEngineWithDSP.swift:159:38: error: 'PlaybackState' is not a member type of enum 'WinAmpPlayer.PlayerEvent'
+157 |         playbackState = newState
+158 |         
+159 |         let pluginState: PlayerEvent.PlaybackState
+    |                                      `- error: 'PlaybackState' is not a member type of enum 'WinAmpPlayer.PlayerEvent'
+160 |         switch newState {
+161 |         case .playing:
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/GeneralPlugin.swift:16:13: note: 'PlayerEvent' declared here
+ 14 | 
+ 15 | /// Events that general plugins can listen to
+ 16 | public enum PlayerEvent {
+    |             `- note: 'PlayerEvent' declared here
+ 17 |     case trackChanged(Track?)
+ 18 |     case playbackStateChanged(PlaybackState)
+[8/20] Compiling WinAmpPlayer WinAmpPlayerApp.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/WinAmpPlayerApp.swift:34:26: error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 32 |     }
+ 33 |     
+ 34 |     var body: some Scene {
+    |                          `- error: the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions
+ 35 |         WindowGroup("WinAmp Player") {
+ 36 |             SkinnableMainPlayerView()
+[9/20] Compiling WinAmpPlayer SkinBrowserWindow.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinBrowserWindow.swift:25:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+ 23 |     private func exportSkin(_ skin: Skin) {
+ 24 |         let panel = NSSavePanel()
+ 25 |         panel.allowedFileTypes = ["wsz", "zip"]
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+ 26 |         panel.nameFieldStringValue = "\(skin.name).wsz"
+ 27 |         panel.prompt = "Export"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinBrowserWindow.swift:115:54: warning: non-sendable result type 'NSImage?' cannot be sent from nonisolated context in call to instance method 'createThumbnail(for:)'; this is an error in the Swift 6 language mode
+113 |             // Load thumbnail
+114 |             if thumbnail == nil {
+115 |                 thumbnail = await SkinManager.shared.createThumbnail(for: skin)
+    |                                                      `- warning: non-sendable result type 'NSImage?' cannot be sent from nonisolated context in call to instance method 'createThumbnail(for:)'; this is an error in the Swift 6 language mode
+116 |             }
+117 |         }
+
+Swift.Optional:1:21: note: generic enum 'Optional' does not conform to the 'Sendable' protocol
+1 | @frozen public enum Optional<Wrapped> : ~Copyable where Wrapped : ~Copyable {
+  |                     `- note: generic enum 'Optional' does not conform to the 'Sendable' protocol
+2 |     case none
+3 |     case some(Wrapped)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinBrowserWindow.swift:224:24: error: initializer for conditional binding must have Optional type, not 'Skin'
+222 |                     Spacer()
+223 |                     
+224 |                     if let current = skinManager.currentSkin {
+    |                        `- error: initializer for conditional binding must have Optional type, not 'Skin'
+225 |                         Text("Current: \(current.name)")
+226 |                             .font(.system(size: 11, weight: .regular, design: .monospaced))
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinBrowserWindow.swift:278:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+276 |     private func addSkin() {
+277 |         let panel = NSOpenPanel()
+278 |         panel.allowedFileTypes = ["wsz", "zip"]
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+279 |         panel.allowsMultipleSelection = true
+280 |         panel.prompt = "Add Skin"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinBrowserWindow.swift:346:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+344 |     private func exportAllSkins() {
+345 |         let panel = NSSavePanel()
+346 |         panel.allowedFileTypes = ["zip"]
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+347 |         panel.nameFieldStringValue = "WinAmp_Skins_Pack.zip"
+348 |         panel.prompt = "Export Pack"
+[10/20] Compiling WinAmpPlayer ReverbDSP.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/DSP/Examples/ReverbDSP.swift:71:9: error: cannot assign to property: 'parameters' setter is inaccessible
+ 69 |         
+ 70 |         // Initialize parameters
+ 71 |         parameters = [
+    |         `- error: cannot assign to property: 'parameters' setter is inaccessible
+ 72 |             DSPParameter(
+ 73 |                 id: "room_size",
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/DSP/Examples/ReverbDSP.swift:136:17: warning: variable 'reverb' was never mutated; consider changing to 'let' constant
+134 |         for channel in 0..<channelCount {
+135 |             let channelData = buffer.channel(channel)
+136 |             var reverb = channelReverbs[channel]
+    |                 `- warning: variable 'reverb' was never mutated; consider changing to 'let' constant
+137 |             
+138 |             // Clear wet buffer
+[11/20] Compiling WinAmpPlayer PluginPreferencesWindow.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/PluginPreferencesWindow.swift:342:34: error: cannot convert return expression of type '[any VisualizationPlugin]' to return type '[any WAPlugin]'
+340 |         switch category {
+341 |         case .visualization:
+342 |             return pluginManager.visualizationPlugins
+    |                                  |- error: cannot convert return expression of type '[any VisualizationPlugin]' to return type '[any WAPlugin]'
+    |                                  `- note: arguments to generic parameter 'Element' ('any VisualizationPlugin' and 'any WAPlugin') are expected to be equal
+343 |         case .dsp:
+344 |             return pluginManager.dspPlugins
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/PluginPreferencesWindow.swift:396:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+394 |     private func addPlugin() {
+395 |         let panel = NSOpenPanel()
+396 |         panel.allowedFileTypes = ["waplugin"]
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+397 |         panel.allowsMultipleSelection = true
+398 |         panel.prompt = "Add Plugin"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/PluginPreferencesWindow.swift:469:10: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+467 |             updateActiveState()
+468 |         }
+469 |         .onChange(of: plugin.state) { _ in
+    |          `- warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+470 |             updateActiveState()
+471 |         }
+[12/20] Compiling WinAmpPlayer SkinnablePlaylistWindow.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinnablePlaylistWindow.swift:215:34: error: incorrect argument label in call (have 'trackCount:totalDuration:selectedCount:', expected 'totalTracks:totalDuration:selectedCount:')
+213 |                 
+214 |                 // Status bar
+215 |                 PlaylistStatusBar(
+    |                                  `- error: incorrect argument label in call (have 'trackCount:totalDuration:selectedCount:', expected 'totalTracks:totalDuration:selectedCount:')
+216 |                     trackCount: displayedTracks.count,
+217 |                     totalDuration: totalDuration,
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinnablePlaylistWindow.swift:235:13: error: cannot find 'PlaylistToolbar' in scope
+233 |         VStack(spacing: 0) {
+234 |             // Toolbar
+235 |             PlaylistToolbar(
+    |             `- error: cannot find 'PlaylistToolbar' in scope
+236 |                 onAdd: addFiles,
+237 |                 onRemove: removeSelected,
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinnablePlaylistWindow.swift:325:15: error: type 'PlaylistSortField' has no member 'none'
+323 |         case .duration:
+324 |             tracks.sort { sortAscending ? $0.duration < $1.duration : $0.duration > $1.duration }
+325 |         case .none:
+    |               `- error: type 'PlaylistSortField' has no member 'none'
+326 |             break
+327 |         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinnablePlaylistWindow.swift:354:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+352 |     private func addFiles() {
+353 |         let panel = NSOpenPanel()
+354 |         panel.allowedFileTypes = Track.supportedExtensions
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+355 |         panel.allowsMultipleSelection = true
+356 |         panel.canChooseDirectories = true
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Windows/SkinnablePlaylistWindow.swift:409:49: error: value of optional type 'URL?' must be unwrapped to refer to member 'path' of wrapped base type 'URL'
+407 |         
+408 |         Button("Show in Finder") {
+409 |             NSWorkspace.shared.selectFile(track.fileURL.path, inFileViewerRootedAtPath: "")
+    |                                                 |- error: value of optional type 'URL?' must be unwrapped to refer to member 'path' of wrapped base type 'URL'
+    |                                                 `- note: chain the optional using '?' to access member 'path' only for non-'nil' base values
+410 |         }
+411 |     }
+[13/20] Compiling WinAmpPlayer LastFMScrobbler.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/Examples/LastFMScrobbler.swift:170:29: error: call to method 'showAuthenticationWindow' in closure requires explicit use of 'self' to make capture semantics explicit
+167 |                 HStack {
+168 |                     if !isAuthenticated {
+169 |                         Button("Authenticate") {
+    |                                                `- note: capture 'self' explicitly to enable implicit 'self' in this closure
+170 |                             showAuthenticationWindow()
+    |                             |- error: call to method 'showAuthenticationWindow' in closure requires explicit use of 'self' to make capture semantics explicit
+    |                             `- note: reference 'self.' explicitly
+171 |                         }
+172 |                     }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/Examples/LastFMScrobbler.swift:175:74: error: reference to property 'username' in closure requires explicit use of 'self' to make capture semantics explicit
+172 |                     }
+173 |                     
+174 |                     Button("View on Last.fm") {
+    |                                               `- note: capture 'self' explicitly to enable implicit 'self' in this closure
+175 |                         if let url = URL(string: "https://last.fm/user/\(username)") {
+    |                                                                          |- error: reference to property 'username' in closure requires explicit use of 'self' to make capture semantics explicit
+    |                                                                          `- note: reference 'self.' explicitly
+176 |                             NSWorkspace.shared.open(url)
+177 |                         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/Examples/LastFMScrobbler.swift:212:16: warning: immutable value 'player' was never used; consider replacing with '_' or removing it
+210 |         // Submit previous track if needed
+211 |         if let startTime = currentTrackStartTime,
+212 |            let player = playerControl,
+    |                `- warning: immutable value 'player' was never used; consider replacing with '_' or removing it
+213 |            hasScrobbled {
+214 |             let playDuration = Date().timeIntervalSince(startTime)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/General/Examples/LastFMScrobbler.swift:214:17: warning: initialization of immutable value 'playDuration' was never used; consider replacing with assignment to '_' or removing it
+212 |            let player = playerControl,
+213 |            hasScrobbled {
+214 |             let playDuration = Date().timeIntervalSince(startTime)
+    |                 `- warning: initialization of immutable value 'playDuration' was never used; consider replacing with assignment to '_' or removing it
+215 |             updateNowPlaying(nil) // Clear now playing
+216 |         }
+[14/20] Compiling WinAmpPlayer SkinPackager.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:78:18: error: type 'SpriteType' has no member 'main'
+  76 |         
+  77 |         // Main window components
+  78 |         sprites[.main] = try generateMainWindow(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'main'
+  79 |         sprites[.titleBar] = try generateTitleBar(config: config, palette: palette)
+  80 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:79:18: error: type 'SpriteType' has no member 'titleBar'
+  77 |         // Main window components
+  78 |         sprites[.main] = try generateMainWindow(config: config, palette: palette)
+  79 |         sprites[.titleBar] = try generateTitleBar(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'titleBar'
+  80 |         
+  81 |         // Control buttons
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:82:18: error: type 'SpriteType' has no member 'cButtons'
+  80 |         
+  81 |         // Control buttons
+  82 |         sprites[.cButtons] = try generateControlButtons(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'cButtons'
+  83 |         
+  84 |         // Sliders
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:85:18: error: type 'SpriteType' has no member 'volume'
+  83 |         
+  84 |         // Sliders
+  85 |         sprites[.volume] = try generateVolumeSlider(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'volume'
+  86 |         sprites[.balance] = try generateBalanceSlider(config: config, palette: palette)
+  87 |         sprites[.posBar] = try generatePositionBar(config: config, palette: palette)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:86:18: error: type 'SpriteType' has no member 'balance'
+  84 |         // Sliders
+  85 |         sprites[.volume] = try generateVolumeSlider(config: config, palette: palette)
+  86 |         sprites[.balance] = try generateBalanceSlider(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'balance'
+  87 |         sprites[.posBar] = try generatePositionBar(config: config, palette: palette)
+  88 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:87:18: error: type 'SpriteType' has no member 'posBar'
+  85 |         sprites[.volume] = try generateVolumeSlider(config: config, palette: palette)
+  86 |         sprites[.balance] = try generateBalanceSlider(config: config, palette: palette)
+  87 |         sprites[.posBar] = try generatePositionBar(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'posBar'
+  88 |         
+  89 |         // Display areas
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:90:18: error: type 'SpriteType' has no member 'numbers'
+  88 |         
+  89 |         // Display areas
+  90 |         sprites[.numbers] = try generateNumbers(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'numbers'
+  91 |         sprites[.text] = try generateText(config: config, palette: palette)
+  92 |         sprites[.monoster] = try generateMonoster(config: config, palette: palette)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:91:18: error: type 'SpriteType' has no member 'text'
+  89 |         // Display areas
+  90 |         sprites[.numbers] = try generateNumbers(config: config, palette: palette)
+  91 |         sprites[.text] = try generateText(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'text'
+  92 |         sprites[.monoster] = try generateMonoster(config: config, palette: palette)
+  93 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:92:18: error: type 'SpriteType' has no member 'monoster'
+  90 |         sprites[.numbers] = try generateNumbers(config: config, palette: palette)
+  91 |         sprites[.text] = try generateText(config: config, palette: palette)
+  92 |         sprites[.monoster] = try generateMonoster(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'monoster'
+  93 |         
+  94 |         // Playlist window
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:95:18: error: type 'SpriteType' has no member 'pledit'
+  93 |         
+  94 |         // Playlist window
+  95 |         sprites[.pledit] = try generatePlaylistEditor(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'pledit'
+  96 |         sprites[.plEdit] = try generatePlaylistText(config: config, palette: palette)
+  97 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:96:18: error: type 'SpriteType' has no member 'plEdit'
+  94 |         // Playlist window
+  95 |         sprites[.pledit] = try generatePlaylistEditor(config: config, palette: palette)
+  96 |         sprites[.plEdit] = try generatePlaylistText(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'plEdit'
+  97 |         
+  98 |         // Equalizer window
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:99:18: error: type 'SpriteType' has no member 'eqMain'
+  97 |         
+  98 |         // Equalizer window
+  99 |         sprites[.eqMain] = try generateEqualizer(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'eqMain'
+ 100 |         sprites[.eq_ex] = try generateEqualizerExtended(config: config, palette: palette)
+ 101 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:100:18: error: type 'SpriteType' has no member 'eq_ex'
+  98 |         // Equalizer window
+  99 |         sprites[.eqMain] = try generateEqualizer(config: config, palette: palette)
+ 100 |         sprites[.eq_ex] = try generateEqualizerExtended(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'eq_ex'
+ 101 |         
+ 102 |         // Visualization
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:103:18: error: type 'SpriteType' has no member 'visColor'
+ 101 |         
+ 102 |         // Visualization
+ 103 |         sprites[.visColor] = try generateVisualizationColors(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'visColor'
+ 104 |         
+ 105 |         // AVS placeholder
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:106:18: error: type 'SpriteType' has no member 'avs'
+ 104 |         
+ 105 |         // AVS placeholder
+ 106 |         sprites[.avs] = try generateAVSPlaceholder(config: config, palette: palette)
+     |                  `- error: type 'SpriteType' has no member 'avs'
+ 107 |         
+ 108 |         return sprites
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:864:15: error: type 'SpriteType' has no member 'main'
+ 862 |         // Map sprite types to their standard WinAmp filenames
+ 863 |         switch spriteType {
+ 864 |         case .main: return "main"
+     |               `- error: type 'SpriteType' has no member 'main'
+ 865 |         case .titleBar: return "titlebar"
+ 866 |         case .cButtons: return "cbuttons"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:865:15: error: type 'SpriteType' has no member 'titleBar'
+ 863 |         switch spriteType {
+ 864 |         case .main: return "main"
+ 865 |         case .titleBar: return "titlebar"
+     |               `- error: type 'SpriteType' has no member 'titleBar'
+ 866 |         case .cButtons: return "cbuttons"
+ 867 |         case .volume: return "volume"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:866:15: error: type 'SpriteType' has no member 'cButtons'
+ 864 |         case .main: return "main"
+ 865 |         case .titleBar: return "titlebar"
+ 866 |         case .cButtons: return "cbuttons"
+     |               `- error: type 'SpriteType' has no member 'cButtons'
+ 867 |         case .volume: return "volume"
+ 868 |         case .balance: return "balance"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:867:15: error: type 'SpriteType' has no member 'volume'
+ 865 |         case .titleBar: return "titlebar"
+ 866 |         case .cButtons: return "cbuttons"
+ 867 |         case .volume: return "volume"
+     |               `- error: type 'SpriteType' has no member 'volume'
+ 868 |         case .balance: return "balance"
+ 869 |         case .posBar: return "posbar"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:868:15: error: type 'SpriteType' has no member 'balance'
+ 866 |         case .cButtons: return "cbuttons"
+ 867 |         case .volume: return "volume"
+ 868 |         case .balance: return "balance"
+     |               `- error: type 'SpriteType' has no member 'balance'
+ 869 |         case .posBar: return "posbar"
+ 870 |         case .numbers: return "numbers"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:869:15: error: type 'SpriteType' has no member 'posBar'
+ 867 |         case .volume: return "volume"
+ 868 |         case .balance: return "balance"
+ 869 |         case .posBar: return "posbar"
+     |               `- error: type 'SpriteType' has no member 'posBar'
+ 870 |         case .numbers: return "numbers"
+ 871 |         case .text: return "text"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:870:15: error: type 'SpriteType' has no member 'numbers'
+ 868 |         case .balance: return "balance"
+ 869 |         case .posBar: return "posbar"
+ 870 |         case .numbers: return "numbers"
+     |               `- error: type 'SpriteType' has no member 'numbers'
+ 871 |         case .text: return "text"
+ 872 |         case .monoster: return "monoster"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:871:15: error: type 'SpriteType' has no member 'text'
+ 869 |         case .posBar: return "posbar"
+ 870 |         case .numbers: return "numbers"
+ 871 |         case .text: return "text"
+     |               `- error: type 'SpriteType' has no member 'text'
+ 872 |         case .monoster: return "monoster"
+ 873 |         case .pledit: return "pledit"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:872:15: error: type 'SpriteType' has no member 'monoster'
+ 870 |         case .numbers: return "numbers"
+ 871 |         case .text: return "text"
+ 872 |         case .monoster: return "monoster"
+     |               `- error: type 'SpriteType' has no member 'monoster'
+ 873 |         case .pledit: return "pledit"
+ 874 |         case .plEdit: return "pledit"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:873:15: error: type 'SpriteType' has no member 'pledit'
+ 871 |         case .text: return "text"
+ 872 |         case .monoster: return "monoster"
+ 873 |         case .pledit: return "pledit"
+     |               `- error: type 'SpriteType' has no member 'pledit'
+ 874 |         case .plEdit: return "pledit"
+ 875 |         case .eqMain: return "eqmain"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:874:15: error: type 'SpriteType' has no member 'plEdit'
+ 872 |         case .monoster: return "monoster"
+ 873 |         case .pledit: return "pledit"
+ 874 |         case .plEdit: return "pledit"
+     |               `- error: type 'SpriteType' has no member 'plEdit'
+ 875 |         case .eqMain: return "eqmain"
+ 876 |         case .eq_ex: return "eq_ex"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:875:15: error: type 'SpriteType' has no member 'eqMain'
+ 873 |         case .pledit: return "pledit"
+ 874 |         case .plEdit: return "pledit"
+ 875 |         case .eqMain: return "eqmain"
+     |               `- error: type 'SpriteType' has no member 'eqMain'
+ 876 |         case .eq_ex: return "eq_ex"
+ 877 |         case .visColor: return "viscolor"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:876:15: error: type 'SpriteType' has no member 'eq_ex'
+ 874 |         case .plEdit: return "pledit"
+ 875 |         case .eqMain: return "eqmain"
+ 876 |         case .eq_ex: return "eq_ex"
+     |               `- error: type 'SpriteType' has no member 'eq_ex'
+ 877 |         case .visColor: return "viscolor"
+ 878 |         case .avs: return "avs"
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:877:15: error: type 'SpriteType' has no member 'visColor'
+ 875 |         case .eqMain: return "eqmain"
+ 876 |         case .eq_ex: return "eq_ex"
+ 877 |         case .visColor: return "viscolor"
+     |               `- error: type 'SpriteType' has no member 'visColor'
+ 878 |         case .avs: return "avs"
+ 879 |         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Skins/Generation/SkinPackager.swift:878:15: error: type 'SpriteType' has no member 'avs'
+ 876 |         case .eq_ex: return "eq_ex"
+ 877 |         case .visColor: return "viscolor"
+ 878 |         case .avs: return "avs"
+     |               `- error: type 'SpriteType' has no member 'avs'
+ 879 |         }
+ 880 |     }
+[15/20] Compiling WinAmpPlayer PluginManager.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:132:13: warning: no 'async' operations occur within 'await' expression
+130 |         // Deactivate current
+131 |         if let current = activeVisualization {
+132 |             await current.deactivate()
+    |             `- warning: no 'async' operations occur within 'await' expression
+133 |         }
+134 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:137:17: warning: no 'async' operations occur within 'await' expression
+135 |         // Activate new
+136 |         do {
+137 |             try await plugin.activate()
+    |                 `- warning: no 'async' operations occur within 'await' expression
+138 |             await MainActor.run {
+139 |                 activeVisualization = plugin
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:137:13: warning: no calls to throwing functions occur within 'try' expression
+135 |         // Activate new
+136 |         do {
+137 |             try await plugin.activate()
+    |             `- warning: no calls to throwing functions occur within 'try' expression
+138 |             await MainActor.run {
+139 |                 activeVisualization = plugin
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:141:11: warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+139 |                 activeVisualization = plugin
+140 |             }
+141 |         } catch {
+    |           `- warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+142 |             pluginHost.log("Failed to activate visualization: \(error)", level: .error, from: "PluginManager")
+143 |         }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:218:41: error: argument type 'SpectrumVisualizationPlugin' does not conform to expected type 'WAPlugin'
+216 |         
+217 |         Task {
+218 |             try? await initializePlugin(spectrum)
+    |                                         `- error: argument type 'SpectrumVisualizationPlugin' does not conform to expected type 'WAPlugin'
+219 |             try? await initializePlugin(oscilloscope)
+220 |             try? await initializePlugin(matrix)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/PluginManager.swift:249:40: warning: instance method 'makeIterator' is unavailable from asynchronous contexts; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+247 |         ) else { return }
+248 |         
+249 |         for case let fileURL as URL in enumerator {
+    |                                        `- warning: instance method 'makeIterator' is unavailable from asynchronous contexts; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+250 |             if fileURL.pathExtension == "waplugin" {
+251 |                 do {
+[16/20] Compiling WinAmpPlayer EqualizerDSP.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/DSP/Examples/EqualizerDSP.swift:50:24: error: cannot use mutating member on immutable value: 'parameters' setter is inaccessible
+ 48 |                 unit: "dB"
+ 49 |             )
+ 50 |             parameters.append(param)
+    |                        `- error: cannot use mutating member on immutable value: 'parameters' setter is inaccessible
+ 51 |         }
+ 52 |         
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/DSP/Examples/EqualizerDSP.swift:60:20: error: cannot use mutating member on immutable value: 'parameters' setter is inaccessible
+ 58 |             unit: "dB"
+ 59 |         )
+ 60 |         parameters.append(preampParam)
+    |                    `- error: cannot use mutating member on immutable value: 'parameters' setter is inaccessible
+ 61 |     }
+ 62 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/Core/Plugins/DSP/Examples/EqualizerDSP.swift:111:44: error: cannot pass immutable value as inout argument: 'preampLinear' is a 'let' constant
+100 |         // Get preamp gain
+101 |         let preampGain = parameters.first(where: { $0.id == "preamp" })?.value as? Float ?? 0.0
+102 |         let preampLinear = pow(10.0, preampGain / 20.0)
+    |         `- note: change 'let' to 'var' to make it mutable
+103 |         
+104 |         // Process each channel
+    :
+109 |             if preampGain != 0.0 {
+110 |                 var frameCountVDSP = vDSP_Length(frameCount)
+111 |                 vDSP_vsmul(channelData, 1, &preampLinear, channelData, 1, frameCountVDSP)
+    |                                            `- error: cannot pass immutable value as inout argument: 'preampLinear' is a 'let' constant
+112 |             }
+113 |             
+[17/20] Compiling WinAmpPlayer SkinnableMainPlayerView.swift
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:175:30: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+173 |                                 onPressed: .equalizerButton(true, .pressed)
+174 |                             )
+175 |                             .onChange(of: eqEnabled) { newValue in
+    |                              `- warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+176 |                                 if newValue {
+177 |                                     SecondaryWindowManager.shared.toggleWindow(.equalizer, audioEngine: audioEngine)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:188:30: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+186 |                                 onPressed: .playlistButton(true, .pressed)
+187 |                             )
+188 |                             .onChange(of: plEnabled) { newValue in
+    |                              `- warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+189 |                                 if newValue {
+190 |                                     SecondaryWindowManager.shared.toggleWindow(.playlist, playlistController: playlistController)
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:293:53: error: referencing operator function '==' on 'Equatable' requires that 'AudioPlaybackState' conform to 'Equatable'
+291 |                 if audioEngine.isPlaying {
+292 |                     SpriteView(.playingIndicator)
+293 |                 } else if audioEngine.playbackState == .paused {
+    |                                                     |- error: referencing operator function '==' on 'Equatable' requires that 'AudioPlaybackState' conform to 'Equatable'
+    |                                                     `- note: binary operator '==' cannot be synthesized for enums with associated values
+294 |                     SpriteView(.pausedIndicator)
+295 |                 } else {
+
+Swift.Equatable:1:17: note: where 'Self' = 'AudioPlaybackState'
+1 | public protocol Equatable {
+  |                 `- note: where 'Self' = 'AudioPlaybackState'
+2 |     static func == (lhs: Self, rhs: Self) -> Bool
+3 | }
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:374:28: error: cannot call value of non-function type 'Binding<Subject>'
+372 |     
+373 |     private func previousTrack() {
+374 |         playlistController.previousTrack()
+    |                            `- error: cannot call value of non-function type 'Binding<Subject>'
+375 |     }
+376 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:374:28: error: value of type 'PlaylistController' has no dynamic member 'previousTrack' using key path from root type 'PlaylistController'
+372 |     
+373 |     private func previousTrack() {
+374 |         playlistController.previousTrack()
+    |                            `- error: value of type 'PlaylistController' has no dynamic member 'previousTrack' using key path from root type 'PlaylistController'
+375 |     }
+376 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:374:9: error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<PlaylistController>.Wrapper'
+372 |     
+373 |     private func previousTrack() {
+374 |         playlistController.previousTrack()
+    |         `- error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<PlaylistController>.Wrapper'
+375 |     }
+376 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:378:28: error: value of type 'PlaylistController' has no dynamic member 'nextTrack' using key path from root type 'PlaylistController'
+376 |     
+377 |     private func nextTrack() {
+378 |         playlistController.nextTrack()
+    |                            `- error: value of type 'PlaylistController' has no dynamic member 'nextTrack' using key path from root type 'PlaylistController'
+379 |     }
+380 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:378:9: error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<PlaylistController>.Wrapper'
+376 |     
+377 |     private func nextTrack() {
+378 |         playlistController.nextTrack()
+    |         `- error: referencing subscript 'subscript(dynamicMember:)' requires wrapper 'ObservedObject<PlaylistController>.Wrapper'
+379 |     }
+380 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:378:28: error: cannot call value of non-function type 'Binding<Subject>'
+376 |     
+377 |     private func nextTrack() {
+378 |         playlistController.nextTrack()
+    |                            `- error: cannot call value of non-function type 'Binding<Subject>'
+379 |     }
+380 |     
+
+/Users/hank/dev/src/WinAmpPlayer/Sources/WinAmpPlayer/UI/Views/SkinnableMainPlayerView.swift:383:15: warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+381 |     private func openFile() {
+382 |         let panel = NSOpenPanel()
+383 |         panel.allowedFileTypes = Track.supportedExtensions
+    |               `- warning: 'allowedFileTypes' was deprecated in macOS 12.0: Use -allowedContentTypes instead
+384 |         panel.allowsMultipleSelection = false
+385 |         panel.canChooseDirectories = false

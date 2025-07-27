@@ -322,8 +322,6 @@ struct SkinnablePlaylistWindow: View {
             }
         case .duration:
             tracks.sort { sortAscending ? $0.duration < $1.duration : $0.duration > $1.duration }
-        case .none:
-            break
         }
         
         return tracks

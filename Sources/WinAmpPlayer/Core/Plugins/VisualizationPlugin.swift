@@ -547,7 +547,7 @@ public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
 
 // MARK: - Configuration Implementations
 
-private class SliderConfiguration: VisualizationConfiguration {
+public class SliderConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
@@ -561,7 +561,7 @@ private class SliderConfiguration: VisualizationConfiguration {
     }
 }
 
-private class ColorConfiguration: VisualizationConfiguration {
+public class ColorConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
@@ -574,7 +574,7 @@ private class ColorConfiguration: VisualizationConfiguration {
     }
 }
 
-private class ToggleConfiguration: VisualizationConfiguration {
+public class ToggleConfiguration: VisualizationConfiguration {
     let displayName: String
     let key: String
     var value: Any
