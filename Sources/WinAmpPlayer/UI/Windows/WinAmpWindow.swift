@@ -48,10 +48,16 @@ public struct WinAmpColors {
     static let accentDark = Color(red: 0.0, green: 0.5, blue: 0.0) // #008000
     static let selection = Color(red: 0.0, green: 0.3, blue: 0.3) // #004D4D - Dark teal
     static let shadow = Color.black.opacity(0.8)
-    
-    // Classic button colors
-    static let buttonNormal = Color(red: 0.75, green: 0.75, blue: 0.75) // Standard gray
     static let button = Color(red: 0.2, green: 0.2, blue: 0.2) // #333333 - Dark button
+    
+    // Additional text colors
+    static let textSecondary = Color(red: 0.0, green: 0.8, blue: 0.0) // #00CC00 - Secondary text
+    
+    // Playlist specific colors
+    static let playlistBackground = Color(red: 0.05, green: 0.05, blue: 0.05) // #0D0D0D - Dark playlist background
+    static let playlistText = Color(red: 0.0, green: 1.0, blue: 0.0) // #00FF00 - Green text
+    static let playlistPlaying = Color(red: 0.0, green: 1.0, blue: 1.0) // #00FFFF - Cyan for playing track
+    static let playlistSelected = Color(red: 0.0, green: 0.3, blue: 0.3) // #004D4D - Dark teal for selection
 }
 
 // MARK: - Window Control Button Type

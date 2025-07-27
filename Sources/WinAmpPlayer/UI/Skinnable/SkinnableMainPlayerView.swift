@@ -16,8 +16,8 @@ struct SkinnableMainPlayerView: View {
     @State private var isRemainingTime = false
     @State private var isDragging = false
     @State private var isMinimized = false
-    @State private var volume: Double = 0.75
-    @State private var balance: Double = 0.5
+    @State private var volume: Float = 0.75
+    @State private var balance: Float = 0.5
     @State private var position: Double = 0
     
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -67,13 +67,13 @@ struct SkinnableMainPlayerView: View {
                             ClassicHorizontalSlider(value: $volume)
                                 .frame(width: 68)
                                 .onChange(of: volume) { newValue in
-                                    audioEngine.volume = Float(newValue)
-                                    volumeController.setVolume(Float(newValue))
+                                    audioEngine.volume = newValue
+                                    volumeController.setVolume(newValue)
                                 }
                             ClassicHorizontalSlider(value: $balance)
                                 .frame(width: 38)
                                 .onChange(of: balance) { newValue in
-                                    volumeController.setBalance(Float(newValue))
+                                    volumeController.setBalance(newValue)
                                 }
                         }
                         .padding(.top, 4)
@@ -98,9 +98,13 @@ struct SkinnableMainPlayerView: View {
                         .fill(WinAmpColors.background)
                         .frame(width: 16)
                     
-                    ClassicPositionSlider(value: $position) { newValue in
-                        try? audioEngine.seek(to: newValue * audioEngine.duration)
-                    }
+                    ClassicPositionSlider(
+                        position: $position,
+                        duration: audioEngine.duration,
+                        onSeek: { newValue in
+                            try? audioEngine.seek(to: newValue)
+                        }
+                    )
                     .frame(height: 10)
                     
                     Rectangle()

@@ -10,8 +10,8 @@ import SwiftUI
 struct ClassicEQWindow: View {
     @State private var isOn = true
     @State private var isAuto = false
-    @State private var preamp: Double = 0
-    @State private var bands: [Double] = Array(repeating: 0, count: 10)
+    @State private var preamp: Float = 0
+    @State private var bands: [Float] = Array(repeating: 0, count: 10)
     
     private let frequencies = ["60", "170", "310", "600", "1k", "3k", "6k", "12k", "14k", "16k"]
     
@@ -66,7 +66,7 @@ struct ClassicEQWindow: View {
                     // Presets button
                     Button(action: {}) {
                         Text("PRESETS")
-                            .font(.system(size: 7, weight: .bold, design: .monospaced))
+                            .font(Font.system(size: 7, weight: .bold, design: .monospaced))
                             .foregroundColor(WinAmpColors.text)
                             .frame(width: 44, height: 12)
                             .background(WinAmpColors.buttonNormal)
@@ -86,7 +86,7 @@ struct ClassicEQWindow: View {
                         .fixedSize()
                         .frame(width: 14, height: 40)
                     
-                    ClassicEQSlider(value: $preamp, frequency: "")
+                    ClassicEQSlider(value: $preamp)
                         .frame(width: 14)
                 }
                 .padding(.horizontal, 4)
@@ -101,8 +101,7 @@ struct ClassicEQWindow: View {
                 HStack(spacing: 3) {
                     ForEach(0..<10) { index in
                         ClassicEQSlider(
-                            value: $bands[index],
-                            frequency: frequencies[index]
+                            value: $bands[index]
                         )
                     }
                 }

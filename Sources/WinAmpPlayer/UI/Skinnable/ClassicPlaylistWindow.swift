@@ -245,8 +245,8 @@ struct PlaylistRow: View {
     }
     
     private var trackDisplay: String {
-        if !track.artist.isEmpty && !track.title.isEmpty {
-            return "\(track.artist) - \(track.title)"
+        if let artist = track.artist, !artist.isEmpty, !track.title.isEmpty {
+            return "\(artist) - \(track.title)"
         } else if !track.title.isEmpty {
             return track.title
         } else {
