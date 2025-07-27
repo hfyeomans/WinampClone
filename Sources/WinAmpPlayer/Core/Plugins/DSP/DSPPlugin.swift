@@ -311,7 +311,7 @@ open class BaseDSPPlugin: DSPPlugin {
     public var supportedChannelCounts: [Int] { [] }
     public var canProcessInPlace: Bool { true }
     public var isBypassed: Bool = false
-    public private(set) var parameters: [DSPParameter] = []
+    public internal(set) var parameters: [DSPParameter] = []
     
     internal var format: AVAudioFormat?
     internal var maxFrames: AVAudioFrameCount = 0

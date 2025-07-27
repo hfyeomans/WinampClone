@@ -173,7 +173,7 @@ class AudioEngine: ObservableObject {
     private var displayLink: Timer?
     private let updateInterval: TimeInterval = 0.05 // 20 FPS update rate
     
-    private let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
+    internal let logger = Logger(subsystem: "com.winamp.player", category: "AudioEngine")
     private let audioQueue = DispatchQueue(label: "com.winamp.audioengine", qos: .userInitiated)
     
     // Audio tap properties
