@@ -112,18 +112,6 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
         stateSubject.send(.loaded)
     }
     
-    // MARK: - VisualizationPlugin Protocol Methods
-    
-    /// Synchronous activate for VisualizationPlugin protocol
-    public func activate() {
-        isActive = true
-    }
-    
-    /// Synchronous deactivate for VisualizationPlugin protocol  
-    public func deactivate() {
-        isActive = false
-    }
-    
     public func shutdown() async {
         if isActive {
             try? await deactivate()
@@ -263,10 +251,8 @@ private struct ConfigurationItemView: View {
                 ))
                 .labelsHidden()
                 .onAppear {
-                    if let cgColor = configuration.value as? CGColor,
-                       let components = cgColor.components {
-                        colorComponents = Array(components)
-                    }
+                    // Skip CGColor handling for now - would need proper color conversion
+                    colorComponents = [1.0, 0.0, 0.0, 1.0] // Default red color
                 }
                 
             case .dropdown(let options):

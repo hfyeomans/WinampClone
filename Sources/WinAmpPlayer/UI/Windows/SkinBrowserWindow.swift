@@ -221,11 +221,9 @@ public struct SkinBrowserWindow: View {
                     
                     Spacer()
                     
-                    if let current = skinManager.currentSkin {
-                        Text("Current: \(current.name)")
-                            .font(.system(size: 11, weight: .regular, design: .monospaced))
-                            .foregroundColor(WinAmpColors.text)
-                    }
+                    Text("Current: \(skinManager.currentSkin.name)")
+                        .font(.system(size: 11, weight: .regular, design: .monospaced))
+                        .foregroundColor(WinAmpColors.text)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 4)
