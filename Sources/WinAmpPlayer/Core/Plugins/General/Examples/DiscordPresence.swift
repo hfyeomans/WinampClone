@@ -286,19 +286,19 @@ public final class DiscordPresencePlugin: BaseGeneralPlugin {
         let showAlbumArt: Bool
     }
     
-    private struct DiscordActivity {
+    struct DiscordActivity {
         var details: String
         var state: String?
         var timestamps: DiscordTimestamps?
         var assets: DiscordAssets
     }
     
-    private struct DiscordTimestamps {
+    struct DiscordTimestamps {
         let start: Date
         var end: Date?
     }
     
-    private struct DiscordAssets {
+    struct DiscordAssets {
         var largeImage: String
         var largeText: String
         var smallImage: String

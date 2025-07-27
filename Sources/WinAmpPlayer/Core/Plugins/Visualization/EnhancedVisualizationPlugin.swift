@@ -16,7 +16,13 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
     
     // MARK: - WAPlugin Requirements
     
-    public let metadata: PluginMetadata
+    public let pluginMetadata: PluginMetadata
+    
+    // WAPlugin protocol requires a property called 'metadata'
+    public var metadata: PluginMetadata {
+        return pluginMetadata
+    }
+    
     public private(set) var state: PluginState = .unloaded
     private let stateSubject = CurrentValueSubject<PluginState, Never>(.unloaded)
     public var statePublisher: AnyPublisher<PluginState, Never> {
@@ -25,14 +31,20 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
     
     // MARK: - VisualizationPlugin Requirements
     
+    // Use a different name since 'metadata' is used for WAPlugin
     public var visualizationMetadata: VisualizationPluginMetadata {
+        return metadata
+    }
+    
+    // VisualizationPlugin protocol requires a property called 'metadata'
+    public var metadata: VisualizationPluginMetadata {
         VisualizationPluginMetadata(
-            identifier: metadata.identifier,
-            name: metadata.name,
-            author: metadata.author,
-            version: metadata.version,
-            description: metadata.description,
-            iconName: metadata.iconName
+            identifier: pluginMetadata.identifier,
+            name: pluginMetadata.name,
+            author: pluginMetadata.author,
+            version: pluginMetadata.version,
+            description: pluginMetadata.description,
+            iconName: pluginMetadata.iconName
         )
     }
     
@@ -40,10 +52,20 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
     open var capabilities: VisualizationCapabilities { .basic }
     open var configurationOptions: [VisualizationConfiguration] { [] }
     
+    // MARK: - VisualizationPlugin Protocol Methods
+    
+    open func activate() {
+        // Override in subclasses for sync activation
+    }
+    
+    open func deactivate() {
+        // Override in subclasses for sync deactivation
+    }
+    
     // MARK: - Protected Properties
     
-    protected weak var host: PluginHost?
-    protected var isActive = false
+    internal weak var host: PluginHost?
+    internal var isActive = false
     
     // MARK: - Initialization
     
@@ -55,7 +77,7 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
         description: String,
         iconName: String? = nil
     ) {
-        self.metadata = PluginMetadata(
+        self.pluginMetadata = PluginMetadata(
             identifier: identifier,
             name: name,
             type: .visualization,
@@ -78,21 +100,27 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
         state = .loaded
         stateSubject.send(.loaded)
         
-        host.log("Visualization plugin initialized", level: .info, from: metadata.identifier)
+        host.log("Visualization plugin initialized", level: .info, from: pluginMetadata.identifier)
     }
     
     public func activate() async throws {
-        activate() // Call old protocol method
+        // Implement async activation
         isActive = true
         state = .active
         stateSubject.send(.active)
+        
+        // Call the sync version for VisualizationPlugin protocol
+        activate()
     }
     
     public func deactivate() async throws {
-        deactivate() // Call old protocol method
+        // Implement async deactivation
         isActive = false
         state = .loaded
         stateSubject.send(.loaded)
+        
+        // Call the sync version for VisualizationPlugin protocol
+        deactivate()
     }
     
     public func shutdown() async {
@@ -148,14 +176,6 @@ open class EnhancedVisualizationPlugin: WAPlugin, VisualizationPlugin {
     }
     
     // MARK: - VisualizationPlugin Methods (Default Implementations)
-    
-    open func activate() {
-        // Override in subclasses
-    }
-    
-    open func deactivate() {
-        // Override in subclasses
-    }
     
     open func render(audioData: VisualizationAudioData, context: VisualizationRenderContext) {
         // Override in subclasses
@@ -321,7 +341,7 @@ public final class EnhancedSpectrumVisualizationPlugin: EnhancedVisualizationPlu
         ]
     }
     
-    public init() {
+    public required init() {
         super.init(
             identifier: "com.winamp.visualization.spectrum.enhanced",
             name: "Enhanced Spectrum Analyzer",

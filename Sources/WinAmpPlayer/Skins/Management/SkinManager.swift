@@ -8,6 +8,7 @@
 
 import Foundation
 import AppKit
+import SwiftUI
 import Combine
 
 /// Notification names for skin changes
@@ -30,6 +31,12 @@ public class SkinManager: ObservableObject {
     
     /// Current cached skin data
     private var currentCachedSkin: CachedSkin?
+    
+    /// Main skins directory
+    public var skinsDirectory: URL {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        return appSupport.appendingPathComponent("WinAmpPlayer/Skins")
+    }
     
     /// Skin directories
     private let skinDirectories: [URL]

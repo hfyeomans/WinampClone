@@ -257,9 +257,9 @@ open class BaseGeneralPlugin: GeneralPlugin {
     public var toolbarItems: [PluginToolbarItem] { [] }
     public var statusBarView: AnyView? { nil }
     
-    protected weak var host: PluginHost?
-    protected var playerControl: PlayerControl?
-    protected var mediaLibrary: MediaLibraryAccess?
+    internal weak var host: PluginHost?
+    internal var playerControl: PlayerControl?
+    internal var mediaLibrary: MediaLibraryAccess?
     
     public init(metadata: PluginMetadata) {
         self.metadata = metadata

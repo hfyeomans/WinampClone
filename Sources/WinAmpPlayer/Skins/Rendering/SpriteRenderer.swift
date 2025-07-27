@@ -77,7 +77,7 @@ public class SpriteRendererView: NSView {
         needsDisplay = true
     }
     
-    override func draw(_ dirtyRect: NSRect) {
+    public override func draw(_ dirtyRect: NSRect) {
         guard let sprite = sprite else {
             // Draw placeholder
             NSColor.gray.withAlphaComponent(0.3).setFill()

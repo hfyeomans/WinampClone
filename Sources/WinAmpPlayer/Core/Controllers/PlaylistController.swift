@@ -358,7 +358,7 @@ class PlaylistController: ObservableObject {
         try await audioEngine.loadTrack(track)
     }
     
-    private func handlePlaybackStateChange(_ state: PlaybackState) {
+    private func handlePlaybackStateChange(_ state: AudioPlaybackState) {
         switch state {
         case .stopped:
             isPlaying = false

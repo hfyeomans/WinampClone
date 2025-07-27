@@ -10,7 +10,7 @@ import Foundation
 import AppKit
 
 /// Sprite definitions for WinAmp skin elements
-public enum SpriteType {
+public enum SpriteType: Hashable {
     // Main window sprites
     case mainBackground
     case titleBarActive
@@ -72,7 +72,7 @@ public enum SpriteType {
 }
 
 /// Button state for sprite selection
-public enum ButtonState {
+public enum ButtonState: Hashable {
     case normal
     case pressed
     case hover
