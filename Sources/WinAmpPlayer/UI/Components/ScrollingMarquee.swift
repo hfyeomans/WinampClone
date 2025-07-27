@@ -25,7 +25,7 @@ public struct ScrollingMarquee: View {
     public init(
         text: String,
         font: Font = .system(size: 11, weight: .regular, design: .monospaced),
-        color: Color = Color(WinAmpColors.lcdText),
+        color: Color = Color(red: 0.0, green: 1.0, blue: 0.0),
         speed: Double = 30
     ) {
         self.text = text

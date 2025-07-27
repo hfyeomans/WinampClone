@@ -79,6 +79,7 @@ struct LCDSongDisplay: View {
     let title: String
     @State private var scrollOffset: CGFloat = 0
     @State private var shouldScroll = false
+    @State private var textSize: CGSize = .zero
     
     private let scrollSpeed: Double = 30 // pixels per second
     
@@ -103,6 +104,7 @@ struct LCDSongDisplay: View {
                     GeometryReader { textGeometry in
                         Color.clear
                             .onAppear {
+                                textSize = textGeometry.size
                                 shouldScroll = textGeometry.size.width > geometry.size.width
                             }
                     }
@@ -112,7 +114,7 @@ struct LCDSongDisplay: View {
                 .onAppear {
                     if shouldScroll {
                         withAnimation {
-                            scrollOffset = -(textGeometry.size.width - geometry.size.width)
+                            scrollOffset = -(textSize.width - geometry.size.width)
                         }
                     }
                 }
@@ -120,15 +122,6 @@ struct LCDSongDisplay: View {
         .frame(height: 11)
         .clipped()
         .background(WinAmpColors.lcdBackground)
-    }
-    
-    private var textGeometry: some GeometryProxy {
-        GeometryReader { geometry in
-            Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-        }
-        .frame(height: 0)
-        .hidden()
-        as! GeometryProxy
     }
 }
 
