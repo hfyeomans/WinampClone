@@ -48,34 +48,34 @@ struct WinAmpPlayerApp: App {
     private var mainWindow: some Scene {
         WindowGroup("WinAmp Player") {
             mainPlayerView
+                .frame(width: 275, height: 116)
         }
-        .winAmpMainWindowStyle()
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
     }
     
     private var equalizerWindow: some Scene {
         WindowGroup("Equalizer", id: "equalizer") {
-            Text("Equalizer - Coming Soon")
-                .frame(width: 275, height: 116)
-                .winAmpWindow(configuration: WinAmpWindowConfiguration(
-                    title: "Equalizer",
-                    windowType: .equalizer,
-                    resizable: false
-                ))
+            ClassicEQWindow()
+                .environmentObject(audioEngine)
+                .environmentObject(volumeController)
+                .environmentObject(skinManager)
+                .preferredColorScheme(.dark)
         }
-        .winAmpMainWindowStyle()
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
     }
     
     private var playlistWindow: some Scene {
         WindowGroup("Playlist", id: "playlist") {
-            Text("Playlist - Coming Soon")
-                .frame(width: 275, height: 232)
-                .winAmpWindow(configuration: WinAmpWindowConfiguration(
-                    title: "Playlist",
-                    windowType: .playlist,
-                    resizable: true
-                ))
+            ClassicPlaylistWindow()
+                .environmentObject(audioEngine)
+                .environmentObject(volumeController)
+                .environmentObject(skinManager)
+                .preferredColorScheme(.dark)
         }
-        .winAmpMainWindowStyle()
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
     }
     
     private var mainPlayerView: some View {
@@ -218,10 +218,3 @@ struct WinAmpPlayerApp: App {
     }
 }
 
-extension Scene {
-    func winAmpMainWindowStyle() -> some Scene {
-        self
-            .windowStyle(.hiddenTitleBar)
-            .windowResizability(.contentSize)
-    }
-}

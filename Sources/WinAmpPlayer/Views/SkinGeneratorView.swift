@@ -401,6 +401,9 @@ struct SkinGeneratorView: View {
     }
     
     private func generateSkin() {
+        // Update config from UI values before generating
+        updateConfig()
+        
         Task {
             isGenerating = true
             do {

@@ -14,7 +14,7 @@ import AppKit
 
 final class AudioEngineIntegrationTests: XCTestCase {
     var audioEngine: AudioEngine!
-    var audioSessionManager: AudioSessionManager!
+    var audioSystemManager: macOSAudioSystemManager!
     var playlist: Playlist!
     var cancellables: Set<AnyCancellable> = []
     var testFileURLs: [URL] = []
@@ -22,14 +22,14 @@ final class AudioEngineIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
         audioEngine = AudioEngine()
-        audioSessionManager = AudioSessionManager.shared
+        audioSystemManager = macOSAudioSystemManager.shared
         playlist = Playlist(name: "Test Playlist")
         cancellables.removeAll()
     }
     
     override func tearDown() {
         audioEngine = nil
-        audioSessionManager = nil
+        audioSystemManager = nil
         playlist = nil
         AudioTestFixtures.cleanup(testFileURLs)
         testFileURLs.removeAll()
@@ -39,8 +39,9 @@ final class AudioEngineIntegrationTests: XCTestCase {
     // MARK: - AudioSession Integration Tests
     
     func testAudioSessionConfiguration() async throws {
-        // Configure audio session for playback
-        try audioSessionManager.configureForPlayback()
+        // Configure audio system for playback
+        audioSystemManager.configure(for: audioEngine.engine)
+        try audioSystemManager.activate()
         
         // Load and play audio
         let file = try AudioTestFixtures.createTestAudioFile()
@@ -365,7 +366,7 @@ final class AudioEngineIntegrationTests: XCTestCase {
         
         // Simulate app going to background
         NotificationCenter.default.post(
-            name: UIApplication.didEnterBackgroundNotification,
+            name: NSApplication.didResignActiveNotification,
             object: nil
         )
         
@@ -375,7 +376,7 @@ final class AudioEngineIntegrationTests: XCTestCase {
         
         // Simulate app coming to foreground
         NotificationCenter.default.post(
-            name: UIApplication.willEnterForegroundNotification,
+            name: NSApplication.didBecomeActiveNotification,
             object: nil
         )
         

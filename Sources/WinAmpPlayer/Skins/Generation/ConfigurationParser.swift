@@ -107,9 +107,14 @@ public class ConfigurationParser {
         if value == "true" { return true }
         if value == "false" { return false }
         
-        // Parse number
-        if let int = Int(value) { return int }
-        if let double = Double(value) { return double }
+        // Parse number - try Double first to handle decimals
+        if let double = Double(value) { 
+            // If it's a whole number, keep it as Int for compatibility
+            if double == Double(Int(double)) {
+                return Int(double)
+            }
+            return double 
+        }
         
         // Parse inline table
         if value.hasPrefix("{") && value.hasSuffix("}") {
@@ -206,7 +211,17 @@ public class ConfigurationParser {
     
     /// Parse HCT color
     private static func parseHCTColor(_ dict: [String: Any]) throws -> HCTColor {
+        // Debug: Print what we're receiving
+        print("DEBUG: parseHCTColor received dict: \(dict)")
+        
         guard let hue = dict["hue"] as? Double else {
+            // Try to convert from Int if needed
+            if let intHue = dict["hue"] as? Int {
+                let chroma = dict["chroma"] as? Double ?? 0.5
+                let tone = dict["tone"] as? Double ?? 0.5
+                return HCTColor(hue: Double(intHue), chroma: chroma, tone: tone)
+            }
+            print("DEBUG: Failed to find hue in dict: \(dict)")
             throw ParseError.missingRequiredField("color.hue")
         }
         

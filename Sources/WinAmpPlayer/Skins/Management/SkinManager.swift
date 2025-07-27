@@ -64,6 +64,9 @@ public class SkinManager: ObservableObject {
         // Load default skin
         Task {
             await loadDefaultSkin()
+            
+            // Generate prebuilt skins on first launch
+            await generatePrebuiltSkins()
         }
     }
     

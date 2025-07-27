@@ -63,6 +63,24 @@ public class SkinAssetCache {
         }
     }
     
+    /// Cache a skin from a Skin object
+    public func cacheSkin(_ skin: Skin) async throws -> CachedSkin {
+        // Extract sprites
+        let sprites = SpriteExtractor.extractAllSprites(from: skin)
+        
+        // Create cached skin
+        let cachedSkin = CachedSkin(
+            url: skin.url,
+            name: skin.name,
+            sprites: sprites,
+            configurations: [:], // TODO: Load configurations
+            loadedAt: Date()
+        )
+        
+        try await cacheSkin(cachedSkin, for: skin.url)
+        return cachedSkin
+    }
+    
     /// Cache a skin
     private func cacheSkin(_ skin: CachedSkin, for url: URL) async throws {
         let estimatedSize = estimateSkinMemorySize(skin)
@@ -174,6 +192,12 @@ public class CachedSkin {
     
     func updateLastAccessed() {
         lastAccessedAt = Date()
+    }
+    
+    /// Get a sprite from the cached skin
+    public func getSprite(_ type: SpriteType) -> NSImage? {
+        updateLastAccessed()
+        return sprites[type]
     }
     
     /// Get playlist configuration
