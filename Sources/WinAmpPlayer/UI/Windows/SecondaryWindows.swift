@@ -125,6 +125,11 @@ class SecondaryWindowManager: ObservableObject {
         openWindow(.skinBrowser)
     }
     
+    /// Open skin generator window
+    func openSkinGenerator() {
+        openWindow(.skinGenerator)
+    }
+    
     /// Open plugin preferences window
     func openPluginPreferences() {
         openWindow(.pluginPreferences)
