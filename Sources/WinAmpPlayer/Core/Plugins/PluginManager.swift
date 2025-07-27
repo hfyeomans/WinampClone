@@ -129,7 +129,7 @@ public final class PluginManager: ObservableObject {
     public func activateVisualization(_ plugin: VisualizationPlugin) async {
         // Deactivate current
         if let current = activeVisualization {
-            await current.deactivate()
+            try? await current.deactivate()
         }
         
         // Activate new
