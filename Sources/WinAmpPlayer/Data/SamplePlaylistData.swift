@@ -7,6 +7,9 @@
 
 import Foundation
 
+// Import AudioMetadata from MetadataProtocol
+import struct WinAmpPlayer.AudioMetadata
+
 struct SamplePlaylistData {
     static func createSamplePlaylist() -> Playlist {
         let tracks = [
@@ -16,7 +19,7 @@ struct SamplePlaylistData {
                 album: "Winamp 5",
                 duration: 5,
                 fileURL: nil,
-                metadata: TrackMetadata(
+                metadata: AudioMetadata(
                     title: "Llama Whippin' Intro",
                     artist: "DJ Mike Llama",
                     album: "Winamp 5",
@@ -34,7 +37,7 @@ struct SamplePlaylistData {
                 album: "Winamp 5",
                 duration: 219, // 3:39
                 fileURL: nil,
-                metadata: TrackMetadata(
+                metadata: AudioMetadata(
                     title: "Winamp 5 theme.cda",
                     artist: "Nullsoft",
                     album: "Winamp 5",
@@ -52,7 +55,7 @@ struct SamplePlaylistData {
                 album: "Demo Tracks",
                 duration: 190, // 3:10
                 fileURL: nil,
-                metadata: TrackMetadata(
+                metadata: AudioMetadata(
                     title: "We Are Going To Eclectunk Your Ass",
                     artist: "Eclectak",
                     album: "Demo Tracks",
@@ -84,12 +87,16 @@ struct SamplePlaylistData {
 // Extension to make Track creation easier
 extension Track {
     init(title: String, artist: String, album: String, duration: TimeInterval, 
-         fileURL: URL?, metadata: TrackMetadata) {
-        self.init(fileURL: fileURL)
-        self.title = title
-        self.artist = artist
-        self.album = album
-        self.duration = duration
-        self.metadata = metadata
+         fileURL: URL?, metadata: AudioMetadata) {
+        self.init(
+            title: title,
+            artist: artist,
+            album: album,
+            genre: metadata.genre,
+            year: metadata.year,
+            duration: duration,
+            fileURL: fileURL,
+            trackNumber: metadata.trackNumber
+        )
     }
 }
