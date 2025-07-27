@@ -69,6 +69,23 @@ public enum SpriteType: Hashable {
     case playlistSelectButton(ButtonState)
     case playlistMiscButton(ButtonState)
     case playlistListButton(ButtonState)
+    
+    // Raw sprite sheet references (for parser compatibility)
+    case main
+    case cButtons
+    case titleBar
+    case volume
+    case balance
+    case posBar
+    case pledit
+    case plEdit  // alternate case
+    case numbers
+    case text
+    case visColor
+    case monoster
+    case eqMain
+    case eq_ex
+    case avs
 }
 
 /// Button state for sprite selection
