@@ -335,9 +335,8 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
             throw PluginError.invalidConfiguration
         }
         
-        if let color = settings["rainColor"] as? CGColor {
-            rainColor = color
-        }
+        // CGColor can't be directly deserialized from JSON, skip for now
+        // In a real implementation, would store color components as array
         if let speed = settings["dropSpeed"] as? Double {
             dropSpeed = speed
         }
