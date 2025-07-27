@@ -297,23 +297,20 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
     // MARK: - WAPlugin Lifecycle Methods
     
     public func initialize(host: PluginHost) async throws {
-        stateSubject.send(.initializing)
+        stateSubject.send(.loading)
         // Initialize plugin with host
-        stateSubject.send(.inactive)
+        stateSubject.send(.loaded)
     }
     
     public func activate() async throws {
-        stateSubject.send(.activating)
         stateSubject.send(.active)
     }
     
     public func deactivate() async throws {
-        stateSubject.send(.deactivating)
-        stateSubject.send(.inactive)
+        stateSubject.send(.loaded)
     }
     
     public func shutdown() async {
-        stateSubject.send(.unloading)
         rainDrops.removeAll()
         stateSubject.send(.unloaded)
     }
