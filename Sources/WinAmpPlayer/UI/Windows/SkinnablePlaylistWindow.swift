@@ -231,52 +231,66 @@ struct SkinnablePlaylistWindow: View {
     
     private var fallbackContent: some View {
         VStack(spacing: 0) {
-            // Toolbar
-            PlaylistToolbar(
-                onAdd: addFiles,
-                onRemove: removeSelected,
-                onClear: clearPlaylist,
-                onSort: handleSort,
-                sortField: sortField,
-                sortAscending: sortAscending
-            )
-            .frame(height: 30)
-            
-            // Search bar
-            PlaylistSearchField(text: $searchText)
-                .frame(height: 20)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-            
-            // Playlist content
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(Array(displayedTracks.enumerated()), id: \.element.id) { index, track in
-                        PlaylistRowView(
-                            track: track,
-                            index: index,
-                            isSelected: selectedTracks.contains(track.id),
-                            isCurrent: playlistController.currentTrack?.id == track.id,
-                            onSelect: { toggleSelection(track) },
-                            onPlay: { playTrack(track) }
-                        )
-                        .contextMenu {
-                            playlistContextMenu(for: track)
-                        }
-                    }
-                }
-                .padding(.horizontal, 4)
-            }
-            .background(WinAmpColors.background)
-            
-            // Status bar
-            PlaylistStatusBar(
-                trackCount: displayedTracks.count,
-                totalDuration: totalDuration,
-                selectedCount: selectedTracks.count
-            )
-            .frame(height: 20)
+            playlistToolbar
+            playlistSearchField
+            playlistScrollView
+            playlistStatusBar
         }
+    }
+    
+    private var playlistToolbar: some View {
+        PlaylistToolbar(
+            onAdd: addFiles,
+            onRemove: removeSelected,
+            onClear: clearPlaylist,
+            onSort: handleSort,
+            sortField: sortField,
+            sortAscending: sortAscending
+        )
+        .frame(height: 30)
+    }
+    
+    private var playlistSearchField: some View {
+        PlaylistSearchField(text: $searchText)
+            .frame(height: 20)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+    }
+    
+    private var playlistScrollView: some View {
+        ScrollView {
+            playlistTrackList
+        }
+        .background(WinAmpColors.background)
+    }
+    
+    private var playlistTrackList: some View {
+        LazyVStack(spacing: 0) {
+            ForEach(Array(displayedTracks.enumerated()), id: \.element.id) { index, track in
+                PlaylistRowView(
+                    track: track,
+                    index: index + 1,
+                    isCurrentTrack: playlistController.currentTrack?.id == track.id,
+                    isPlaying: playlistController.isPlaying && playlistController.currentTrack?.id == track.id
+                )
+                .onTapGesture {
+                    playTrack(track)
+                }
+                .contextMenu {
+                    playlistContextMenu(for: track)
+                }
+            }
+        }
+        .padding(.horizontal, 4)
+    }
+    
+    private var playlistStatusBar: some View {
+        PlaylistStatusBar(
+            totalTracks: displayedTracks.count,
+            totalDuration: totalDuration,
+            selectedCount: selectedTracks.count
+        )
+        .frame(height: 20)
     }
     
     private var playlistBackgroundColor: Color {
