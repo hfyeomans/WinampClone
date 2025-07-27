@@ -19,17 +19,19 @@ struct SamplePlaylistData {
                 album: "Winamp 5",
                 duration: 5,
                 fileURL: nil,
-                metadata: AudioMetadata(
-                    title: "Llama Whippin' Intro",
-                    artist: "DJ Mike Llama",
-                    album: "Winamp 5",
-                    genre: "Electronic",
-                    year: "2003",
-                    track: 1,
-                    bitrate: 128,
-                    sampleRate: 44100,
-                    channels: 2
-                )
+                metadata: {
+                    var metadata = AudioMetadata()
+                    metadata.title = "Llama Whippin' Intro"
+                    metadata.artist = "DJ Mike Llama"
+                    metadata.album = "Winamp 5"
+                    metadata.genre = "Electronic"
+                    metadata.year = 2003
+                    metadata.trackNumber = 1
+                    metadata.bitrate = 128
+                    metadata.sampleRate = 44100
+                    metadata.channels = 2
+                    return metadata
+                }()
             ),
             Track(
                 title: "Winamp 5 theme.cda",
@@ -37,17 +39,19 @@ struct SamplePlaylistData {
                 album: "Winamp 5",
                 duration: 219, // 3:39
                 fileURL: nil,
-                metadata: AudioMetadata(
-                    title: "Winamp 5 theme.cda",
-                    artist: "Nullsoft",
-                    album: "Winamp 5",
-                    genre: "Theme",
-                    year: "2003",
-                    track: 2,
-                    bitrate: 128,
-                    sampleRate: 44100,
-                    channels: 2
-                )
+                metadata: {
+                    var metadata = AudioMetadata()
+                    metadata.title = "Winamp 5 theme.cda"
+                    metadata.artist = "Nullsoft"
+                    metadata.album = "Winamp 5"
+                    metadata.genre = "Theme"
+                    metadata.year = 2003
+                    metadata.trackNumber = 2
+                    metadata.bitrate = 128
+                    metadata.sampleRate = 44100
+                    metadata.channels = 2
+                    return metadata
+                }()
             ),
             Track(
                 title: "We Are Going To Eclectunk Your Ass",
@@ -55,17 +59,19 @@ struct SamplePlaylistData {
                 album: "Demo Tracks",
                 duration: 190, // 3:10
                 fileURL: nil,
-                metadata: AudioMetadata(
-                    title: "We Are Going To Eclectunk Your Ass",
-                    artist: "Eclectak",
-                    album: "Demo Tracks",
-                    genre: "Electronic",
-                    year: "2003",
-                    track: 3,
-                    bitrate: 128,
-                    sampleRate: 44100,
-                    channels: 2
-                )
+                metadata: {
+                    var metadata = AudioMetadata()
+                    metadata.title = "We Are Going To Eclectunk Your Ass"
+                    metadata.artist = "Eclectak"
+                    metadata.album = "Demo Tracks"
+                    metadata.genre = "Electronic"
+                    metadata.year = 2003
+                    metadata.trackNumber = 3
+                    metadata.bitrate = 128
+                    metadata.sampleRate = 44100
+                    metadata.channels = 2
+                    return metadata
+                }()
             )
         ]
         
