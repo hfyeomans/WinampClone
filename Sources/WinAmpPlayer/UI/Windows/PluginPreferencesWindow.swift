@@ -20,7 +20,7 @@ public struct PluginPreferencesWindow: View {
         WinAmpWindow(
             configuration: WinAmpWindowConfiguration(
                 title: "Plugin Preferences",
-                windowType: .preferences,
+                windowType: .library,
                 showTitleBar: true,
                 resizable: true,
                 minSize: CGSize(width: 600, height: 400),
@@ -116,7 +116,7 @@ public struct PluginPreferencesWindow: View {
             // Plugin table
             ScrollView {
                 VStack(spacing: 0) {
-                    ForEach(pluginsForCategory(selectedCategory), id: \.metadata.identifier) { plugin in
+                    ForEach(pluginsForCategory(selectedCategory), id: \.metadata.identifier) { (plugin: any WAPlugin) in
                         PluginListItem(
                             plugin: plugin,
                             isSelected: selectedPlugin?.metadata.identifier == plugin.metadata.identifier,
@@ -245,7 +245,7 @@ public struct PluginPreferencesWindow: View {
     // MARK: - Helper Views
     
     @ViewBuilder
-    private func pluginSpecificInfo(for plugin: WAPlugin) -> some View {
+    private func pluginSpecificInfo(for plugin: any WAPlugin) -> some View {
         switch plugin.metadata.type {
         case .visualization:
             if let vizPlugin = plugin as? VisualizationPlugin {
@@ -336,7 +336,7 @@ public struct PluginPreferencesWindow: View {
         }
     }
     
-    private func pluginsForCategory(_ category: PluginType) -> [WAPlugin] {
+    private func pluginsForCategory(_ category: PluginType) -> [any WAPlugin] {
         switch category {
         case .visualization:
             return pluginManager.visualizationPlugins
@@ -349,7 +349,7 @@ public struct PluginPreferencesWindow: View {
         }
     }
     
-    private func togglePlugin(_ plugin: WAPlugin) {
+    private func togglePlugin(_ plugin: any WAPlugin) {
         Task {
             switch plugin.metadata.type {
             case .visualization:
@@ -423,7 +423,7 @@ public struct PluginPreferencesWindow: View {
 // MARK: - Supporting Views
 
 private struct PluginListItem: View {
-    let plugin: WAPlugin
+    let plugin: any WAPlugin
     let isSelected: Bool
     let onSelect: () -> Void
     let onToggle: () -> Void

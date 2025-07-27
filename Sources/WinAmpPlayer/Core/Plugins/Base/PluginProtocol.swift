@@ -13,7 +13,7 @@ import Combine
 // MARK: - Plugin Types
 
 /// Types of plugins supported by WinAmp Player
-public enum PluginType: String, CaseIterable {
+public enum PluginType: String, CaseIterable, Codable {
     case visualization = "Visualization"
     case dsp = "DSP"
     case general = "General"
@@ -24,12 +24,28 @@ public enum PluginType: String, CaseIterable {
 // MARK: - Plugin State
 
 /// Current state of a plugin
-public enum PluginState {
+public enum PluginState: Equatable {
     case unloaded
     case loading
     case loaded
     case active
     case error(Error)
+    
+    public static func == (lhs: PluginState, rhs: PluginState) -> Bool {
+        switch (lhs, rhs) {
+        case (.unloaded, .unloaded),
+             (.loading, .loading),
+             (.loaded, .loaded),
+             (.active, .active):
+            return true
+        case (.error(let lhsError), .error(let rhsError)):
+            // Compare error descriptions since Error doesn't conform to Equatable
+            return (lhsError as NSError).code == (rhsError as NSError).code &&
+                   (lhsError as NSError).domain == (rhsError as NSError).domain
+        default:
+            return false
+        }
+    }
 }
 
 // MARK: - Plugin Metadata

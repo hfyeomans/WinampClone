@@ -9,7 +9,7 @@
 import Foundation
 
 /// Playlist sorting field options
-enum PlaylistSortField {
+public enum PlaylistSortField {
     case title
     case artist
     case album

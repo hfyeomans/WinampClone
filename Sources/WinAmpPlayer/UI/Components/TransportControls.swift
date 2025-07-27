@@ -1,16 +1,7 @@
 import SwiftUI
 
 // MARK: - Transport Button Style
-struct WinAmpTransportButtonStyle: ButtonStyle {
-    let isPressed: Bool
-    let isHovered: Bool
-    
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
-    }
-}
+// Note: Custom button style removed - using PlainButtonStyle instead
 
 // MARK: - Base Transport Button
 struct TransportButtonBase<Content: View>: View {
@@ -56,18 +47,18 @@ struct TransportButtonBase<Content: View>: View {
             }
             .shadow(color: isPressed ? Color.black.opacity(0.5) : Color.clear, radius: 2, x: 0, y: 1)
         }
-        .buttonStyle(WinAmpTransportButtonStyle(isPressed: isPressed, isHovered: isHovered))
+        .buttonStyle(PlainButtonStyle())
         .onHover { hovering in
-            withAnimation(.easeInOut(duration: 0.15)) {
+            withAnimation(Animation.easeInOut(duration: 0.15)) {
                 isHovered = hovering
             }
         }
         .pressEvents {
-            withAnimation(.easeInOut(duration: 0.1)) {
+            withAnimation(Animation.easeInOut(duration: 0.1)) {
                 isPressed = true
             }
         } onRelease: {
-            withAnimation(.easeInOut(duration: 0.1)) {
+            withAnimation(Animation.easeInOut(duration: 0.1)) {
                 isPressed = false
             }
         }

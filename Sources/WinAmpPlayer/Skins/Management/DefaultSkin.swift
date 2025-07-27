@@ -542,8 +542,6 @@ public class DefaultSkin {
 
 extension WinAmpColors {
     static let buttonNormal = backgroundLight
-    static let buttonPressed = accent
-    static let buttonActive = selection
     static let playingIndicator = Color.green
     static let pausedIndicator = Color.yellow
     static let stoppedIndicator = Color.red

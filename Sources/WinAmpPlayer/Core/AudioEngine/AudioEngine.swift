@@ -73,7 +73,7 @@ enum AudioEngineError: LocalizedError {
 }
 
 /// Playback state of the audio engine
-enum PlaybackState {
+enum AudioPlaybackState {
     case stopped
     case playing
     case paused
@@ -96,7 +96,7 @@ class AudioEngine: ObservableObject {
     }
     // MARK: - Published Properties
     
-    @Published var playbackState: PlaybackState = .stopped
+    @Published var playbackState: AudioPlaybackState = .stopped
     @Published var currentTime: TimeInterval = 0
     @Published var duration: TimeInterval = 0
     @Published var volume: Float = 0.5 {

@@ -145,10 +145,10 @@ struct PlaylistValidationResult {
 }
 
 /// Represents a playlist containing multiple tracks
-class Playlist: ObservableObject, Identifiable, Codable {
+public class Playlist: ObservableObject, Identifiable, Codable {
     // MARK: - Properties
     
-    let id: UUID
+    public let id: UUID
     @Published var name: String
     @Published var tracks: [Track]
     @Published var playlistItems: [PlaylistItem]
@@ -296,7 +296,7 @@ class Playlist: ObservableObject, Identifiable, Codable {
         case shuffleMode, repeatMode, queue, queueIndex, history, historyIndex
     }
     
-    required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
@@ -319,7 +319,7 @@ class Playlist: ObservableObject, Identifiable, Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)

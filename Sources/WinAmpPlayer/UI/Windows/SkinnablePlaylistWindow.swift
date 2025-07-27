@@ -99,7 +99,7 @@ struct SkinnablePlaylistWindow: View {
     @StateObject private var skinManager = SkinManager.shared
     @State private var selectedTracks: Set<Track.ID> = []
     @State private var searchText = ""
-    @State private var sortField: PlaylistSortField = .none
+    @State private var sortField: PlaylistSortField = .title
     @State private var sortAscending = true
     
     private let windowSize = CGSize(width: 275, height: 232)
@@ -369,9 +369,13 @@ struct SkinnablePlaylistWindow: View {
     private func removeSelected() {
         guard let playlist = playlistController.currentPlaylist else { return }
         
-        let tracksToRemove = playlist.tracks.filter { selectedTracks.contains($0.id) }
-        for track in tracksToRemove {
-            playlist.removeTrack(track)
+        let tracksToRemove = playlist.tracks.enumerated()
+            .filter { selectedTracks.contains($0.element.id) }
+            .map { $0.offset }
+            .reversed() // Remove from end to avoid index shifting
+        
+        for index in tracksToRemove {
+            playlist.removeTrack(at: index)
         }
         selectedTracks.removeAll()
     }
@@ -393,7 +397,10 @@ struct SkinnablePlaylistWindow: View {
         }
         
         Button("Remove") {
-            playlistController.currentPlaylist?.removeTrack(track)
+            if let playlist = playlistController.currentPlaylist,
+               let index = playlist.tracks.firstIndex(where: { $0.id == track.id }) {
+                playlist.removeTrack(at: index)
+            }
         }
         
         Divider()

@@ -9,6 +9,8 @@
 import Foundation
 import AVFoundation
 import Accelerate
+import Combine
+import SwiftUI
 
 // MARK: - DSP Configuration
 
@@ -311,9 +313,9 @@ open class BaseDSPPlugin: DSPPlugin {
     public var isBypassed: Bool = false
     public private(set) var parameters: [DSPParameter] = []
     
-    protected var format: AVAudioFormat?
-    protected var maxFrames: AVAudioFrameCount = 0
-    protected weak var host: PluginHost?
+    internal var format: AVAudioFormat?
+    internal var maxFrames: AVAudioFrameCount = 0
+    internal weak var host: PluginHost?
     
     public init(metadata: PluginMetadata) {
         self.metadata = metadata

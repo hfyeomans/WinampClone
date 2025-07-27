@@ -87,6 +87,11 @@ struct WinAmpPlayerApp: App {
                 
                 Divider()
                 
+                Button("Generate Skin...") {
+                    SecondaryWindowManager.shared.openSkinGenerator()
+                }
+                .keyboardShortcut("G", modifiers: [.command, .shift])
+                
                 Button("Get More Skins Online...") {
                     NSWorkspace.shared.open(URL(string: "https://skins.webamp.org/")!)
                 }

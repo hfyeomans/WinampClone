@@ -129,10 +129,9 @@ extension AudioEngine {
     
     /// Set the current render context for visualizations
     func setVisualizationRenderContext(_ context: VisualizationRenderContext) {
-        currentRenderContext = context
+        // Context is passed directly to visualization plugins when needed
+        // No need to store it here
     }
-    
-    private var currentRenderContext: VisualizationRenderContext?
 }
 
 // MARK: - Player Event Notifications
@@ -184,99 +183,5 @@ extension AudioEngine {
     }
 }
 
-// MARK: - FFT Processor (moved from separate file for integration)
-
-class FFTProcessor {
-    private let fftSetup: FFTSetup
-    private let log2n: vDSP_Length
-    private let n: Int
-    private let nOver2: Int
-    
-    private var window: [Float]
-    private var realBuffer: [Float]
-    private var imagBuffer: [Float]
-    
-    init(bufferSize: Int = 2048) {
-        // Ensure power of 2
-        let log2Size = vDSP_Length(log2(Float(bufferSize)))
-        self.log2n = log2Size
-        self.n = 1 << log2Size
-        self.nOver2 = n / 2
-        
-        // Create FFT setup
-        guard let setup = vDSP_create_fftsetup(log2Size, FFTRadix(kFFTRadix2)) else {
-            fatalError("Failed to create FFT setup")
-        }
-        self.fftSetup = setup
-        
-        // Initialize buffers
-        self.window = [Float](repeating: 0, count: n)
-        self.realBuffer = [Float](repeating: 0, count: nOver2)
-        self.imagBuffer = [Float](repeating: 0, count: nOver2)
-        
-        // Create Hamming window
-        vDSP_hamm_window(&window, vDSP_Length(n), 0)
-    }
-    
-    deinit {
-        vDSP_destroy_fftsetup(fftSetup)
-    }
-    
-    func performFFT(on samples: [Float]) -> [Float] {
-        // Ensure we have enough samples
-        guard samples.count >= n else {
-            return []
-        }
-        
-        // Apply window
-        var windowedSamples = [Float](repeating: 0, count: n)
-        vDSP_vmul(samples, 1, window, 1, &windowedSamples, 1, vDSP_Length(n))
-        
-        // Convert to split complex format
-        windowedSamples.withUnsafeBufferPointer { samplesPtr in
-            realBuffer.withUnsafeMutableBufferPointer { realPtr in
-                imagBuffer.withUnsafeMutableBufferPointer { imagPtr in
-                    var splitComplex = DSPSplitComplex(
-                        realp: realPtr.baseAddress!,
-                        imagp: imagPtr.baseAddress!
-                    )
-                    
-                    samplesPtr.baseAddress!.withMemoryRebound(to: DSPComplex.self, capacity: nOver2) { complexPtr in
-                        vDSP_ctoz(complexPtr, 2, &splitComplex, 1, vDSP_Length(nOver2))
-                    }
-                    
-                    // Perform FFT
-                    vDSP_fft_zrip(fftSetup, &splitComplex, 1, log2n, FFTDirection(FFT_FORWARD))
-                    
-                    // Calculate magnitudes
-                    var magnitudes = [Float](repeating: 0, count: nOver2)
-                    vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(nOver2))
-                    
-                    // Convert to dB scale
-                    var scaledMagnitudes = [Float](repeating: 0, count: nOver2)
-                    var scale = Float(1.0 / Float(n))
-                    vDSP_vsmul(magnitudes, 1, &scale, &scaledMagnitudes, 1, vDSP_Length(nOver2))
-                    
-                    // Convert to dB
-                    var dbMagnitudes = [Float](repeating: 0, count: nOver2)
-                    var one = Float(1.0)
-                    vDSP_vdbcon(scaledMagnitudes, 1, &one, &dbMagnitudes, 1, vDSP_Length(nOver2), 1)
-                    
-                    // Normalize to 0-1 range (-60dB to 0dB)
-                    var normalizedMagnitudes = [Float](repeating: 0, count: nOver2)
-                    var minDB = Float(-60.0)
-                    var range = Float(60.0)
-                    vDSP_vsadd(dbMagnitudes, 1, &minDB, &normalizedMagnitudes, 1, vDSP_Length(nOver2))
-                    vDSP_vsdiv(normalizedMagnitudes, 1, &range, &normalizedMagnitudes, 1, vDSP_Length(nOver2))
-                    
-                    // Clamp to 0-1
-                    var zero = Float(0.0)
-                    var one = Float(1.0)
-                    vDSP_vclip(normalizedMagnitudes, 1, &zero, &one, &normalizedMagnitudes, 1, vDSP_Length(nOver2))
-                    
-                    return normalizedMagnitudes
-                }
-            }
-        }
-    }
-}
+// MARK: - FFT Processing
+// Note: FFT processing is handled by the FFTProcessor class in FFTProcessor.swift
