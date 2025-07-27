@@ -1,21 +1,43 @@
 import Foundation
 import CoreGraphics
 import AppKit
+import SwiftUI
+import Combine
 
 /// Example custom visualization plugin - Matrix Rain effect
 /// This demonstrates how to create a custom visualization using the plugin API
 public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
     
-    // MARK: - Plugin Metadata
+    // MARK: - WAPlugin Requirements
     
-    public let metadata = VisualizationPluginMetadata(
+    public let metadata = PluginMetadata(
         identifier: "com.example.visualization.matrix",
         name: "Matrix Rain",
-        author: "Example Developer",
+        type: .visualization,
         version: "1.0.0",
+        author: "Example Developer",
         description: "Digital rain effect inspired by The Matrix, reactive to audio",
         iconName: "matrix_icon"
     )
+    
+    public private(set) var state: PluginState = .unloaded
+    private let stateSubject = CurrentValueSubject<PluginState, Never>(.unloaded)
+    public var statePublisher: AnyPublisher<PluginState, Never> {
+        stateSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: - VisualizationPlugin Requirements
+    
+    public var visualizationMetadata: VisualizationPluginMetadata {
+        VisualizationPluginMetadata(
+            identifier: metadata.identifier,
+            name: metadata.name,
+            author: metadata.author,
+            version: metadata.version,
+            description: metadata.description,
+            iconName: metadata.iconName
+        )
+    }
     
     public let capabilities: VisualizationCapabilities = [.spectrum, .beatDetection, .customConfiguration]
     
@@ -270,6 +292,68 @@ public final class MatrixRainVisualizationPlugin: VisualizationPlugin {
             drop.speed = CGFloat(dropSpeed) * CGFloat.random(in: 0.5...1.5)
             rainDrops.append(drop)
         }
+    }
+    
+    // MARK: - WAPlugin Lifecycle Methods
+    
+    public func initialize(host: PluginHost) async throws {
+        stateSubject.send(.loading)
+        // Initialize plugin with host
+        stateSubject.send(.loaded)
+    }
+    
+    public func activate() async throws {
+        stateSubject.send(.active)
+    }
+    
+    public func deactivate() async throws {
+        stateSubject.send(.loaded)
+    }
+    
+    public func shutdown() async {
+        rainDrops.removeAll()
+        stateSubject.send(.unloaded)
+    }
+    
+    public func configurationView() -> AnyView? {
+        return nil // Could return SwiftUI configuration view
+    }
+    
+    public func exportSettings() -> Data? {
+        let settings = [
+            "rainColor": rainColor,
+            "dropSpeed": dropSpeed,
+            "dropDensity": dropDensity,
+            "reactToBeats": reactToBeats,
+            "glowIntensity": glowIntensity
+        ]
+        return try? JSONSerialization.data(withJSONObject: settings)
+    }
+    
+    public func importSettings(_ data: Data) throws {
+        guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw PluginError.configurationError("Invalid settings format")
+        }
+        
+        if let color = settings["rainColor"] as? CGColor {
+            rainColor = color
+        }
+        if let speed = settings["dropSpeed"] as? Double {
+            dropSpeed = speed
+        }
+        if let density = settings["dropDensity"] as? Int {
+            dropDensity = density
+        }
+        if let beats = settings["reactToBeats"] as? Bool {
+            reactToBeats = beats
+        }
+        if let glow = settings["glowIntensity"] as? Double {
+            glowIntensity = glow
+        }
+    }
+    
+    public func handleMessage(_ message: PluginMessage) {
+        // Handle inter-plugin messages if needed
     }
 }
 

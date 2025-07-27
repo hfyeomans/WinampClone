@@ -73,12 +73,23 @@ enum AudioEngineError: LocalizedError {
 }
 
 /// Playback state of the audio engine
-enum AudioPlaybackState {
+enum AudioPlaybackState: Equatable {
     case stopped
     case playing
     case paused
     case loading
     case error(Error)
+    
+    static func == (lhs: AudioPlaybackState, rhs: AudioPlaybackState) -> Bool {
+        switch (lhs, rhs) {
+        case (.stopped, .stopped), (.playing, .playing), (.paused, .paused), (.loading, .loading):
+            return true
+        case (.error, .error):
+            return true // Compare errors by type, not by content for simplicity
+        default:
+            return false
+        }
+    }
 }
 
 /// Manages audio playback, decoding, and processing using AVAudioEngine
