@@ -430,7 +430,7 @@ public final class SpectrumVisualizationPlugin: VisualizationPlugin {
     }
     
     public func exportSettings() -> Data? {
-        let settings = [
+        let settings: [String: Any] = [
             "barCount": barCount,
             "barColor": barColor,
             "peakHold": peakHold
@@ -440,7 +440,7 @@ public final class SpectrumVisualizationPlugin: VisualizationPlugin {
     
     public func importSettings(_ data: Data) throws {
         guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw PluginError.configurationError("Invalid settings format")
+            throw PluginError.invalidConfiguration
         }
         
         if let count = settings["barCount"] as? Int {
@@ -669,7 +669,7 @@ public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
     }
     
     public func exportSettings() -> Data? {
-        let settings = [
+        let settings: [String: Any] = [
             "lineColor": lineColor,
             "lineWidth": lineWidth,
             "drawMode": drawMode.rawValue
@@ -679,7 +679,7 @@ public final class OscilloscopeVisualizationPlugin: VisualizationPlugin {
     
     public func importSettings(_ data: Data) throws {
         guard let settings = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw PluginError.configurationError("Invalid settings format")
+            throw PluginError.invalidConfiguration
         }
         
         if let color = settings["lineColor"] as? CGColor {

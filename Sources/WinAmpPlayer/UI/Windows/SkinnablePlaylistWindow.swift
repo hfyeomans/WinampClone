@@ -213,7 +213,7 @@ struct SkinnablePlaylistWindow: View {
                 
                 // Status bar
                 PlaylistStatusBar(
-                    trackCount: displayedTracks.count,
+                    totalTracks: displayedTracks.count,
                     totalDuration: totalDuration,
                     selectedCount: selectedTracks.count
                 )
@@ -236,14 +236,7 @@ struct SkinnablePlaylistWindow: View {
                 onAdd: addFiles,
                 onRemove: removeSelected,
                 onClear: clearPlaylist,
-                onSort: { field in
-                    if sortField == field {
-                        sortAscending.toggle()
-                    } else {
-                        sortField = field
-                        sortAscending = true
-                    }
-                },
+                onSort: handleSort,
                 sortField: sortField,
                 sortAscending: sortAscending
             )
@@ -347,6 +340,15 @@ struct SkinnablePlaylistWindow: View {
         }
     }
     
+    private func handleSort(_ field: PlaylistSortField) {
+        if sortField == field {
+            sortAscending.toggle()
+        } else {
+            sortField = field
+            sortAscending = true
+        }
+    }
+    
     private func addFiles() {
         let panel = NSOpenPanel()
         panel.allowedFileTypes = Track.supportedExtensions
@@ -404,7 +406,9 @@ struct SkinnablePlaylistWindow: View {
         Divider()
         
         Button("Show in Finder") {
-            NSWorkspace.shared.selectFile(track.fileURL.path, inFileViewerRootedAtPath: "")
+            if let fileURL = track.fileURL {
+                NSWorkspace.shared.selectFile(fileURL.path, inFileViewerRootedAtPath: "")
+            }
         }
     }
 }
