@@ -15,6 +15,8 @@ enum SecondaryWindowType: String, CaseIterable {
     case equalizer = "equalizer"
     case library = "library"
     case skinBrowser = "skinBrowser"
+    case pluginPreferences = "pluginPreferences"
+    case preferences = "preferences"
     
     var title: String {
         switch self {
@@ -22,6 +24,8 @@ enum SecondaryWindowType: String, CaseIterable {
         case .equalizer: return "Equalizer"
         case .library: return "Media Library"
         case .skinBrowser: return "Skin Browser"
+        case .pluginPreferences: return "Plugin Preferences"
+        case .preferences: return "Preferences"
         }
     }
     
@@ -31,6 +35,8 @@ enum SecondaryWindowType: String, CaseIterable {
         case .equalizer: return CGSize(width: 275, height: 116)
         case .library: return CGSize(width: 400, height: 300)
         case .skinBrowser: return CGSize(width: 600, height: 400)
+        case .pluginPreferences: return CGSize(width: 700, height: 500)
+        case .preferences: return CGSize(width: 500, height: 400)
         }
     }
 }
@@ -81,6 +87,12 @@ class SecondaryWindowManager: ObservableObject {
         case .skinBrowser:
             let contentView = SkinBrowserWindow()
             window.contentView = NSHostingView(rootView: contentView)
+        case .pluginPreferences:
+            let contentView = PluginPreferencesWindow()
+            window.contentView = NSHostingView(rootView: contentView)
+        case .preferences:
+            // TODO: Add general preferences window
+            break
         }
         
         window.makeKeyAndOrderFront(nil)
@@ -105,6 +117,11 @@ class SecondaryWindowManager: ObservableObject {
     /// Open skin browser window
     func openSkinBrowser() {
         openWindow(.skinBrowser)
+    }
+    
+    /// Open plugin preferences window
+    func openPluginPreferences() {
+        openWindow(.pluginPreferences)
     }
     
     /// Check if window is open
