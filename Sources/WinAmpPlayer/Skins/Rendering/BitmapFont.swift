@@ -10,11 +10,11 @@ import SwiftUI
 import AppKit
 
 /// Bitmap font text view using skin number sprites
-public struct BitmapFontText: View {
+public struct BitmapFontDigits: View {
     let text: String
     let spacing: CGFloat
     
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     
     public init(_ text: String, spacing: CGFloat = 0) {
         self.text = text
@@ -55,7 +55,7 @@ public struct SkinnableTimeDisplay: View {
     let time: TimeInterval
     let showRemaining: Bool
     
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     
     public init(time: TimeInterval, showRemaining: Bool = false) {
         self.time = time
@@ -78,7 +78,7 @@ public struct SkinnableTimeDisplay: View {
 public struct SkinnableBitrateDisplay: View {
     let bitrate: Int? // in kbps
     
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     
     public init(bitrate: Int?) {
         self.bitrate = bitrate
@@ -97,7 +97,7 @@ public struct SkinnableBitrateDisplay: View {
 public struct SkinnableSampleRateDisplay: View {
     let sampleRate: Int? // in Hz
     
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     
     public init(sampleRate: Int?) {
         self.sampleRate = sampleRate

@@ -26,7 +26,7 @@ public class ClassicSkinParser {
         "shufrep.bmp",
         "text.bmp",
         "titlebar.bmp",
-        "eq_main.bmp",
+        "eqmain.bmp",
         "pledit.bmp"
     ]
     

@@ -62,6 +62,11 @@ struct WinAmpPlayerApp: App {
                     .frame(width: 275, height: 102) // Reduced by title bar height
             }
             .frame(width: 275, height: 116)
+            .environmentObject(audioEngine)
+            .environmentObject(volumeController)
+            .environmentObject(playlistController)
+            .environmentObject(skinManager)
+            .preferredColorScheme(.dark)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)

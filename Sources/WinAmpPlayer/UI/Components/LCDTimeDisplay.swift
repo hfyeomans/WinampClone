@@ -14,37 +14,31 @@ struct LCDTimeDisplay: View {
     let khz: String
     let mode: String // "Stereo" or "Mono"
     @Binding var isRemainingTime: Bool
+    @EnvironmentObject var skinManager: SkinManager
     
     var body: some View {
         HStack(spacing: 2) {
             // Time display
-            HStack(spacing: 0) {
-                ForEach(Array(displayTime.enumerated()), id: \.offset) { index, char in
-                    LCDDigit(character: char)
-                }
-            }
+            BitmapNumberText(text: displayTime)
             
             Spacer()
             
             // Bitrate and sample rate
             VStack(alignment: .trailing, spacing: 0) {
-                Text("\(kbps) kbps")
-                    .font(.system(size: 8, weight: .medium, design: .monospaced))
-                    .foregroundColor(WinAmpColors.lcdText)
-                Text("\(khz) kHz")
-                    .font(.system(size: 8, weight: .medium, design: .monospaced))
-                    .foregroundColor(WinAmpColors.lcdText)
+                BitmapFontText("\(kbps) KBPS", spacing: -1)
+                    .scaleEffect(0.8)
+                BitmapFontText("\(khz) KHZ", spacing: -1)
+                    .scaleEffect(0.8)
             }
             
             // Mode indicator
-            Text(mode)
-                .font(.system(size: 8, weight: .medium, design: .monospaced))
-                .foregroundColor(WinAmpColors.lcdText)
+            BitmapFontText(mode.uppercased(), spacing: -1)
+                .scaleEffect(0.8)
                 .frame(width: 35)
         }
         .padding(.horizontal, 4)
         .frame(width: 154, height: 13)
-        .background(WinAmpColors.lcdBackground)
+        .background(skinManager.colorManager.lcdBackgroundColor)
         .overlay(BeveledBorder(raised: false))
         .onTapGesture {
             isRemainingTime.toggle()
@@ -62,13 +56,14 @@ struct LCDTimeDisplay: View {
 
 struct LCDDigit: View {
     let character: Character
+    @EnvironmentObject var skinManager: SkinManager
     
     var body: some View {
         Text(String(character))
             .font(.custom("Monaco", size: 11))
-            .foregroundColor(WinAmpColors.lcdText)
+            .foregroundColor(skinManager.colorManager.timeDisplayColor)
             .frame(width: 6, height: 11)
-            .shadow(color: WinAmpColors.lcdText.opacity(0.5), radius: 1)
+            .shadow(color: skinManager.colorManager.timeDisplayColor.opacity(0.5), radius: 1)
     }
 }
 
@@ -77,11 +72,7 @@ struct LCDDigit: View {
 struct LCDSongDisplay: View {
     let artist: String
     let title: String
-    @State private var scrollOffset: CGFloat = 0
-    @State private var shouldScroll = false
-    @State private var textSize: CGSize = .zero
-    
-    private let scrollSpeed: Double = 30 // pixels per second
+    @EnvironmentObject var skinManager: SkinManager
     
     var displayText: String {
         if !artist.isEmpty && !title.isEmpty {
@@ -94,34 +85,9 @@ struct LCDSongDisplay: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            Text(displayText)
-                .font(.system(size: 9, weight: .medium, design: .monospaced))
-                .foregroundColor(WinAmpColors.lcdText)
-                .lineLimit(1)
-                .fixedSize()
-                .background(
-                    GeometryReader { textGeometry in
-                        Color.clear
-                            .onAppear {
-                                textSize = textGeometry.size
-                                shouldScroll = textGeometry.size.width > geometry.size.width
-                            }
-                    }
-                )
-                .offset(x: scrollOffset)
-                .animation(shouldScroll ? .linear(duration: Double(displayText.count) / 10).repeatForever(autoreverses: true) : .none, value: scrollOffset)
-                .onAppear {
-                    if shouldScroll {
-                        withAnimation {
-                            scrollOffset = -(textSize.width - geometry.size.width)
-                        }
-                    }
-                }
-        }
-        .frame(height: 11)
-        .clipped()
-        .background(WinAmpColors.lcdBackground)
+        ScrollingBitmapText(text: displayText.uppercased(), width: 154)
+            .frame(height: 11)
+            .background(skinManager.colorManager.lcdBackgroundColor)
     }
 }
 

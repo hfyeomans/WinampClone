@@ -237,14 +237,15 @@ struct SkinnableMainPlayerView: View {
                         // If we have multiple files, we can add them to the playlist
                         if urls.count > 1, let playlist = playlistController.currentPlaylist {
                             for url in urls {
-                                let track = Track(fileURL: url)
-                                playlist.addTrack(track)
+                                if let track = Track(from: url) {
+                                    playlist.addTrack(track)
+                                }
                             }
                         } else if urls.count > 1 {
                             // Create a new playlist with all tracks
-                            let tracks = urls.map { Track(fileURL: $0) }
+                            let tracks = urls.compactMap { Track(from: $0) }
                             let playlist = Playlist(name: "Current Playlist", tracks: tracks)
-                            playlistController.setPlaylist(playlist)
+                            playlistController.loadPlaylist(playlist)
                         }
                     } catch {
                         print("🎵 ❌ Failed to load audio file: \(error)")
@@ -258,7 +259,7 @@ struct SkinnableMainPlayerView: View {
 // MARK: - Background Sprite View
 
 struct BackgroundSpriteView: View {
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     
     var body: some View {
         GeometryReader { geometry in

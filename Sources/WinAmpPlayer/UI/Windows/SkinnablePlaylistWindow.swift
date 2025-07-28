@@ -21,22 +21,17 @@ struct SkinnablePlaylistRow: View {
     var body: some View {
         HStack(spacing: 4) {
             // Track number
-            Text("\(index + 1).")
-                .font(.system(size: 11, weight: .regular, design: .monospaced))
-                .foregroundColor(textColor)
+            BitmapFontText("\(index + 1).")
                 .frame(width: 30, alignment: .trailing)
             
             // Track info
             VStack(alignment: .leading, spacing: 0) {
-                Text(track.displayTitle)
-                    .font(.system(size: 11, weight: isCurrent ? .bold : .regular, design: .monospaced))
-                    .foregroundColor(textColor)
+                BitmapFontText(track.displayTitle.uppercased())
                     .lineLimit(1)
                 
                 if !track.displayArtist.isEmpty {
-                    Text(track.displayArtist)
-                        .font(.system(size: 10, weight: .regular, design: .monospaced))
-                        .foregroundColor(textColor.opacity(0.8))
+                    BitmapFontText(track.displayArtist.uppercased())
+                        .opacity(0.8)
                         .lineLimit(1)
                 }
             }
@@ -44,9 +39,7 @@ struct SkinnablePlaylistRow: View {
             Spacer()
             
             // Duration
-            Text(formatDuration(track.duration))
-                .font(.system(size: 11, weight: .regular, design: .monospaced))
-                .foregroundColor(textColor)
+            BitmapFontText(formatDuration(track.duration))
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 2)
@@ -54,29 +47,16 @@ struct SkinnablePlaylistRow: View {
     }
     
     private var textColor: Color {
-        if let config = skinManager.playlistConfig {
-            if isCurrent {
-                return Color(config.currentText)
-            } else {
-                return Color(config.normalText)
-            }
+        if isCurrent {
+            return skinManager.colorManager.playlistPlayingColor
         } else {
-            // Fallback colors
-            if isCurrent {
-                return WinAmpColors.textHighlight
-            } else {
-                return WinAmpColors.text
-            }
+            return skinManager.colorManager.playlistTextColor
         }
     }
     
     private var backgroundColor: Color {
         if isSelected {
-            if let config = skinManager.playlistConfig {
-                return Color(config.selectedBackground)
-            } else {
-                return WinAmpColors.selection.opacity(0.3)
-            }
+            return skinManager.colorManager.playlistSelectedColor
         } else {
             if let config = skinManager.playlistConfig {
                 return Color(config.normalBackground)
@@ -294,11 +274,7 @@ struct SkinnablePlaylistWindow: View {
     }
     
     private var playlistBackgroundColor: Color {
-        if let config = skinManager.playlistConfig {
-            return Color(config.normalBackground)
-        } else {
-            return WinAmpColors.background
-        }
+        return skinManager.colorManager.playlistBackgroundColor
     }
     
     private var displayedTracks: [Track] {

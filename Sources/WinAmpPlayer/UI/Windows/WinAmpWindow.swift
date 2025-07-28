@@ -162,9 +162,8 @@ struct WinAmpTitleBar: View {
             
             // Title area (draggable)
             HStack {
-                Text(title.uppercased())
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
-                    .foregroundColor(WinAmpColors.text)
+                BitmapFontText(title.uppercased(), spacing: -1)
+                    .scaleEffect(0.8)
                     .shadow(color: WinAmpColors.shadow, radius: 1, x: 1, y: 1)
                 
                 Spacer()
