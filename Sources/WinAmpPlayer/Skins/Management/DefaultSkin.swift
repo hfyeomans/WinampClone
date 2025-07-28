@@ -33,9 +33,9 @@ public class DefaultSkin {
     
     /// Generate default sprites programmatically
     private func generateDefaultSprites() {
-        // Main window background
+        // Main window background (without title bar)
         sprites[.mainBackground] = createGradientImage(
-            size: CGSize(width: 275, height: 116),
+            size: CGSize(width: 275, height: 102), // Exclude title bar (14px)
             startColor: WinAmpColors.background,
             endColor: WinAmpColors.backgroundDark
         )

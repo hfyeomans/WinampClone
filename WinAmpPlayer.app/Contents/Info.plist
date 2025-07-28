@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<\!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleDisplayName</key>
-    <string>WinAmp Player</string>
     <key>CFBundleExecutable</key>
     <string>WinAmpPlayer</string>
     <key>CFBundleIdentifier</key>
-    <string>com.example.winampplayer</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
+    <string>com.winamp.player</string>
     <key>CFBundleName</key>
     <string>WinAmpPlayer</string>
     <key>CFBundlePackageType</key>
@@ -19,32 +15,21 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
-    <string>14.0</string>
-    <key>NSPrincipalClass</key>
-    <string>NSApplication</string>
+    <string>13.0</string>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>WinAmpPlayer needs access to your microphone for visualizations.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>WinAmpPlayer needs access to your files to play music.</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>WinAmpPlayer needs access to your downloads folder to play music.</string>
+    <key>NSMusicUsageDescription</key>
+    <string>WinAmpPlayer needs access to your music library.</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.music</string>
-    <key>CFBundleDocumentTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeExtensions</key>
-            <array>
-                <string>mp3</string>
-                <string>m4a</string>
-                <string>wav</string>
-                <string>flac</string>
-                <string>aac</string>
-                <string>wsz</string>
-            </array>
-            <key>CFBundleTypeName</key>
-            <string>Audio and Skin Files</string>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>LSHandlerRank</key>
-            <string>Alternative</string>
-        </dict>
-    </array>
 </dict>
 </plist>
+EOF < /dev/null

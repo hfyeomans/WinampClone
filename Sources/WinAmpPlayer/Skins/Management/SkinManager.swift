@@ -32,6 +32,9 @@ public class SkinManager: ObservableObject {
     /// Current cached skin data
     internal var currentCachedSkin: CachedSkin?
     
+    /// Color manager for skin-aware text rendering
+    @Published public var colorManager = SkinColorManager()
+    
     /// Main skins directory
     public var skinsDirectory: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -131,6 +134,7 @@ public class SkinManager: ObservableObject {
             // Use default skin
             currentCachedSkin = nil
             await MainActor.run {
+                self.colorManager.resetToDefaults()
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.currentSkin = skin
                 }
@@ -146,6 +150,7 @@ public class SkinManager: ObservableObject {
                 print("🎨 Skin loaded successfully. Cached skin name: \(cachedSkin.name)")
                 
                 await MainActor.run {
+                    self.colorManager.updateColors(from: cachedSkin)
                     withAnimation(.easeInOut(duration: 0.3)) {
                         self.currentSkin = skin
                     }

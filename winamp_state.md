@@ -6,11 +6,12 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🎯 Current Sprint
 
-**Status**: 🚧 UI Enhancements Branch Active  
-**Current Activity**: Classic WinAmp UI Implementation - Major UI Overhaul  
-**Last Major Milestone**: Complete UI transformation to match authentic WinAmp 2.x interface (2025-07-27)  
-**Current Branch**: UI-Enhancements (52 files changed, 7623 insertions, 547 deletions)  
-**Last Sprint Completed**: Sprint 8-9 - Procedural Skin Generation (Core implementation complete, ~177 compilation errors remain)  
+**Status**: ✅ Button Functionality & Skin Fixes Complete  
+**Current Activity**: Sprite extraction improvements for proper skin mapping  
+**Last Major Milestone**: Fixed sprite extraction to properly separate title bar from main background (2025-07-28)  
+**Current Branch**: button-functionality-and-skin-fixes (3 files changed, 91 insertions, 7 deletions)  
+**Previous Branch**: UI-Enhancements (merged to main)  
+**Last Sprint Completed**: Sprint 8-9 - Procedural Skin Generation (Core implementation complete)  
 **Previous Sprint**: Sprint 8 - Plugin System (100% complete)
 **Next Sprint Options**: Sprint 9 - Advanced Audio Features OR Sprint 10 - Network Features  
 **Refactoring Progress**: All Phases Complete ✅
@@ -874,7 +875,175 @@ Total Tasks: 24/24 completed (100%)
 - Need to resolve before full build succeeds
 - UI components are complete but need integration testing
 
+## 🚧 Button Functionality & Skin Fixes Branch (2025-07-28)
+
+### Transport Controls & Skin Rendering Improvements
+
+**Branch**: button-functionality-and-skin-fixes  
+**Commit**: bf2cb56 - "Implement transport button functionality and fix skin rendering"  
+**Status**: Completed and committed  
+
+#### Transport Control Fixes:
+
+1. **PlaylistController Integration**
+   - Created PlaylistController instance in WinAmpPlayerApp
+   - Passed to all views via @EnvironmentObject
+   - Connected Previous/Next buttons to playlist navigation methods
+
+2. **Button Functionality Implemented**
+   - ✅ Play/Pause buttons → `audioEngine.togglePlayPause()`
+   - ✅ Stop button → `audioEngine.stop()`
+   - ✅ Previous button → `playlistController.playPrevious()`
+   - ✅ Next button → `playlistController.playNext()`
+   - ✅ Eject button → File dialog with multi-file selection
+
+3. **File Loading Integration**
+   - Implemented NSOpenPanel for audio file selection
+   - Supports multiple file selection
+   - Creates/updates playlists automatically
+   - Plays first selected track immediately
+
+#### Skin Rendering Fixes:
+
+1. **Background Coverage Issue**
+   - Fixed sprite not filling entire window area
+   - Changed from `.aspectRatio(contentMode: .fit)` to `.fill`
+   - Created custom `BackgroundSpriteView` component
+
+2. **Rendering Improvements**
+   - Proper clipping of overflow content
+   - Maintained pixel-perfect rendering with `.interpolation(.none)`
+   - Added fallback to classic WinAmp background color
+
+#### Files Modified:
+- `SkinnableMainPlayerView.swift` - Added transport control handlers
+- `WinAmpPlayerApp.swift` - Created PlaylistController instance
+- `BackgroundSpriteView` - New component for proper background rendering
+
+#### Sprite Extraction Improvements (2025-07-28):
+
+1. **Fixed Main Background Sprite Extraction**
+   - Updated `SpriteExtractor.swift` to exclude title bar from main background
+   - Changed from `CGRect(x: 0, y: 0, width: 275, height: 116)` to `CGRect(x: 0, y: 14, width: 275, height: 102)`
+   - Title bar area (0-14px) is now properly separated
+
+2. **Updated Default Skin Generation**
+   - Modified `DefaultSkin.swift` to generate correct background size
+   - Main background now 275x102 instead of 275x116
+   - Maintains proper separation between title bar and main content area
+
+3. **Why This Matters**
+   - Classic WinAmp skins have the title bar as a separate sprite
+   - Previous extraction was including the title bar in the main background
+   - This caused improper rendering and skin mapping issues
+   - Now follows the authentic WinAmp skin structure
+
 ## 🔄 Last Updated
+
+2025-07-28 - **Critical Crash Fix - Thread Safety & SwiftUI Environment Objects** 🚨 Fixed multiple crash issues
+
+### Critical Crash Fixes (2025-07-28 - Latest)
+
+**Issue 1**: App crashed on launch with `-[__NSTaggedDate count]: unrecognized selector`
+
+**Root Cause**: Race condition in PluginManager where multiple async Tasks were concurrently modifying the `allPlugins` dictionary without synchronization, causing memory corruption.
+
+**Solution**:
+- Changed `allPlugins` dictionary to use `@MainActor` for thread-safe access
+- Updated all dictionary operations to use `await MainActor.run { }`
+- This ensures all dictionary modifications happen on the main thread
+
+**Issue 2**: SwiftUI crash with `EXC_BREAKPOINT` in BitmapFontText
+
+**Root Cause**: Multiple views were incorrectly creating their own `@StateObject` instances of `SkinManager.shared` instead of using the shared `@EnvironmentObject`
+
+**Solution**:
+- Changed all `@StateObject private var skinManager = SkinManager.shared` to `@EnvironmentObject var skinManager: SkinManager`
+- Ensured proper environment object injection in `WinAmpPlayerApp.swift`
+- Fixed environment object usage in `CustomTitleBar`, `BitmapFont`, and `SkinnableMainPlayerView`
+
+**Additional Fixes**:
+- Fixed SkinColorManager property mismatches
+- Removed references to non-existent `parsedSkin` property
+- Updated bitmap access patterns to use proper methods
+
+**Status**: ✅ Fixed, built, and deployed - App launches successfully
+
+**Outstanding UI Issues**:
+- ❌ EQ and Playlist windows still not changing to skin (showing default appearance)
+- ❌ Text still appears bright green in all 3 windows instead of skin colors
+- Note: These UI issues marked as "solved" earlier are NOT actually resolved
+- Will require consultation with UI design expert and Swift macOS engineer in future session
+
+2025-07-28 - **Bitmap Font Implementation & Skin System Fixes** 📝 Complete overhaul of text rendering and skin loading
+
+### Bitmap Font & Skin System Improvements (2025-07-28)
+
+**Branch**: UI-Enhancements  
+**Status**: All compilation errors fixed, app rebuilt and deployed  
+
+#### Major Fixes Implemented:
+
+1. **Bitmap Font Rendering System** ✅
+   - Replaced ALL system Text() components with BitmapFontText()
+   - Implemented full text rendering using skin's text.bmp file
+   - Added ScrollingBitmapText for song title display
+   - Created BitmapNumberText for authentic LCD time display
+   - Fixed character extraction from bitmap font files
+   - Added proper spacing and scaling support
+
+2. **Fixed EQ & Playlist Window Skinning** ✅
+   - Resolved filename inconsistencies:
+     - `eq_main.bmp` → `eqmain.bmp`
+     - `monostereo.bmp` → `monoster.bmp`
+   - Both windows now properly load and display skin backgrounds
+   - All text in these windows now uses bitmap fonts
+
+3. **Color System Conflict Resolution** ✅
+   - Changed `@Published public let colorManager` to `var` for proper updates
+   - Removed hardcoded bright green colors that were overriding skins
+   - Dynamic color extraction from skin files now working properly
+
+4. **Window Title Bars** ✅
+   - Updated CustomTitleBar to use BitmapFontText
+   - Fixed WinAmpWindow title rendering
+   - All window titles now render with skin's bitmap font
+
+5. **Compilation Fixes** ✅
+   - Fixed duplicate BitmapFontText declarations
+   - Resolved empty dictionary syntax for text.bmp
+   - Fixed duplicate sprite type definitions
+   - Added missing helper methods for text rendering
+   - Resolved all build errors
+
+#### Files Modified:
+- `CustomTitleBar.swift` - Window title using bitmap font
+- `WinAmpWindow.swift` - Title bar text conversion
+- `LCDTimeDisplay.swift` - All text elements using bitmap fonts
+- `SkinnableEqualizerWindow.swift` - EQ labels and presets
+- `SkinnablePlaylistWindow.swift` - Playlist text rendering
+- `BitmapFontText.swift` - Complete implementation of bitmap text rendering
+- `SpriteExtractor.swift` - Added text character extraction methods
+- `ClassicSkinParser.swift` - Fixed filename inconsistencies
+- `SkinManager.swift` - Fixed @Published property wrapper
+- `SpriteType.swift` - Removed duplicate definitions
+
+#### Test Results:
+- App successfully builds with zero errors
+- Two .wsz test files located in Downloads folder:
+  - `Deus_Ex_Amp_by_AJ.wsz`
+  - `Purple_Glow.wsz`
+- Ready for user testing with real WinAmp skins
+
+#### What Users Should See Now:
+- ✅ No more bright green system text
+- ✅ All text renders using the skin's bitmap fonts
+- ✅ EQ window properly skinned with background
+- ✅ Playlist window properly skinned with background
+- ✅ Authentic WinAmp text rendering throughout
+- ✅ Colors adapt to each loaded skin
+
+2025-07-28 - **Button Functionality & Skin Fixes** 🎮 Implemented transport controls and fixed skin rendering
 
 2025-07-27 - **UI Enhancements Branch Created** 🎨 Major UI overhaul to implement classic WinAmp interface
 

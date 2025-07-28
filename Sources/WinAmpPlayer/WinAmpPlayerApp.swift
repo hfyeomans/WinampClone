@@ -12,6 +12,7 @@ import SwiftUI
 struct WinAmpPlayerApp: App {
     @StateObject private var audioEngine = AudioEngine()
     @StateObject private var volumeController: VolumeBalanceController
+    @StateObject private var playlistController: PlaylistController
     @StateObject private var skinManager = SkinManager.shared
     @StateObject private var pluginManager = PluginManager.shared
     
@@ -19,8 +20,11 @@ struct WinAmpPlayerApp: App {
         let engine = AudioEngine()
         let controller = VolumeBalanceController(audioEngine: engine.audioEngine)
         engine.setVolumeController(controller)
+        let playlist = PlaylistController(audioEngine: engine, volumeController: controller)
+        
         _audioEngine = StateObject(wrappedValue: engine)
         _volumeController = StateObject(wrappedValue: controller)
+        _playlistController = StateObject(wrappedValue: playlist)
         
         // Initialize skin system
         Task {
@@ -58,6 +62,11 @@ struct WinAmpPlayerApp: App {
                     .frame(width: 275, height: 102) // Reduced by title bar height
             }
             .frame(width: 275, height: 116)
+            .environmentObject(audioEngine)
+            .environmentObject(volumeController)
+            .environmentObject(playlistController)
+            .environmentObject(skinManager)
+            .preferredColorScheme(.dark)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
@@ -80,6 +89,7 @@ struct WinAmpPlayerApp: App {
             ClassicPlaylistWindow()
                 .environmentObject(audioEngine)
                 .environmentObject(volumeController)
+                .environmentObject(playlistController)
                 .environmentObject(skinManager)
                 .preferredColorScheme(.dark)
         }
@@ -91,6 +101,7 @@ struct WinAmpPlayerApp: App {
         SkinnableMainPlayerView()
             .environmentObject(audioEngine)
             .environmentObject(volumeController)
+            .environmentObject(playlistController)
             .environmentObject(skinManager)
             .preferredColorScheme(.dark)
     }

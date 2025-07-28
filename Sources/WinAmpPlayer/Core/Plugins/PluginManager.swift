@@ -43,7 +43,7 @@ public final class PluginManager: ObservableObject {
     private var loadedBundles: [String: PluginBundle] = [:]
     
     // Plugin instances
-    private var allPlugins: [String: WAPlugin] = [:]
+    @MainActor private var allPlugins: [String: WAPlugin] = [:]
     
     private init() {
         // Setup plugin directories
@@ -301,7 +301,12 @@ public final class PluginManager: ObservableObject {
     private func initializePlugin(_ plugin: WAPlugin) async throws {
         // Check if already loaded
         let id = plugin.metadata.identifier
-        if allPlugins[id] != nil {
+        
+        let alreadyLoaded = await MainActor.run {
+            allPlugins[id] != nil
+        }
+        
+        if alreadyLoaded {
             return
         }
         
@@ -309,7 +314,9 @@ public final class PluginManager: ObservableObject {
         try await plugin.initialize(host: pluginHost)
         
         // Store plugin
-        allPlugins[id] = plugin
+        await MainActor.run {
+            allPlugins[id] = plugin
+        }
         
         // Add to appropriate type array
         await MainActor.run {

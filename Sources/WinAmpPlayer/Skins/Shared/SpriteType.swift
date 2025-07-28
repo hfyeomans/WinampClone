@@ -61,6 +61,16 @@ public enum SpriteType: Hashable {
     case playlistMiscButton(ButtonState)
     case playlistListButton(ButtonState)
     
+    // EQ window controls
+    case eqCloseButton
+    case eqMinimizeButton
+    case eqShadeButton
+    case eqTitleBarActive
+    case eqTitleBarInactive
+    case eqSliderBackground
+    case eqPreampBackground
+    case eqPreampThumb(ButtonState)
+    
     // Raw sprite sheet references (for parser compatibility)
     case main
     case cButtons

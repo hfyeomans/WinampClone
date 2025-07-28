@@ -9,7 +9,7 @@ import SwiftUI
 import AppKit
 
 struct CustomTitleBar: View {
-    @StateObject private var skinManager = SkinManager.shared
+    @EnvironmentObject var skinManager: SkinManager
     @State private var isHoveringClose = false
     @State private var isHoveringMinimize = false
     @State private var isHoveringShade = false
@@ -34,9 +34,8 @@ struct CustomTitleBar: View {
             
             HStack {
                 // WinAmp title text
-                Text("WINAMP")
-                    .font(.system(size: 9, weight: .bold, design: .monospaced))
-                    .foregroundColor(.green)
+                BitmapFontText("WINAMP", spacing: -1)
+                    .scaleEffect(0.7)
                     .padding(.leading, 6)
                 
                 Spacer()
@@ -155,4 +154,5 @@ struct CustomTitleBar: View {
 #Preview {
     CustomTitleBar()
         .frame(width: 275, height: 14)
+        .environmentObject(SkinManager.shared)
 }

@@ -170,9 +170,7 @@ struct SkinnableEqualizerWindow: View {
                     HStack(spacing: 0) {
                         // Preamp slider
                         VStack(spacing: 2) {
-                            Text("Preamp")
-                                .font(.system(size: 7, weight: .medium, design: .monospaced))
-                                .foregroundColor(Color(WinAmpColors.textDim))
+                            BitmapFontText("PREAMP", spacing: -1)
                                 .rotationEffect(.degrees(-90))
                                 .fixedSize()
                                 .frame(width: 8, height: 40)
@@ -196,9 +194,7 @@ struct SkinnableEqualizerWindow: View {
                         HStack(spacing: 2) {
                             ForEach(Array(EQBandFrequency.allCases.enumerated()), id: \.offset) { index, frequency in
                                 VStack(spacing: 2) {
-                                    Text(frequency.displayText)
-                                        .font(.system(size: 7, weight: .medium, design: .monospaced))
-                                        .foregroundColor(Color(WinAmpColors.textDim))
+                                    BitmapFontText(frequency.displayText, spacing: -1)
                                     
                                     SkinnableEQSlider(
                                         value: $eqController.bandGains[index],
@@ -237,9 +233,8 @@ struct SkinnableEqualizerWindow: View {
                 Spacer()
                 
                 Button(action: { showingPresetMenu.toggle() }) {
-                    Text(selectedPreset?.name ?? "Custom")
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundColor(WinAmpColors.text)
+                    BitmapFontText(selectedPreset?.name ?? "CUSTOM", spacing: -1)
+                        .scaleEffect(0.8)
                         .frame(width: 80)
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -256,9 +251,8 @@ struct SkinnableEqualizerWindow: View {
             HStack(spacing: 4) {
                 // Preamp slider
                 VStack(spacing: 2) {
-                    Text("Preamp")
-                        .font(.system(size: 8, weight: .medium, design: .monospaced))
-                        .foregroundColor(WinAmpColors.textDim)
+                    BitmapFontText("PREAMP", spacing: -1)
+                        .scaleEffect(0.8)
                         .rotationEffect(.degrees(-90))
                         .fixedSize()
                         .frame(width: 8, height: 40)
@@ -278,9 +272,8 @@ struct SkinnableEqualizerWindow: View {
                 // Band sliders
                 ForEach(Array(EQBandFrequency.allCases.enumerated()), id: \.offset) { index, frequency in
                     VStack(spacing: 2) {
-                        Text(frequency.displayText)
-                            .font(.system(size: 8, weight: .medium, design: .monospaced))
-                            .foregroundColor(WinAmpColors.textDim)
+                        BitmapFontText(frequency.displayText, spacing: -1)
+                            .scaleEffect(0.8)
                         
                         EQSlider(
                             value: $eqController.bandGains[index],
