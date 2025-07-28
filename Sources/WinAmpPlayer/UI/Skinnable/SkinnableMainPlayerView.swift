@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 struct SkinnableMainPlayerView: View {
     @EnvironmentObject var audioEngine: AudioEngine
@@ -219,35 +220,34 @@ struct SkinnableMainPlayerView: View {
         panel.showsHiddenFiles = false
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
-        panel.allowedContentTypes = [.mp3, .audio]
+        panel.allowedFileTypes = ["mp3", "m4a", "wav", "flac", "aac", "ogg", "aiff"]
         
         if panel.runModal() == .OK {
             let urls = panel.urls
             if !urls.isEmpty {
                 Task {
                     do {
-                        // If we have a playlist, add tracks to it
-                        if let playlist = playlistController.currentPlaylist {
+                        // For now, just load the first file directly into the audio engine
+                        // This matches the toolbar implementation
+                        if let firstURL = urls.first {
+                            try await audioEngine.loadURL(firstURL)
+                            print("🎵 Audio file loaded successfully: \(firstURL.lastPathComponent)")
+                        }
+                        
+                        // If we have multiple files, we can add them to the playlist
+                        if urls.count > 1, let playlist = playlistController.currentPlaylist {
                             for url in urls {
                                 let track = Track(fileURL: url)
                                 playlist.addTrack(track)
                             }
-                            // Play the first added track
-                            if let firstTrack = urls.first {
-                                let track = Track(fileURL: firstTrack)
-                                try await playlistController.playTrack(track)
-                            }
-                        } else {
-                            // Create a new playlist with these tracks
+                        } else if urls.count > 1 {
+                            // Create a new playlist with all tracks
                             let tracks = urls.map { Track(fileURL: $0) }
                             let playlist = Playlist(name: "Current Playlist", tracks: tracks)
                             playlistController.setPlaylist(playlist)
-                            if let firstTrack = tracks.first {
-                                try await playlistController.playTrack(firstTrack)
-                            }
                         }
                     } catch {
-                        print("Failed to load audio file: \(error)")
+                        print("🎵 ❌ Failed to load audio file: \(error)")
                     }
                 }
             }

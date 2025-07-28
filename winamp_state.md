@@ -6,11 +6,12 @@ This file tracks the development progress, sprint status, and overall project st
 
 ## 🎯 Current Sprint
 
-**Status**: 🚧 UI Enhancements Branch Active  
-**Current Activity**: Classic WinAmp UI Implementation - Major UI Overhaul  
-**Last Major Milestone**: Complete UI transformation to match authentic WinAmp 2.x interface (2025-07-27)  
-**Current Branch**: UI-Enhancements (52 files changed, 7623 insertions, 547 deletions)  
-**Last Sprint Completed**: Sprint 8-9 - Procedural Skin Generation (Core implementation complete, ~177 compilation errors remain)  
+**Status**: 🚧 Button Functionality & Skin Fixes Branch Active  
+**Current Activity**: Transport Controls & Skin Rendering Fixes  
+**Last Major Milestone**: Implemented full transport button functionality and fixed skin rendering coverage (2025-07-28)  
+**Current Branch**: button-functionality-and-skin-fixes (3 files changed, 91 insertions, 7 deletions)  
+**Previous Branch**: UI-Enhancements (merged to main)  
+**Last Sprint Completed**: Sprint 8-9 - Procedural Skin Generation (Core implementation complete)  
 **Previous Sprint**: Sprint 8 - Plugin System (100% complete)
 **Next Sprint Options**: Sprint 9 - Advanced Audio Features OR Sprint 10 - Network Features  
 **Refactoring Progress**: All Phases Complete ✅
@@ -874,7 +875,54 @@ Total Tasks: 24/24 completed (100%)
 - Need to resolve before full build succeeds
 - UI components are complete but need integration testing
 
+## 🚧 Button Functionality & Skin Fixes Branch (2025-07-28)
+
+### Transport Controls & Skin Rendering Improvements
+
+**Branch**: button-functionality-and-skin-fixes  
+**Commit**: bf2cb56 - "Implement transport button functionality and fix skin rendering"  
+**Status**: Completed and committed  
+
+#### Transport Control Fixes:
+
+1. **PlaylistController Integration**
+   - Created PlaylistController instance in WinAmpPlayerApp
+   - Passed to all views via @EnvironmentObject
+   - Connected Previous/Next buttons to playlist navigation methods
+
+2. **Button Functionality Implemented**
+   - ✅ Play/Pause buttons → `audioEngine.togglePlayPause()`
+   - ✅ Stop button → `audioEngine.stop()`
+   - ✅ Previous button → `playlistController.playPrevious()`
+   - ✅ Next button → `playlistController.playNext()`
+   - ✅ Eject button → File dialog with multi-file selection
+
+3. **File Loading Integration**
+   - Implemented NSOpenPanel for audio file selection
+   - Supports multiple file selection
+   - Creates/updates playlists automatically
+   - Plays first selected track immediately
+
+#### Skin Rendering Fixes:
+
+1. **Background Coverage Issue**
+   - Fixed sprite not filling entire window area
+   - Changed from `.aspectRatio(contentMode: .fit)` to `.fill`
+   - Created custom `BackgroundSpriteView` component
+
+2. **Rendering Improvements**
+   - Proper clipping of overflow content
+   - Maintained pixel-perfect rendering with `.interpolation(.none)`
+   - Added fallback to classic WinAmp background color
+
+#### Files Modified:
+- `SkinnableMainPlayerView.swift` - Added transport control handlers
+- `WinAmpPlayerApp.swift` - Created PlaylistController instance
+- `BackgroundSpriteView` - New component for proper background rendering
+
 ## 🔄 Last Updated
+
+2025-07-28 - **Button Functionality & Skin Fixes** 🎮 Implemented transport controls and fixed skin rendering
 
 2025-07-27 - **UI Enhancements Branch Created** 🎨 Major UI overhaul to implement classic WinAmp interface
 
