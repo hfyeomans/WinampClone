@@ -24,10 +24,6 @@ struct SkinnableMainPlayerView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Title bar
-            ClassicTitleBar(isMinimized: $isMinimized)
-                .frame(height: 14)
-            
             if !isMinimized {
                 // Main display area
                 HStack(spacing: 0) {
@@ -64,17 +60,16 @@ struct SkinnableMainPlayerView: View {
                     VStack(spacing: 2) {
                         // Volume and balance
                         HStack(spacing: 2) {
-                            ClassicHorizontalSlider(value: $volume)
-                                .frame(width: 68)
-                                .onChange(of: volume) { newValue in
-                                    audioEngine.volume = newValue
-                                    volumeController.setVolume(newValue)
-                                }
-                            ClassicHorizontalSlider(value: $balance)
-                                .frame(width: 38)
-                                .onChange(of: balance) { newValue in
-                                    volumeController.setBalance(newValue)
-                                }
+                            SkinnableVolumeSlider(volume: $volume) { newValue in
+                                audioEngine.volume = newValue
+                                volumeController.setVolume(newValue)
+                            }
+                            .frame(width: 68)
+                            
+                            SkinnableBalanceSlider(balance: $balance) { newValue in
+                                volumeController.setBalance(newValue)
+                            }
+                            .frame(width: 38)
                         }
                         .padding(.top, 4)
                         
@@ -98,7 +93,7 @@ struct SkinnableMainPlayerView: View {
                         .fill(WinAmpColors.background)
                         .frame(width: 16)
                     
-                    ClassicPositionSlider(
+                    SkinnablePositionSlider(
                         position: $position,
                         duration: audioEngine.duration,
                         onSeek: { newValue in
@@ -120,12 +115,41 @@ struct SkinnableMainPlayerView: View {
                         .fill(WinAmpColors.background)
                         .frame(width: 6)
                     
-                    ClassicControlButton(action: { previousTrack() }, icon: .previous)
-                    ClassicControlButton(action: { togglePlayPause() }, icon: .play)
-                    ClassicControlButton(action: { togglePlayPause() }, icon: .pause)
-                    ClassicControlButton(action: { audioEngine.stop() }, icon: .stop)
-                    ClassicControlButton(action: { nextTrack() }, icon: .next)
-                    ClassicControlButton(action: {}, icon: .eject)
+                    SkinnableButton(
+                        normal: .previousButton(.normal),
+                        pressed: .previousButton(.pressed),
+                        action: { previousTrack() }
+                    )
+                    
+                    SkinnableButton(
+                        normal: .playButton(.normal),
+                        pressed: .playButton(.pressed),
+                        action: { togglePlayPause() }
+                    )
+                    
+                    SkinnableButton(
+                        normal: .pauseButton(.normal),
+                        pressed: .pauseButton(.pressed),
+                        action: { togglePlayPause() }
+                    )
+                    
+                    SkinnableButton(
+                        normal: .stopButton(.normal),
+                        pressed: .stopButton(.pressed),
+                        action: { audioEngine.stop() }
+                    )
+                    
+                    SkinnableButton(
+                        normal: .nextButton(.normal),
+                        pressed: .nextButton(.pressed),
+                        action: { nextTrack() }
+                    )
+                    
+                    SkinnableButton(
+                        normal: .ejectButton(.normal),
+                        pressed: .ejectButton(.pressed),
+                        action: {}
+                    )
                     
                     Spacer()
                     
@@ -143,9 +167,11 @@ struct SkinnableMainPlayerView: View {
                 .frame(height: 18)
             }
         }
-        .frame(width: 275, height: isMinimized ? 14 : 116)
-        .background(WinAmpColors.background)
-        .overlay(BeveledBorder(raised: true))
+        .frame(width: 275, height: isMinimized ? 0 : 102) // 102 = 116 - 14 (title bar)
+        .background(
+            SpriteView(.mainBackground)
+                .aspectRatio(contentMode: .fit)
+        )
         .onReceive(timer) { _ in
             if !isDragging && audioEngine.isPlaying {
                 currentTime = audioEngine.currentTime

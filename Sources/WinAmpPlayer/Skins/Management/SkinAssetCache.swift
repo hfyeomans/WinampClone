@@ -104,6 +104,47 @@ public class SkinAssetCache {
         }
     }
     
+    /// Cache a ParsedSkinProtocol from any skin parser
+    public func cacheSkin(_ parsedSkin: ParsedSkinProtocol, for url: URL) async {
+        // Convert ParsedSkin to legacy CachedSkin format
+        var sprites: [SpriteType: NSImage] = [:]
+        
+        // Map common bitmaps to SpriteType enum
+        if let mainBackground = parsedSkin.bitmaps["main"] {
+            sprites[.mainBackground] = mainBackground
+        }
+        if let titlebar = parsedSkin.bitmaps["titlebar"] {
+            sprites[.titleBar] = titlebar
+        }
+        if let cButtons = parsedSkin.bitmaps["cbuttons"] {
+            sprites[.cButtons] = cButtons
+        }
+        // Add more sprite mappings as needed...
+        
+        let configurations = [
+            "name": parsedSkin.name,
+            "author": parsedSkin.author,
+            "version": parsedSkin.version
+        ]
+        
+        let cachedSkin = CachedSkin(
+            url: url,
+            name: parsedSkin.name,
+            sprites: sprites,
+            configurations: configurations,
+            loadedAt: Date()
+        )
+        
+        let estimatedSize = estimateSkinMemorySize(cachedSkin)
+        await ensureMemoryLimit(additionalSize: estimatedSize)
+        
+        cacheQueue.async(flags: .barrier) {
+            self.loadedSkins[url] = cachedSkin
+            self.extractedSprites[parsedSkin.name] = sprites
+            self.currentMemoryUsage += estimatedSize
+        }
+    }
+    
     /// Ensure memory limit is not exceeded
     private func ensureMemoryLimit(additionalSize: Int) async {
         await cacheQueue.sync {

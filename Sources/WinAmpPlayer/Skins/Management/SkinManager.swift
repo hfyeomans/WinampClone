@@ -116,6 +116,8 @@ public class SkinManager: ObservableObject {
     
     /// Apply a skin
     public func applySkin(_ skin: Skin) async throws {
+        print("🎨 SkinManager.applySkin called with skin: \(skin.name)")
+        
         // Post pre-change notification for animation
         await MainActor.run {
             NotificationCenter.default.post(name: .skinWillChange, object: skin)
@@ -125,6 +127,7 @@ public class SkinManager: ObservableObject {
         try? await Task.sleep(nanoseconds: 150_000_000) // 150ms
         
         if skin.isDefault {
+            print("🎨 Applying default skin")
             // Use default skin
             currentCachedSkin = nil
             await MainActor.run {
@@ -132,12 +135,15 @@ public class SkinManager: ObservableObject {
                     self.currentSkin = skin
                 }
             }
+            print("🎨 Default skin applied. Current skin: \(self.currentSkin.name)")
             NotificationCenter.default.post(name: .skinDidChange, object: skin)
         } else if let url = skin.url {
+            print("🎨 Loading skin from URL: \(url)")
             // Load and apply skin
             do {
                 let cachedSkin = try await SkinAssetCache.shared.loadSkin(from: url)
                 currentCachedSkin = cachedSkin
+                print("🎨 Skin loaded successfully. Cached skin name: \(cachedSkin.name)")
                 
                 await MainActor.run {
                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -145,8 +151,10 @@ public class SkinManager: ObservableObject {
                     }
                 }
                 
+                print("🎨 Skin applied. Current skin: \(self.currentSkin.name)")
                 NotificationCenter.default.post(name: .skinDidChange, object: skin)
             } catch {
+                print("🎨 ❌ Failed to load skin: \(error)")
                 NotificationCenter.default.post(
                     name: .skinLoadingFailed,
                     object: nil,

@@ -262,19 +262,8 @@ extension Notification.Name {
     static let skinAnimationCompleted = Notification.Name("skinAnimationCompleted")
 }
 
-// MARK: - Sprite Types
+// MARK: - Test Helper Extensions
 
 extension SkinManager {
-    enum SpriteType {
-        case mainBackground
-        case playButton
-        case pauseButton
-        case stopButton
-        case nextButton
-        case prevButton
-        case ejectButton
-        case volumeSlider
-        case balanceSlider
-        case seekBar
-    }
+    // Test helpers can be added here if needed
 }

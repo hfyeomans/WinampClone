@@ -92,8 +92,38 @@ extension SkinManager {
     
     /// Load skin from WSZ/ZIP file
     private func loadSkinFromFile(_ file: URL) async {
-        // TODO: Implement ZIP extraction and loading
-        print("Loading from WSZ/ZIP not yet implemented: \(file)")
+        do {
+            // Use our new ClassicSkinParser
+            let parser = ClassicSkinParser(skinURL: file)
+            let parsedSkin = try await parser.parse()
+            
+            // Create Skin object from parsed data
+            let skin = Skin(
+                name: parsedSkin.name,
+                url: file,
+                isDefault: false,
+                author: parsedSkin.author,
+                version: parsedSkin.version
+            )
+            
+            // Store parsed data for use by other components
+            await SkinAssetCache.shared.cacheSkin(parsedSkin, for: file)
+            
+            // Apply the skin using the proper method
+            try await applySkin(skin)
+            
+            print("✅ Successfully loaded WSZ skin: \(parsedSkin.name) by \(parsedSkin.author)")
+            
+        } catch {
+            print("❌ Failed to load WSZ skin: \(error)")
+            await MainActor.run {
+                NotificationCenter.default.post(
+                    name: .skinLoadingFailed,
+                    object: self,
+                    userInfo: ["error": error, "file": file]
+                )
+            }
+        }
     }
 }
 

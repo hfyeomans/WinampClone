@@ -207,7 +207,7 @@ public class SkinParser {
 }
 
 /// Parsed skin data structure
-public struct ParsedSkin {
+public struct ParsedSkin: ParsedSkinProtocol {
     public let name: String
     public let bitmaps: [String: NSImage]
     public let configurations: [String: String]

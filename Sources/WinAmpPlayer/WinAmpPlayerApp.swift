@@ -38,6 +38,7 @@ struct WinAmpPlayerApp: App {
             playlistWindow
         }
         .commands {
+            fileMenuCommands
             skinMenuCommands
             pluginMenuCommands
         }
@@ -47,8 +48,16 @@ struct WinAmpPlayerApp: App {
     
     private var mainWindow: some Scene {
         WindowGroup("WinAmp Player") {
-            mainPlayerView
-                .frame(width: 275, height: 116)
+            VStack(spacing: 0) {
+                // Custom title bar with skin-based chrome
+                CustomTitleBar()
+                    .frame(height: 14)
+                
+                // Main player content
+                mainPlayerView
+                    .frame(width: 275, height: 102) // Reduced by title bar height
+            }
+            .frame(width: 275, height: 116)
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
@@ -87,6 +96,30 @@ struct WinAmpPlayerApp: App {
     }
     
     // MARK: - Command Menus
+    
+    @CommandsBuilder
+    private var fileMenuCommands: some Commands {
+        CommandMenu("File") {
+            Button("Open Audio File...") {
+                let panel = NSOpenPanel()
+                panel.allowedFileTypes = ["mp3", "m4a", "wav", "flac", "aac"]
+                panel.allowsMultipleSelection = false
+                panel.canChooseDirectories = false
+                
+                if panel.runModal() == .OK, let url = panel.url {
+                    Task {
+                        do {
+                            try await audioEngine.loadURL(url)
+                            print("🎵 Audio file loaded successfully: \(url.lastPathComponent)")
+                        } catch {
+                            print("🎵 ❌ Failed to load audio file: \(error)")
+                        }
+                    }
+                }
+            }
+            .keyboardShortcut("O", modifiers: [.command])
+        }
+    }
     
     @CommandsBuilder
     private var skinMenuCommands: some Commands {
