@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct SkinnableMainPlayerView: View {
     @EnvironmentObject var audioEngine: AudioEngine
     @EnvironmentObject var volumeController: VolumeBalanceController
+    @EnvironmentObject var playlistController: PlaylistController
     @EnvironmentObject var skinManager: SkinManager
     
     @State private var currentTime: TimeInterval = 0
@@ -148,7 +150,7 @@ struct SkinnableMainPlayerView: View {
                     SkinnableButton(
                         normal: .ejectButton(.normal),
                         pressed: .ejectButton(.pressed),
-                        action: {}
+                        action: { openFile() }
                     )
                     
                     Spacer()
@@ -169,8 +171,8 @@ struct SkinnableMainPlayerView: View {
         }
         .frame(width: 275, height: isMinimized ? 0 : 102) // 102 = 116 - 14 (title bar)
         .background(
-            SpriteView(.mainBackground)
-                .aspectRatio(contentMode: .fit)
+            // Use a custom background renderer that tiles or stretches properly
+            BackgroundSpriteView()
         )
         .onReceive(timer) { _ in
             if !isDragging && audioEngine.isPlaying {
@@ -191,13 +193,89 @@ struct SkinnableMainPlayerView: View {
     }
     
     private func previousTrack() {
-        // This would be implemented with playlist integration
-        // For now, just send a notification
+        Task {
+            do {
+                try await playlistController.playPrevious()
+            } catch {
+                print("Failed to play previous track: \(error)")
+            }
+        }
     }
     
     private func nextTrack() {
-        // This would be implemented with playlist integration
-        // For now, just send a notification
+        Task {
+            do {
+                try await playlistController.playNext()
+            } catch {
+                print("Failed to play next track: \(error)")
+            }
+        }
+    }
+    
+    private func openFile() {
+        let panel = NSOpenPanel()
+        panel.title = "Choose Audio File"
+        panel.showsResizeIndicator = true
+        panel.showsHiddenFiles = false
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.mp3, .audio]
+        
+        if panel.runModal() == .OK {
+            let urls = panel.urls
+            if !urls.isEmpty {
+                Task {
+                    do {
+                        // If we have a playlist, add tracks to it
+                        if let playlist = playlistController.currentPlaylist {
+                            for url in urls {
+                                let track = Track(fileURL: url)
+                                playlist.addTrack(track)
+                            }
+                            // Play the first added track
+                            if let firstTrack = urls.first {
+                                let track = Track(fileURL: firstTrack)
+                                try await playlistController.playTrack(track)
+                            }
+                        } else {
+                            // Create a new playlist with these tracks
+                            let tracks = urls.map { Track(fileURL: $0) }
+                            let playlist = Playlist(name: "Current Playlist", tracks: tracks)
+                            playlistController.setPlaylist(playlist)
+                            if let firstTrack = tracks.first {
+                                try await playlistController.playTrack(firstTrack)
+                            }
+                        }
+                    } catch {
+                        print("Failed to load audio file: \(error)")
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Background Sprite View
+
+struct BackgroundSpriteView: View {
+    @StateObject private var skinManager = SkinManager.shared
+    
+    var body: some View {
+        GeometryReader { geometry in
+            if let sprite = skinManager.getSprite(.mainBackground) {
+                // Convert NSImage to Image and tile/stretch it to fill the entire area
+                Image(nsImage: sprite)
+                    .resizable()
+                    .interpolation(.none) // Preserve pixel art
+                    .aspectRatio(contentMode: .fill) // Fill the entire area
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped() // Clip any overflow
+            } else {
+                // Fallback to WinAmp classic background color
+                Rectangle()
+                    .fill(WinAmpColors.background)
+            }
+        }
     }
 }
 
