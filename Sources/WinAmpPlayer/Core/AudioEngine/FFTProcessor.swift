@@ -93,27 +93,41 @@ final class FFTProcessor: ObservableObject {
             vDSP_vmul(inputBuffer, 1, window, 1, &inputBuffer, 1, vDSP_Length(bufferSizePow2))
         }
         
-        // Convert to split complex format
-        var splitComplex = DSPSplitComplex(
-            realp: UnsafeMutablePointer(mutating: realBuffer),
-            imagp: UnsafeMutablePointer(mutating: imagBuffer)
-        )
-        
-        inputBuffer.withUnsafeBufferPointer { inputPtr in
-            vDSP_ctoz(
-                inputPtr.baseAddress!.withMemoryRebound(to: DSPComplex.self, capacity: bufferSizePow2 / 2) { $0 },
-                2,
-                &splitComplex,
-                1,
-                vDSP_Length(bufferSizePow2 / 2)
-            )
+        // Convert to split complex format - using proper buffer pointers to avoid dangling pointers
+        // Process FFT using safe buffer access
+        realBuffer.withUnsafeMutableBufferPointer { realPtr in
+            imagBuffer.withUnsafeMutableBufferPointer { imagPtr in
+                guard let realBaseAddress = realPtr.baseAddress,
+                      let imagBaseAddress = imagPtr.baseAddress else {
+                    return
+                }
+                
+                var splitComplex = DSPSplitComplex(
+                    realp: realBaseAddress,
+                    imagp: imagBaseAddress
+                )
+                
+                inputBuffer.withUnsafeBufferPointer { inputPtr in
+                    guard let inputBaseAddress = inputPtr.baseAddress else { return }
+                    
+                    inputBaseAddress.withMemoryRebound(to: DSPComplex.self, capacity: bufferSizePow2 / 2) { complexPtr in
+                        vDSP_ctoz(
+                            complexPtr,
+                            2,
+                            &splitComplex,
+                            1,
+                            vDSP_Length(bufferSizePow2 / 2)
+                        )
+                    }
+                }
+                
+                // Perform FFT
+                vDSP_fft_zrip(fftSetup, &splitComplex, 1, log2n, FFTDirection(FFT_FORWARD))
+                
+                // Calculate magnitudes
+                vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(bufferSizePow2 / 2))
+            }
         }
-        
-        // Perform FFT
-        vDSP_fft_zrip(fftSetup, &splitComplex, 1, log2n, FFTDirection(FFT_FORWARD))
-        
-        // Calculate magnitudes
-        vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(bufferSizePow2 / 2))
         
         // Convert to dB scale with noise floor
         var scaledMagnitudes = magnitudes

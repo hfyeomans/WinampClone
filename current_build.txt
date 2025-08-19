@@ -1,0 +1,6 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write swift-version--58304C5D6DBC2206.txt
+[1/3] Linking WinAmpPlayer
+[2/3] Applying WinAmpPlayer
+Build complete! (0.95s)
