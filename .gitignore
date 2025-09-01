@@ -103,6 +103,10 @@ iOSInjectionProject/
 !README.md
 !**/README.md
 
+# Build and output files
+*.txt
+*.sh
+
 # Icon must end with two \r
 Icon
 
