@@ -220,7 +220,15 @@ struct SkinnableMainPlayerView: View {
         panel.showsHiddenFiles = false
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
-        panel.allowedFileTypes = ["mp3", "m4a", "wav", "flac", "aac", "ogg", "aiff"]
+        panel.allowedContentTypes = [
+            UTType(filenameExtension: "mp3") ?? .audio,
+            UTType(filenameExtension: "m4a") ?? .audio,
+            UTType(filenameExtension: "wav") ?? .audio,
+            UTType(filenameExtension: "flac") ?? .audio,
+            UTType(filenameExtension: "aac") ?? .audio,
+            UTType(filenameExtension: "ogg") ?? .audio,
+            UTType(filenameExtension: "aiff") ?? .audio
+        ]
         
         if panel.runModal() == .OK {
             let urls = panel.urls

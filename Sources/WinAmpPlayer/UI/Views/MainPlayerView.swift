@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 import AVFoundation
 import AppKit
+import UniformTypeIdentifiers
 
 // MARK: - Bitmap Font Style
 
@@ -670,7 +671,9 @@ public struct MainPlayerView: View {
     
     private func openFile() {
         let panel = NSOpenPanel()
-        panel.allowedFileTypes = Track.supportedExtensions
+        panel.allowedContentTypes = Track.supportedExtensions.compactMap { ext in
+            UTType(filenameExtension: ext) ?? .audio
+        }
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         

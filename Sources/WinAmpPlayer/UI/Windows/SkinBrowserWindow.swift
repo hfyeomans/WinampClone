@@ -365,7 +365,7 @@ public struct SkinBrowserWindow: View {
     
     private func exportAllSkins() {
         let panel = NSSavePanel()
-        panel.allowedFileTypes = ["zip"]
+        panel.allowedContentTypes = [UTType.zip]
         panel.nameFieldStringValue = "WinAmp_Skins_Pack.zip"
         panel.prompt = "Export Pack"
         

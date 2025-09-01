@@ -341,7 +341,9 @@ struct SkinnablePlaylistWindow: View {
     
     private func addFiles() {
         let panel = NSOpenPanel()
-        panel.allowedFileTypes = Track.supportedExtensions
+        panel.allowedContentTypes = Track.supportedExtensions.compactMap { ext in
+            UTType(filenameExtension: ext) ?? .audio
+        }
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = true
         

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 /// Plugin preferences window
 public struct PluginPreferencesWindow: View {
@@ -393,7 +394,9 @@ public struct PluginPreferencesWindow: View {
     
     private func addPlugin() {
         let panel = NSOpenPanel()
-        panel.allowedFileTypes = ["waplugin"]
+        panel.allowedContentTypes = [
+            UTType(filenameExtension: "waplugin") ?? .data
+        ]
         panel.allowsMultipleSelection = true
         panel.prompt = "Add Plugin"
         

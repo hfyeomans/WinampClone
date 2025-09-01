@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 @main
 struct WinAmpPlayerApp: App {
@@ -113,7 +114,13 @@ struct WinAmpPlayerApp: App {
         CommandMenu("File") {
             Button("Open Audio File...") {
                 let panel = NSOpenPanel()
-                panel.allowedFileTypes = ["mp3", "m4a", "wav", "flac", "aac"]
+                panel.allowedContentTypes = [
+                    UTType(filenameExtension: "mp3") ?? .audio,
+                    UTType(filenameExtension: "m4a") ?? .audio,
+                    UTType(filenameExtension: "wav") ?? .audio,
+                    UTType(filenameExtension: "flac") ?? .audio,
+                    UTType(filenameExtension: "aac") ?? .audio
+                ]
                 panel.allowsMultipleSelection = false
                 panel.canChooseDirectories = false
                 
@@ -159,7 +166,10 @@ struct WinAmpPlayerApp: App {
             
             Button("Load Skin File...") {
                 let panel = NSOpenPanel()
-                panel.allowedFileTypes = ["wsz", "zip"]
+                panel.allowedContentTypes = [
+                    UTType(filenameExtension: "wsz") ?? .archive,
+                    UTType.zip
+                ]
                 panel.allowsMultipleSelection = false
                 
                 if panel.runModal() == .OK, let url = panel.url {

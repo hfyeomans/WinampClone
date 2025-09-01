@@ -107,6 +107,29 @@ iOSInjectionProject/
 *.txt
 *.sh
 
+# Development and Testing Files
+demo_*.swift
+test_*.swift
+debug_*.swift
+diagnose_*.swift
+*Test*.swift
+*Demo*.swift
+*.log
+
+# App Bundles and Build Artifacts
+*.app/
+.build*/
+
+# Screenshots and Development Images
+Screenshot*.png
+Correct.png
+Incorrect.png
+*_Test.png
+*_test.png
+
+# Archive directory
+archive/
+
 # Icon must end with two \r
 Icon
 
