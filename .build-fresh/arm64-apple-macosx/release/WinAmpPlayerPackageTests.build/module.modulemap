@@ -1,4 +1,0 @@
-module WinAmpPlayerPackageTests {
-    header "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerPackageTests.build/WinAmpPlayerPackageTests-Swift.h"
-    requires objc
-}

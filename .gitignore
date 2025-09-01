@@ -1,3 +1,7 @@
+# All dot files and folders (except .gitignore)
+.*
+!.gitignore
+
 # env files
 .env
 
