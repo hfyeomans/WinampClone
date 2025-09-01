@@ -1,0 +1,82 @@
+{
+  "": {
+    "dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/WinAmpPlayerTests.d",
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/WinAmpPlayerTests.o",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/master.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Classic/ClassicSkinParsingTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/ClassicSkinParsingTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/ClassicSkinParsingTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/ClassicSkinParsingTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Classic/RegionMaskTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/RegionMaskTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/RegionMaskTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/RegionMaskTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Fixtures/AudioTestFixtures.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioTestFixtures.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioTestFixtures~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioTestFixtures.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Integration/AudioEngineIntegrationTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineIntegrationTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineIntegrationTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineIntegrationTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Suite01_AudioPlaybackTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite01_AudioPlaybackTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite01_AudioPlaybackTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite01_AudioPlaybackTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Suite02_PluginSystemTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite02_PluginSystemTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite02_PluginSystemTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite02_PluginSystemTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Suite03_SkinSystemTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite03_SkinSystemTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite03_SkinSystemTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite03_SkinSystemTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Suite06_EdgeCasesTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite06_EdgeCasesTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite06_EdgeCasesTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/Suite06_EdgeCasesTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/TestHelpers/MockPlugins.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/MockPlugins.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/MockPlugins~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/MockPlugins.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/TestHelpers/TestExtensions.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestExtensions.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestExtensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestExtensions.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/TestRunner.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestRunner.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestRunner~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/TestRunner.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineConcurrencyTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineConcurrencyTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineConcurrencyTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineConcurrencyTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEnginePerformanceTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEnginePerformanceTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEnginePerformanceTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEnginePerformanceTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/Unit/AudioEngineTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/AudioEngineTests.swiftdeps"
+  },
+  "/Users/hank/dev/src/WinAmpPlayer/Tests/WinAmpPlayerTests/WindowManagerTests.swift": {
+    "object": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/WindowManagerTests.swift.o",
+    "swiftmodule": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/WindowManagerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/hank/dev/src/WinAmpPlayer/.build-fresh/arm64-apple-macosx/release/WinAmpPlayerTests.build/WindowManagerTests.swiftdeps"
+  }
+}
